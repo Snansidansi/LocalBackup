@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CsvWriterTest {
@@ -42,6 +43,23 @@ public class CsvWriterTest {
         writeToCsvFile(filePath, false, new String[]{"a", "b"});
         writeToCsvFile(filePath, true, new String[]{"c", "d"});
         assertFileContent(filePath, 2, "a;b", "c;d");
+    }
+
+    @Test
+    void writeAllLinesFromListToCsvFile() throws IOException {
+        Path filePath = tempDir.resolve("writeAllLinesFromList.csv");
+        List<String[]> data = new ArrayList<>();
+        data.add(new String[]{"a", "aa"});
+        data.add(new String[]{"b", "bb"});
+        data.add(new String[]{"c", "cc"});
+
+        try (CsvWriter csvWriter = new CsvWriter(filePath.toString())) {
+            csvWriter.writeAllLines(data);
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+        assertFileContent(filePath, 3, "a;aa", "b;bb", "c;cc");
     }
 
     private void assertFileContent(Path filePath, int expectedSize, String... expectedData) throws IOException {

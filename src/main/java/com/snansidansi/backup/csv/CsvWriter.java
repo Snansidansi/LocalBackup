@@ -3,6 +3,7 @@ package com.snansidansi.backup.csv;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 public class CsvWriter implements AutoCloseable{
     BufferedWriter bufferedWriter;
@@ -19,6 +20,11 @@ public class CsvWriter implements AutoCloseable{
         if (data.length > 0)
             bufferedWriter.write(String.join(";", data));
         bufferedWriter.newLine();
+    }
+
+    public void writeAllLines(List<String[]> data) throws IOException {
+        if (data.isEmpty()) return;
+        for (String[] line : data) this.writeLine(line);
     }
 
     @Override
