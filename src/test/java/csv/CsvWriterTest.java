@@ -15,20 +15,20 @@ import java.util.List;
 
 public class CsvWriterTest {
     @TempDir(cleanup = CleanupMode.ALWAYS)
-    private static Path path;
+    private static Path tempDir;
 
     @Test
     @DisplayName("Create a new csv file and write one line to it")
     void writeLineAndCreateFile() throws IOException {
-        Path filePath = path.resolve("newFileOneLine.csv");
+        Path filePath = tempDir.resolve("newFileOneLine.csv");
         writeToCsvFile(filePath, false, new String[]{"Hello","Test"});
         assertFileContent(filePath, 1, "Hello;Test");
     }
 
     @Test
     @DisplayName("Create a new csv file an write 3 lines to it")
-    void writeFiveLinesAndCreateFile() throws IOException {
-        Path filePath = path.resolve("newFileFiveLines.csv");
+    void writeThreeLinesAndCreateFile() throws IOException {
+        Path filePath = tempDir.resolve("newFileFiveLines.csv");
         writeToCsvFile(filePath, false,
                 new String[]{"a","a"},
                 new String[]{"b","b"},
@@ -38,7 +38,7 @@ public class CsvWriterTest {
 
     @Test
     void appendLineToCsvFile() throws IOException {
-        Path filePath = path.resolve("appendToFile.csv");
+        Path filePath = tempDir.resolve("appendToFile.csv");
         writeToCsvFile(filePath, false, new String[]{"a", "b"});
         writeToCsvFile(filePath, true, new String[]{"c", "d"});
         assertFileContent(filePath, 2, "a;b", "c;d");
