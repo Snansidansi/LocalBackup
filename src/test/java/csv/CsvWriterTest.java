@@ -21,56 +21,43 @@ public class CsvWriterTest {
     @DisplayName("Create a new csv file and write one line to it")
     void writeLineAndCreateFile() throws IOException {
         Path filePath = path.resolve("newFileOneLine.csv");
-        try (CsvWriter csvWriter = new CsvWriter(filePath.toString())) {
-            String[] data = {"Hello", "Test"};
-            csvWriter.writeLine(data);
-        } catch (IOException e) {
-            Assertions.fail("Unexpected IOException: " + e.getMessage());
-        }
-
-        String expected = "Hello;Test";
-        List<String> result = Files.readAllLines(filePath, Charset.defaultCharset());
-        Assertions.assertEquals(1, result.size());
-        Assertions.assertEquals(expected, result.getFirst());
+        writeToCsvFile(filePath, false, new String[]{"Hello","Test"});
+        assertFileContent(filePath, 1, "Hello;Test");
     }
 
     @Test
-    @DisplayName("Create a new csv file an write 5 lines to it")
+    @DisplayName("Create a new csv file an write 3 lines to it")
     void writeFiveLinesAndCreateFile() throws IOException {
         Path filePath = path.resolve("newFileFiveLines.csv");
-        try (CsvWriter csvWriter = new CsvWriter(filePath.toString())) {
-            for (int i = 0; i < 5; i++) {
-                csvWriter.writeLine(i + "a", i + "b");
-            }
-        } catch (IOException e) {
-            Assertions.fail("Unexpected IOException: " + e.getMessage());
-        }
-
-        List<String> result = Files.readAllLines(filePath, Charset.defaultCharset());
-        Assertions.assertEquals(5, result.size());
-        for (int i = 0; i < 5; i++) {
-            Assertions.assertEquals(i + "a;" + i + "b", result.get(i));
-        }
+        writeToCsvFile(filePath, false,
+                new String[]{"a","a"},
+                new String[]{"b","b"},
+                new String[]{"c","c"});
+        assertFileContent(filePath, 3, "a;a", "b;b", "c;c");
     }
 
     @Test
     void appendLineToCsvFile() throws IOException {
         Path filePath = path.resolve("appendToFile.csv");
-        try (CsvWriter csvWriterFilePrepare = new CsvWriter(filePath.toString())) {
-            csvWriterFilePrepare.writeLine("a", "b");
-        } catch (IOException e) {
-            Assertions.fail("Unexpected IOError during file preparation: " + e.getMessage());
-        }
+        writeToCsvFile(filePath, false, new String[]{"a", "b"});
+        writeToCsvFile(filePath, true, new String[]{"c", "d"});
+        assertFileContent(filePath, 2, "a;b", "c;d");
+    }
 
-        try (CsvWriter csvWriterAppend = new CsvWriter(filePath.toString(), true)) {
-            csvWriterAppend.writeLine("c", "d");
-        } catch (IOException e) {
-            Assertions.fail("Unexpected IOException when appending to file: " + e.getMessage());
-        }
-
+    private void assertFileContent(Path filePath, int expectedSize, String... expectedData) throws IOException {
         List<String> result = Files.readAllLines(filePath, Charset.defaultCharset());
-        Assertions.assertEquals(2, result.size());
-        Assertions.assertEquals("a;b", result.get(0));
-        Assertions.assertEquals("c;d", result.get(1));
+        Assertions.assertEquals(expectedSize, result.size());
+        for (int i = 0; i < expectedData.length; i++) {
+            Assertions.assertEquals(expectedData[i], result.get(i));
+        }
+    }
+
+    private void writeToCsvFile(Path filePath, boolean append, String[]... data) {
+        try (CsvWriter csvWriter = new CsvWriter(filePath.toString(), append)) {
+            for (String[] line : data)
+                csvWriter.writeLine(line);
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
     }
 }
