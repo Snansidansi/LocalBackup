@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CsvReaderTest {
     private final String exampleDataCsvFile = "src/test/resources/csv/example-data.csv";
@@ -27,33 +29,27 @@ public class CsvReaderTest {
     @Test
     void readSingleLineFromCsvFile() {
         try (CsvReader csvReader = new CsvReader(exampleDataCsvFile)) {
-            String[] expected = {"1Source", "1Destination"};
+            String[] expected = {"a", "aa"};
             String[] readerOutput = csvReader.readLine();
             Assertions.assertArrayEquals(expected, readerOutput);
-        } catch (Exception e) {
-            Assertions.fail("Something unexpected happend: " + e.getMessage());
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
         }
     }
 
     @Test
-    void readWholeCsvFile() {
+    void readAllLinesFromCsvFile() {
         try (CsvReader csvReader = new CsvReader(exampleDataCsvFile)) {
-            String[][] expected = {
-                    {"1Source", "1Destination"},
-                    {"2Source", "2Destination"},
-                    {"3Source", "3Destination"}
-            };
+            List<String[]> expected = new ArrayList<>();
+            expected.add(new String[]{"a", "aa"});
+            expected.add(new String[]{"b", "bb"});
+            expected.add(new String[]{"c", "cc"});
 
-            String[] line;
-            int i = 0;
-            while ((line = csvReader.readLine()) != null) {
-                Assertions.assertArrayEquals(line, expected[i]);
-                i++;
-            }
+            List<String[]> result = csvReader.readAllLines();
+            for (int i = 0; i < expected.size(); i++)
+                Assertions.assertArrayEquals(expected.get(i), result.get(i));
         } catch (IOException e) {
-            Assertions.fail("IOException happened during the test: " + e.getMessage());
-        } catch (Exception e) {
-            Assertions.fail("Unexpected exception during test: " + e.getMessage());
+            Assertions.fail(e.getMessage());
         }
     }
 }

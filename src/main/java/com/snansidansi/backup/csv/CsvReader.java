@@ -1,6 +1,8 @@
 package com.snansidansi.backup.csv;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CsvReader implements AutoCloseable{
     private final BufferedReader bufferedReader;
@@ -16,6 +18,15 @@ public class CsvReader implements AutoCloseable{
         String line = this.bufferedReader.readLine();
         if (line == null) return null;
         return line.split(";");
+    }
+
+    public List<String[]> readAllLines() throws IOException {
+        String[] line;
+        List<String[]> allLines = new ArrayList<>();
+
+        while ((line = readLine()) != null)
+            allLines.add(line);
+        return allLines;
     }
 
     @Override
