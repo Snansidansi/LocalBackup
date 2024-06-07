@@ -2,6 +2,8 @@ package service;
 
 import com.snansidansi.backup.csv.CsvWriter;
 import com.snansidansi.backup.service.BackupService;
+import com.snansidansi.backup.service.DestinationNoDirException;
+import com.snansidansi.backup.service.SourceDoesNotExistException;
 import com.snansidansi.backup.service.SrcDestPair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,11 @@ public class BackupServiceTest {
     private final String exampleBackupDataPath = "src/test/resources/service/example-backup-data.csv";
     private final String existingFilePath = "src/test/resources/service/ExistingFile.txt";
     private final String existingDirPath = "src/test/resources/service";
+    private final SrcDestPair[] exampleData = {
+            new SrcDestPair("a", "aa"),
+            new SrcDestPair("b", "bb"),
+            new SrcDestPair("c", "cc")
+    };
 
     @TempDir(cleanup = CleanupMode.ALWAYS)
     private static Path tempDir;
@@ -62,6 +69,54 @@ public class BackupServiceTest {
         BackupService backupService = new BackupService(filePath);
         backupService.addBackup(new SrcDestPair(filePath, tempDir.toString()));
         assertFileContent(filePath, 2, "a;b", filePath + ";" + tempDir);
+    }
+
+    @Test
+    void removeTwoBackupsFromBackupConfig() {
+        String filePath = createBackupConfigFile("deleteBackup.csv", exampleData);
+        BackupService backupService = new BackupService(filePath);
+        backupService.removeBackup(1, 2);
+        assertFileContent(filePath, 1, "a;aa");
+    }
+
+    @ParameterizedTest
+    @CsvSource({"1", "-1"})
+    void removeBackupsWithInvalidIndexDoesNothing(int index) {
+        String filePath = createBackupConfigFile(index + "-invalidIndexForRemove.csv",
+                new SrcDestPair("a", "aa"));
+        BackupService backupService = new BackupService(filePath);
+        Assertions.assertFalse(backupService.removeBackup(index));
+        assertFileContent(filePath, 1, "a;aa");
+    }
+
+    @Test
+    void validateBackupPathsSourceDoesNotExistException() {
+        Assertions.assertThrows(SourceDoesNotExistException.class,
+                () -> BackupService.validateBackupPaths(new SrcDestPair("dfkslajsfkldsa", existingDirPath)));
+    }
+
+    @Test
+    void validateBackupPathsDestinationNoDirException() {
+        Assertions.assertThrows(DestinationNoDirException.class,
+                () -> BackupService.validateBackupPaths(new SrcDestPair(existingFilePath, "fksdajsdfsvd")));
+    }
+
+    @Test
+    void validateBackupPathsSourceAndDestinationAreEqual() {
+        try {
+            Assertions.assertFalse(BackupService.validateBackupPaths(new SrcDestPair(existingDirPath, existingDirPath)));
+        } catch (Exception e) {
+            Assertions.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    void validateBackupPathsSourceAndDestinationAreValid() {
+        try {
+            Assertions.assertTrue(BackupService.validateBackupPaths(new SrcDestPair(existingFilePath, existingDirPath)));
+        } catch (Exception e) {
+            Assertions.fail(e.getMessage());
+        }
     }
 
     private String createBackupConfigFile(String fileName, SrcDestPair... pathPairs) {
