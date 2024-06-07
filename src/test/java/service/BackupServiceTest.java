@@ -2,7 +2,7 @@ package service;
 
 import com.snansidansi.backup.csv.CsvWriter;
 import com.snansidansi.backup.service.BackupService;
-import com.snansidansi.backup.service.SourceDoesNotExistException;
+import com.snansidansi.backup.service.SrcDestPair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.CleanupMode;
@@ -13,7 +13,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -25,6 +24,20 @@ public class BackupServiceTest {
     @TempDir(cleanup = CleanupMode.ALWAYS)
     private static Path tempDir;
 
+    @Test
+    void getCorrectBackupConfigFileContent() {
+        BackupService backupService = new BackupService(exampleBackupDataPath);
+        List<SrcDestPair> expected = List.of(
+                new SrcDestPair("aa", "ab"),
+                new SrcDestPair("ba", "bb"),
+                new SrcDestPair("ca", "cb"));
+        List<SrcDestPair> result = backupService.getAllBackups();
+
+        for (int i = 0; i < expected.size(); i++) {
+            Assertions.assertEquals(expected.get(i), result.get(i));
+        }
+    }
+
     @ParameterizedTest
     @CsvSource({
             "aa, ab",
@@ -33,85 +46,46 @@ public class BackupServiceTest {
     })
     void checkIfBackupAlreadyExits(String source, String destination) {
         BackupService backupService = new BackupService(exampleBackupDataPath);
-        Assertions.assertTrue(backupService.checkIfBackupAlreadyExists(source, destination));
+        Assertions.assertTrue(backupService.checkIfBackupAlreadyExists(new SrcDestPair(source, destination)));
     }
 
     @Test
     void checkIfBackupNotAlreadyExits() {
         BackupService backupService = new BackupService(exampleBackupDataPath);
-        Assertions.assertFalse(backupService.checkIfBackupAlreadyExists("", ""));
+        Assertions.assertFalse(backupService.checkIfBackupAlreadyExists(new SrcDestPair("", "")));
     }
 
     @Test
-    void backupSourceDoesNotExist() {
-        BackupService notExistingSourceBackupService = new BackupService("");
-        Assertions.assertThrows(SourceDoesNotExistException.class, () ->
-                notExistingSourceBackupService.addBackup("NoExistingPath", tempDir.toString()));
-    }
-
-    @Test
-    void backupDestinationIsNoDirectory() {
-        BackupService noDirDestinationBackupService = new BackupService("");
-        Assertions.assertThrows(NotDirectoryException.class, () ->
-                noDirDestinationBackupService.addBackup(existingFilePath, "file.txt"));
-    }
-
-    @Test
-    void addBackupToBackupConfig() throws SourceDoesNotExistException, IOException {
-        String filePath = createBackupConfigFile("addBackupToBackupConfig.csv", "a", "b");
+    void addBackupToBackupsConfig() {
+        String filePath = createBackupConfigFile(
+                "addBackupToBackupConfig.csv", new SrcDestPair("a", "b"));
         BackupService backupService = new BackupService(filePath);
-        backupService.addBackup(filePath, tempDir.toString());
+        backupService.addBackup(new SrcDestPair(filePath, tempDir.toString()));
         assertFileContent(filePath, 2, "a;b", filePath + ";" + tempDir);
     }
 
-    @Test
-    void addExistingBackupToBackupConfigChangesNothing()
-            throws SourceDoesNotExistException, IOException {
-        String filePath = createBackupConfigFile("addExistingBackupToBackupConfig.csv",
-                existingFilePath, existingDirPath);
-
-        BackupService backupService = new BackupService(filePath);
-        backupService.addBackup(existingFilePath, existingDirPath);
-        assertFileContent(filePath, 1, existingFilePath + ";" + existingDirPath);
-    }
-
-    @Test
-    void addDirectoryAsBackupSourceToBackupConfig()
-            throws SourceDoesNotExistException, IOException {
-        String filePath = createBackupConfigFile("addDirAsSource.csv");
-
-        BackupService backupService = new BackupService(filePath);
-        backupService.addBackup(existingDirPath, tempDir.toString());
-        assertFileContent(filePath, 1, existingDirPath + ";" + tempDir);
-    }
-
-    @Test
-    void addBackupToBackupConfigWithSameSourceAndDestination()
-            throws SourceDoesNotExistException, IOException {
-        String filePath = createBackupConfigFile("sameSourceAndDestination.csv");
-
-        BackupService backupService = new BackupService(filePath);
-        backupService.addBackup(existingFilePath, existingFilePath);
-        assertFileContent(filePath, 0);
-    }
-
-    private String createBackupConfigFile(String fileName, String... data) {
+    private String createBackupConfigFile(String fileName, SrcDestPair... pathPairs) {
         Path filePath = tempDir.resolve(fileName);
         try (CsvWriter csvWriter = new CsvWriter(filePath.toString())) {
-            for (int i = 0; i < data.length; i += 2) {
-                csvWriter.writeLine(data[i], data[i + 1]);
-            }
+            for (SrcDestPair pathPair : pathPairs)
+                csvWriter.writeLine(pathPair.srcPath(), pathPair.destPath());
         } catch (IOException e) {
             Assertions.fail(e.getMessage());
         }
         return filePath.toString();
     }
 
-    private void assertFileContent(String filePath, int expectedSize, String... expectedData) throws IOException {
-        List<String> result = Files.readAllLines(Path.of(filePath), Charset.defaultCharset());
-        Assertions.assertEquals(expectedSize, result.size());
-        for (int i = 0; i < expectedData.length; i++) {
-            Assertions.assertEquals(expectedData[i], result.get(i));
+    private void assertFileContent(String filePath, int expectedSize, String... expectedData) {
+        List<String> result;
+        try {
+            result = Files.readAllLines(Path.of(filePath), Charset.defaultCharset());
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+            return;
         }
+
+        Assertions.assertEquals(expectedSize, result.size());
+        for (int i = 0; i < expectedData.length; i++)
+            Assertions.assertEquals(expectedData[i], result.get(i));
     }
 }
