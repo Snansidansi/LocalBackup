@@ -3,10 +3,12 @@ package com.snansidansi.backup.service;
 import com.snansidansi.backup.csv.CsvReader;
 import com.snansidansi.backup.csv.CsvWriter;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +23,44 @@ public class BackupService {
         this.allBackups = readBackups();
     }
 
-    // #TODO runBackup Methode erstellen.
+    public void runBackup() {
+        for (SrcDestPair pathPair : allBackups) {
+            Path srcPath = Path.of(pathPair.srcPath());
+            Path destPath = Path.of(pathPair.destPath()).resolve(srcPath.getFileName());
+            if (Files.isDirectory(srcPath)) backupDir(srcPath, destPath);
+            else if (Files.isRegularFile(srcPath)) backupFile(srcPath, destPath);
+        }
+    }
+
+    // Returns true if any backups in the dir or the sub-dirs were successfully done.
+    // Returns false if no backups were done.
+    public static boolean backupDir(Path srcPath, Path destPath) {
+        if (!Files.exists(destPath))
+            if (!destPath.toFile().mkdirs()) return false;
+
+        boolean changedAnything = false;
+        for (File subFile : srcPath.toFile().listFiles()) {
+            if (subFile.isDirectory() && backupDir(subFile.toPath(), destPath.resolve(subFile.getName())))
+                changedAnything = true;
+            else if (subFile.isFile() && backupFile(subFile.toPath(), destPath.resolve(subFile.getName())))
+                changedAnything = true;
+        }
+
+        return changedAnything;
+    }
+
+    public static boolean backupFile(Path srcPath, Path destPath) {
+        try {
+            if (!Files.exists(destPath)
+                    || srcPath.toFile().lastModified() != destPath.toFile().lastModified()) {
+                Files.createDirectories(destPath.getParent());
+                Files.copy(srcPath, destPath, StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
+                return true;
+            }
+        } catch (IOException ignored) {
+        }
+        return false;
+    }
 
     public boolean addBackup(List<SrcDestPair> newBackups) {
         try (CsvWriter csvWriter = new CsvWriter(this.backupConfigFilePath, true)) {

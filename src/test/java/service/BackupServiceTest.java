@@ -17,11 +17,15 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class BackupServiceTest {
     private final String exampleBackupDataPath = "src/test/resources/service/example-backup-data.csv";
     private final String existingFilePath = "src/test/resources/service/ExistingFile.txt";
     private final String existingDirPath = "src/test/resources/service";
+
+    private final Path backupExSrc = Path.of("src/test/resources/service/backupExamples");
+
     private final SrcDestPair[] exampleData = {
             new SrcDestPair("a", "aa"),
             new SrcDestPair("b", "bb"),
@@ -119,6 +123,110 @@ public class BackupServiceTest {
         }
     }
 
+    @Test
+    void backupFileToNotExistingDestinationWithAttributesAndContent() {
+        Path srcPath = backupExSrc.resolve("exampleFile.txt");
+        Path destPath = tempDir.resolve("backupFileToNotExistingDest/a.txt");
+        Assertions.assertTrue(BackupService.backupFile(srcPath, destPath));
+
+        try {
+            Assertions.assertTrue(Files.exists(srcPath));
+            Assertions.assertEquals(Files.getLastModifiedTime(srcPath), Files.getLastModifiedTime(destPath));
+            Assertions.assertEquals(Files.readAllLines(srcPath), Files.readAllLines(destPath));
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    void backupUnmodifiedFileToExistingDestination() {
+        Path srcPath = tempDir.resolve("backupUnmodifiedFileSrc/a.txt");
+        Path destpath = tempDir.resolve("backupUnmodifiedFileDest/a.txt");
+
+        try {
+            Files.createDirectory(srcPath.getParent());
+            Files.createDirectory(destpath.getParent());
+            Files.createFile(srcPath);
+            Files.createFile(destpath);
+            Files.setLastModifiedTime(destpath, Files.getLastModifiedTime(srcPath));
+
+            Assertions.assertFalse(BackupService.backupFile(srcPath, destpath));
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    void backupModifiedFileToExistingDestination() {
+        Path srcPath = backupExSrc.resolve("ExampleFile.txt");
+        Path destPath = tempDir.resolve("backupModifiedFileDest/ExampleFile.txt");
+
+        try {
+            Files.createDirectory(destPath.getParent());
+            Files.createFile(destPath);
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+        Assertions.assertTrue(BackupService.backupFile(srcPath, destPath));
+    }
+
+    @Test
+    void backupDirWithFilesToNotExistingDestination() {
+        Path srcPath = backupExSrc.resolve("dirWithFiles");
+        Path destPath = tempDir.resolve("dirWithFilesToNotExistingDest/dirWithFiles");
+
+        Assertions.assertTrue(BackupService.backupDir(srcPath, destPath));
+        assertDirTree(srcPath, destPath);
+    }
+
+    @Test
+    void backupDirWithSubDirAndFilesToNotExistingDestination() {
+        Path srcpath = backupExSrc.resolve("dirWithSubDirsAndFiles");
+        Path destPath = tempDir.resolve("dirWithSubDirsAndFilesToNotExistingDestination/dirWithSubDirsAndFiles");
+
+        Assertions.assertTrue(BackupService.backupDir(srcpath, destPath));
+        assertDirTree(srcpath, destPath);
+    }
+
+    @Test
+    void backupUnchangedDir() {
+        Path srcPath = backupExSrc.resolve("dirWithFiles");
+        Path destPath = tempDir.resolve("backupUnchangedDir/dirWithFiles");
+
+        BackupService.backupDir(srcPath, destPath);
+        Assertions.assertFalse(BackupService.backupDir(srcPath, destPath));
+    }
+
+    @Test
+    void backupDirToExistingButChangedDir() {
+        Path srcPath = backupExSrc.resolve("dirWithFiles");
+        Path destPath = tempDir.resolve("backupDirToExistingButChangedDir/dirWithFiles");
+
+        BackupService.backupDir(srcPath, destPath);
+        try {
+            Assertions.assertTrue(Files.deleteIfExists(destPath.resolve("1.txt")));
+        } catch (IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+
+        Assertions.assertTrue(BackupService.backupDir(srcPath, destPath));
+        assertDirTree(srcPath, destPath);
+    }
+
+    @Test
+    void runBackupTest() {
+        Path destPath = tempDir.resolve("runBackupTest");
+        String backupConfigPath = createBackupConfigFile("runBackupTest.csv",
+                new SrcDestPair(backupExSrc.resolve("separateBackups/first").toString(), destPath.toString()),
+                new SrcDestPair(backupExSrc.resolve("separateBackups/second").toString(), destPath.toString()),
+                new SrcDestPair(backupExSrc.resolve("separateBackups/3.txt").toString(), destPath.toString()));
+
+        BackupService backupService = new BackupService(backupConfigPath);
+        backupService.runBackup();
+
+        assertDirTree(backupExSrc.resolve("separateBackups"), destPath);
+    }
+
     private String createBackupConfigFile(String fileName, SrcDestPair... pathPairs) {
         Path filePath = tempDir.resolve(fileName);
         try (CsvWriter csvWriter = new CsvWriter(filePath.toString())) {
@@ -128,6 +236,22 @@ public class BackupServiceTest {
             Assertions.fail(e.getMessage());
         }
         return filePath.toString();
+    }
+
+    private void assertDirTree(Path srcPath, Path destPath) {
+        Assertions.assertTrue(Files.exists(destPath));
+        Stream.of(srcPath.toFile().listFiles()).forEach(subFile -> {
+            Path destFilePath = destPath.resolve(subFile.getName());
+
+            if (subFile.isFile()) {
+                Assertions.assertTrue(Files.exists(destFilePath));
+                try {
+                    Assertions.assertEquals(Files.readAllLines(subFile.toPath()), Files.readAllLines(destFilePath));
+                } catch (IOException e) {
+                    Assertions.fail(e.getMessage());
+                }
+            } else assertDirTree(subFile.toPath(), destFilePath);
+        });
     }
 
     private void assertFileContent(String filePath, int expectedSize, String... expectedData) {
