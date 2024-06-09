@@ -1,13 +1,19 @@
 plugins {
     id 'java'
     id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
 group = 'com.snansidansi'
-version = '0.1'
+version = '0.5'
 
 repositories {
     mavenCentral()
+}
+
+javafx {
+    version = "21"
+    modules = ['javafx.controls', 'javafx.fxml']
 }
 
 java {
@@ -17,7 +23,7 @@ java {
 }
 
 application {
-    mainClass = 'com.snansidansi.backup.RunBackup'
+    mainClass = 'com.snansidansi.SimpleBackupApp'
 }
 
 dependencies {
