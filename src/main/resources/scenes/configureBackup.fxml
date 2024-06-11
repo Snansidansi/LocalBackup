@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.*?>
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.snansidansi.gui.controller.ConfigureBackupSceneController">
+    <center>
+        <TableView fx:id="table" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="246.0"
+                   prefWidth="749.0" BorderPane.alignment="CENTER">
+            <columns>
+                <TableColumn fx:id="sourceTableCol" editable="false" maxWidth="1.7976931348623157E308" minWidth="340.0"
+                             prefWidth="340.0" sortable="false" text="Source"/>
+                <TableColumn fx:id="destinationTableCol" editable="false" maxWidth="1.7976931348623157E308"
+                             minWidth="340.0" prefWidth="340.0" sortable="false" text="Destination"/>
+                <TableColumn fx:id="removeTableCol" editable="false" maxWidth="69.0" minWidth="69.0" prefWidth="69.0"
+                             resizable="false" sortable="false" text="Remove"/>
+            </columns>
+        </TableView>
+    </center>
+    <bottom>
+        <VBox BorderPane.alignment="CENTER">
+            <children>
+                <BorderPane prefHeight="4.0" prefWidth="751.0">
+                    <left>
+                        <HBox spacing="10.0" BorderPane.alignment="CENTER">
+                            <children>
+                                <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
+                                        onAction="#deleteBackup" prefHeight="40.0" prefWidth="40.0">
+                                    <graphic>
+                                        <ImageView fitHeight="36.0" fitWidth="36.0">
+                                            <image>
+                                                <Image url="@../icons/trashCan.png"/>
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                    <tooltip>
+                                        <Tooltip text="Delete the selected backups">
+                                            <font>
+                                                <Font size="14.0"/>
+                                            </font>
+                                        </Tooltip>
+                                    </tooltip>
+                                </Button>
+                                <Label prefHeight="48.0" prefWidth="306.0"
+                                       text="Are you sure to remove all the selected backups? Press again to confirm."
+                                       textFill="RED" visible="false" wrapText="true">
+                                    <font>
+                                        <Font size="14.0"/>
+                                    </font>
+                                </Label>
+                            </children>
+                            <BorderPane.margin>
+                                <Insets bottom="10.0" left="10.0" top="10.0"/>
+                            </BorderPane.margin>
+                        </HBox>
+                    </left>
+                    <right>
+                        <CheckBox mnemonicParsing="false" onAction="#toggleFullPath" prefHeight="20.0" prefWidth="123.0"
+                                  text="Show full paths" BorderPane.alignment="CENTER">
+                            <font>
+                                <Font size="14.0"/>
+                            </font>
+                            <BorderPane.margin>
+                                <Insets right="10.0"/>
+                            </BorderPane.margin>
+                        </CheckBox>
+                    </right>
+                    <bottom>
+                        <Line fx:id="middleLine" endX="300.0" fill="BLACK" strokeLineCap="BUTT" strokeWidth="1.3"
+                              BorderPane.alignment="CENTER">
+                            <BorderPane.margin>
+                                <Insets/>
+                            </BorderPane.margin>
+                        </Line>
+                    </bottom>
+                </BorderPane>
+                <Label prefHeight="25.0" prefWidth="113.0" text="Add new backup:" underline="true" VBox.vgrow="NEVER">
+                    <font>
+                        <Font size="14.0"/>
+                    </font>
+                    <VBox.margin>
+                        <Insets bottom="10.0" left="20.0" top="10.0"/>
+                    </VBox.margin>
+                </Label>
+                <BorderPane prefHeight="39.0" prefWidth="200.0">
+                    <left>
+                        <Label prefHeight="19.0" prefWidth="97.0" text="Sourcepath:" BorderPane.alignment="CENTER">
+                            <font>
+                                <Font size="13.0"/>
+                            </font>
+                            <BorderPane.margin>
+                                <Insets/>
+                            </BorderPane.margin>
+                        </Label>
+                    </left>
+                    <center>
+                        <TextField prefHeight="32.0" prefWidth="508.0" BorderPane.alignment="CENTER">
+                            <font>
+                                <Font size="14.0"/>
+                            </font>
+                        </TextField>
+                    </center>
+                    <right>
+                        <Button mnemonicParsing="false" onAction="#openSrcSelection" prefHeight="25.0" prefWidth="42.0"
+                                BorderPane.alignment="CENTER">
+                            <graphic>
+                                <ImageView>
+                                    <image>
+                                        <Image url="@../icons/openedFolder.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                            <BorderPane.margin>
+                                <Insets left="8.0"/>
+                            </BorderPane.margin>
+                            <tooltip>
+                                <Tooltip text="Open the file explorer to select a file or folder.">
+                                    <font>
+                                        <Font size="14.0"/>
+                                    </font>
+                                </Tooltip>
+                            </tooltip>
+                        </Button>
+                    </right>
+                    <VBox.margin>
+                        <Insets left="60.0" right="52.0"/>
+                    </VBox.margin>
+                </BorderPane>
+                <BorderPane prefHeight="37.0" prefWidth="200.0">
+                    <center>
+                        <TextField prefHeight="32.0" prefWidth="509.0" BorderPane.alignment="CENTER">
+                            <font>
+                                <Font size="14.0"/>
+                            </font>
+                            <BorderPane.margin>
+                                <Insets/>
+                            </BorderPane.margin>
+                        </TextField>
+                    </center>
+                    <left>
+                        <Label prefHeight="19.0" prefWidth="97.0" text="Destinationpath:" BorderPane.alignment="CENTER">
+                            <font>
+                                <Font size="13.0"/>
+                            </font>
+                        </Label>
+                    </left>
+                    <right>
+                        <HBox alignment="CENTER" fillHeight="false" prefHeight="99.0" prefWidth="74.0" spacing="10.0"
+                              BorderPane.alignment="CENTER">
+                            <children>
+                                <Button mnemonicParsing="false" onAction="#openDestSelection" prefHeight="25.0"
+                                        prefWidth="42.0">
+                                    <graphic>
+                                        <ImageView>
+                                            <image>
+                                                <Image url="@../icons/openedFolder.png"/>
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                    <tooltip>
+                                        <Tooltip text="Open the fileexplorer to select a folder.">
+                                            <font>
+                                                <Font size="14.0"/>
+                                            </font>
+                                        </Tooltip>
+                                    </tooltip>
+                                </Button>
+                                <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0"
+                                        maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                                        minWidth="-Infinity" mnemonicParsing="false" onAction="#addBackup"
+                                        prefHeight="32.0" prefWidth="32.0">
+                                    <graphic>
+                                        <ImageView fitHeight="32.0" fitWidth="32.0">
+                                            <image>
+                                                <Image url="@../icons/plus.png"/>
+                                            </image>
+                                            <viewport>
+                                                <Rectangle2D/>
+                                            </viewport>
+                                        </ImageView>
+                                    </graphic>
+                                    <tooltip>
+                                        <Tooltip text="Add the backup."/>
+                                    </tooltip>
+                                </Button>
+                            </children>
+                            <BorderPane.margin>
+                                <Insets left="10.0"/>
+                            </BorderPane.margin>
+                        </HBox>
+                    </right>
+                    <VBox.margin>
+                        <Insets bottom="10.0" left="60.0" right="10.0"/>
+                    </VBox.margin>
+                </BorderPane>
+            </children>
+            <BorderPane.margin>
+                <Insets/>
+            </BorderPane.margin>
+        </VBox>
+    </bottom>
+    <top>
+        <MenuBar BorderPane.alignment="CENTER">
+            <menus>
+                <Menu mnemonicParsing="false" text="Run">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#runBackup" text="Run backup"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Settings"/>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#showAboutMessageBox" text="About"/>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+</BorderPane>

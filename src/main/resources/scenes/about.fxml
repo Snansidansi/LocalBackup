@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<VBox prefHeight="122.0" prefWidth="395.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label prefHeight="20.0" prefWidth="123.0" text="About the program" underline="true">
+            <font>
+                <Font size="14.0"/>
+            </font>
+            <VBox.margin>
+                <Insets bottom="10.0" left="20.0" top="10.0"/>
+            </VBox.margin>
+        </Label>
+        <Label prefHeight="20.0" prefWidth="328.0" text="This is a simple program to automate local backups.">
+            <font>
+                <Font size="14.0"/>
+            </font>
+            <VBox.margin>
+                <Insets bottom="10.0" left="40.0"/>
+            </VBox.margin>
+        </Label>
+        <Label prefHeight="20.0" prefWidth="323.0" text="Github: github.com/Snansidansi/LocalBackup">
+            <font>
+                <Font size="14.0"/>
+            </font>
+            <VBox.margin>
+                <Insets left="40.0"/>
+            </VBox.margin>
+        </Label>
+        <Label prefHeight="20.0" prefWidth="189.0" text="Icons by: icons8.com">
+            <font>
+                <Font size="14.0"/>
+            </font>
+            <VBox.margin>
+                <Insets left="40.0"/>
+            </VBox.margin>
+        </Label>
+    </children>
+</VBox>
