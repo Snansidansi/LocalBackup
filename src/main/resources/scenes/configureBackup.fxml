@@ -9,7 +9,8 @@
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.snansidansi.gui.controller.ConfigureBackupSceneController">
     <center>
-        <TableView fx:id="table" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="246.0"
+        <TableView fx:id="tableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                   prefHeight="246.0"
                    prefWidth="749.0" BorderPane.alignment="CENTER">
             <columns>
                 <TableColumn fx:id="sourceTableCol" editable="false" maxWidth="1.7976931348623157E308" minWidth="340.0"

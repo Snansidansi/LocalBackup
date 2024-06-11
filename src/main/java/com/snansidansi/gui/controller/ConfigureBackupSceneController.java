@@ -1,11 +1,13 @@
 package com.snansidansi.gui.controller;
 
+import com.snansidansi.gui.util.TableEntry;
 import com.snansidansi.gui.windows.AboutStage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.HBox;
 import javafx.scene.shape.Line;
 
 import java.io.IOException;
@@ -15,16 +17,32 @@ public class ConfigureBackupSceneController {
     private Line middleLine;
 
     @FXML
-    private TableView<?> table;
+    private TableView<TableEntry> tableView;
 
     @FXML
-    private TableColumn<?, ?> sourceTableCol;
+    private TableColumn<TableEntry, String> sourceTableCol;
 
     @FXML
-    private TableColumn<?, ?> destinationTableCol;
+    private TableColumn<TableEntry, String> destinationTableCol;
 
     @FXML
-    private TableColumn<?, ?> removeTableCol;
+    private TableColumn<TableEntry, HBox> removeTableCol;
+
+    public TableView<TableEntry> getTableView() {
+        return tableView;
+    }
+
+    public TableColumn<TableEntry, String> getSourceTableCol() {
+        return sourceTableCol;
+    }
+
+    public TableColumn<TableEntry, String> getDestinationTableCol() {
+        return destinationTableCol;
+    }
+
+    public TableColumn<TableEntry, HBox> getRemoveTableCol() {
+        return removeTableCol;
+    }
 
     public void bindMiddleLineToWindowWidth(Scene scene) {
         middleLine.endXProperty().bind(scene.widthProperty());
@@ -32,7 +50,7 @@ public class ConfigureBackupSceneController {
 
     public void bindRemoveColToRight() {
         destinationTableCol.prefWidthProperty().bind(
-                table.widthProperty()
+                tableView.widthProperty()
                         .subtract(removeTableCol.getWidth())
                         .subtract(sourceTableCol.widthProperty())
         );
