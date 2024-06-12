@@ -84,14 +84,17 @@ public class BackupService {
     public static boolean validateBackupPaths(SrcDestPair pathPair)
             throws SourceDoesNotExistException, DestinationNoDirException {
         if (pathPair.srcPath().equals(pathPair.destPath())) return false;
-
-        if (Files.notExists(Path.of(pathPair.srcPath())))
-            throw new SourceDoesNotExistException();
-
-        if (!Files.isDirectory(Path.of(pathPair.destPath())))
-            throw new DestinationNoDirException();
-
+        if (validateSrcPath(pathPair.srcPath())) throw new SourceDoesNotExistException();
+        if (validateDestPath(pathPair.destPath())) throw new DestinationNoDirException();
         return true;
+    }
+
+    public static boolean validateSrcPath(String srcPath) {
+        return Files.notExists(Path.of(srcPath));
+    }
+
+    public static boolean validateDestPath(String destPath) {
+        return !Files.isDirectory(Path.of(destPath));
     }
 
     public boolean removeBackup(int... index) {
@@ -107,9 +110,9 @@ public class BackupService {
             return false;
         }
 
-        for (int i = index.length - 1; i >= 0; i--) {
+        for (int i = index.length - 1; i >= 0; i--)
             this.allBackups.remove(index[i]);
-        }
+
         return addBackup(this.allBackups);
     }
 
