@@ -29,6 +29,7 @@ public class ConfigureBackupScene {
         ConfigureBackupSceneController controller = loader.getController();
         controller.bindMiddleLineToWindowWidth(configureBackupScene);
         controller.bindRemoveColToRight();
+        controller.getDeleteConfirmLabel().setVisible(false);
 
         setupTable(controller, backupService);
     }

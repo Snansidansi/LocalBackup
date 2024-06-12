@@ -1,18 +1,26 @@
 package com.snansidansi.gui.controller;
 
+import com.snansidansi.BackupServiceInstance;
 import com.snansidansi.gui.util.TableEntry;
 import com.snansidansi.gui.windows.AboutStage;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Line;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConfigureBackupSceneController {
+    private boolean deletePressedOnce = false;
+
     @FXML
     private Line middleLine;
 
@@ -27,6 +35,13 @@ public class ConfigureBackupSceneController {
 
     @FXML
     private TableColumn<TableEntry, HBox> removeTableCol;
+
+    @FXML
+    private Label deleteConfirmLabel;
+
+    public Label getDeleteConfirmLabel() {
+        return deleteConfirmLabel;
+    }
 
     public TableView<TableEntry> getTableView() {
         return tableView;
@@ -73,7 +88,26 @@ public class ConfigureBackupSceneController {
     }
 
     public void deleteBackup(ActionEvent e) {
-        System.out.println("Delete Backup");
+        if (!deletePressedOnce) {
+            deleteConfirmLabel.setVisible(true);
+            deletePressedOnce = true;
+            return;
+        }
+
+        List<Integer> indicesToRemove = new ArrayList<>();
+        ObservableList<TableEntry> selectedItems = FXCollections.observableArrayList();
+        for (TableEntry entry : tableView.getItems()) {
+            if (entry.getCheckBox().isSelected()) {
+                indicesToRemove.add(entry.getIndex());
+                selectedItems.add(entry);
+            }
+        }
+
+        BackupServiceInstance.backupService.removeBackup(indicesToRemove.stream().mapToInt(i -> i).toArray());
+        tableView.getItems().removeAll(selectedItems);
+
+        deleteConfirmLabel.setVisible(false);
+        deletePressedOnce = false;
     }
 
     public void toggleFullPath(ActionEvent e) {

@@ -10,8 +10,7 @@
             fx:controller="com.snansidansi.gui.controller.ConfigureBackupSceneController">
     <center>
         <TableView fx:id="tableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                   prefHeight="246.0"
-                   prefWidth="749.0" BorderPane.alignment="CENTER">
+                   prefHeight="246.0" prefWidth="749.0" BorderPane.alignment="CENTER">
             <columns>
                 <TableColumn fx:id="sourceTableCol" editable="false" maxWidth="1.7976931348623157E308" minWidth="340.0"
                              prefWidth="340.0" sortable="false" text="Source"/>
@@ -46,9 +45,9 @@
                                         </Tooltip>
                                     </tooltip>
                                 </Button>
-                                <Label prefHeight="48.0" prefWidth="306.0"
+                                <Label fx:id="deleteConfirmLabel" prefHeight="48.0" prefWidth="306.0"
                                        text="Are you sure to remove all the selected backups? Press again to confirm."
-                                       textFill="RED" visible="false" wrapText="true">
+                                       textFill="RED" wrapText="true">
                                     <font>
                                         <Font size="14.0"/>
                                     </font>
