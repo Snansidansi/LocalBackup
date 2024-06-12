@@ -2,6 +2,10 @@ package com.snansidansi.backup.service;
 
 import com.snansidansi.backup.csv.CsvReader;
 import com.snansidansi.backup.csv.CsvWriter;
+import com.snansidansi.backup.exceptions.DestinationNoDirException;
+import com.snansidansi.backup.exceptions.DestinationPathIsInSourcePathException;
+import com.snansidansi.backup.exceptions.SourceDoesNotExistException;
+import com.snansidansi.backup.exceptions.StringsAreEqualException;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +15,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,20 +88,37 @@ public class BackupService {
         return true;
     }
 
-    public static boolean validateBackupPaths(SrcDestPair pathPair)
-            throws SourceDoesNotExistException, DestinationNoDirException {
-        if (pathPair.srcPath().equals(pathPair.destPath())) return false;
-        if (validateSrcPath(pathPair.srcPath())) throw new SourceDoesNotExistException();
-        if (validateDestPath(pathPair.destPath())) throw new DestinationNoDirException();
-        return true;
+    public static void validateBackupPaths(SrcDestPair pathPair)
+            throws SourceDoesNotExistException, DestinationNoDirException, StringsAreEqualException,
+            DestinationPathIsInSourcePathException {
+        if (pathPair.srcPath().equals(pathPair.destPath())) throw new StringsAreEqualException();
+        if (!validateSrcPath(pathPair.srcPath())) throw new SourceDoesNotExistException();
+        if (!validateDestPath(pathPair.destPath())) throw new DestinationNoDirException();
+
+        // Check if the destination path is a sub path of the source path
+        Iterator<Path> srcPathIterator = Path.of(pathPair.srcPath()).iterator();
+        Iterator<Path> destPathIterator = Path.of(pathPair.destPath()).iterator();
+
+        while (srcPathIterator.hasNext() && destPathIterator.hasNext()) {
+            if (!srcPathIterator.next().equals(destPathIterator.next())) return;
+        }
+
+        if (!srcPathIterator.hasNext()) throw new DestinationPathIsInSourcePathException();
     }
 
     public static boolean validateSrcPath(String srcPath) {
-        return Files.notExists(Path.of(srcPath));
+        return !Files.notExists(Path.of(srcPath));
     }
 
-    public static boolean validateDestPath(String destPath) {
-        return !Files.isDirectory(Path.of(destPath));
+    public static boolean validateDestPath(String destPathString) {
+        Path destPath = Path.of(destPathString);
+        if (Files.isDirectory(destPath)) return true;
+        try {
+            if (Files.notExists(destPath.getRoot())) return false;
+        } catch (NullPointerException unused) {
+            return false;
+        }
+        return true;
     }
 
     public boolean removeBackup(int... index) {

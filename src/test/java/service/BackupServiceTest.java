@@ -1,9 +1,11 @@
 package service;
 
 import com.snansidansi.backup.csv.CsvWriter;
+import com.snansidansi.backup.exceptions.DestinationNoDirException;
+import com.snansidansi.backup.exceptions.DestinationPathIsInSourcePathException;
+import com.snansidansi.backup.exceptions.SourceDoesNotExistException;
+import com.snansidansi.backup.exceptions.StringsAreEqualException;
 import com.snansidansi.backup.service.BackupService;
-import com.snansidansi.backup.service.DestinationNoDirException;
-import com.snansidansi.backup.service.SourceDoesNotExistException;
 import com.snansidansi.backup.service.SrcDestPair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -21,9 +23,9 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class BackupServiceTest {
-    private final String exampleBackupDataPath = "src/test/resources/service/example-backup-data.csv";
-    private final String existingFilePath = "src/test/resources/service/ExistingFile.txt";
-    private final String existingDirPath = "src/test/resources/service";
+    private final String exampleBackupDataPath = Paths.get("src/test/resources/service/example-backup-data.csv").toAbsolutePath().toString();
+    private final String existingFilePath = Paths.get("src/test/resources/service/ExistingFile.txt").toAbsolutePath().toString();
+    private final String existingDirPath = Paths.get("src/test/resources/service").toAbsolutePath().toString();
 
     private final Path backupExSrc = Path.of("src/test/resources/service/backupExamples");
 
@@ -106,25 +108,37 @@ public class BackupServiceTest {
     @Test
     void validateBackupPathsDestinationNoDirException() {
         Assertions.assertThrows(DestinationNoDirException.class,
-                () -> BackupService.validateBackupPaths(new SrcDestPair(existingFilePath, "fksdajsdfsvd")));
+                () -> BackupService.validateBackupPaths(new SrcDestPair(existingFilePath, "fksdajsdfsvd.txt")));
     }
 
     @Test
     void validateBackupPathsSourceAndDestinationAreEqual() {
-        try {
-            Assertions.assertFalse(BackupService.validateBackupPaths(new SrcDestPair(existingDirPath, existingDirPath)));
-        } catch (Exception e) {
-            Assertions.fail(e.getMessage());
-        }
+        Assertions.assertThrows(StringsAreEqualException.class, () -> {
+            BackupService.validateBackupPaths(new SrcDestPair(existingDirPath, existingDirPath));
+        });
     }
 
     @Test
     void validateBackupPathsSourceAndDestinationAreValid() {
-        try {
-            Assertions.assertTrue(BackupService.validateBackupPaths(new SrcDestPair(existingFilePath, existingDirPath)));
-        } catch (Exception e) {
-            Assertions.fail(e.getMessage());
-        }
+        Assertions.assertDoesNotThrow(() -> {
+            BackupService.validateBackupPaths(new SrcDestPair(existingFilePath, existingDirPath));
+        });
+    }
+
+    @Test
+    void validateBackupsPathsDestinationIsDirButDoesNotExist() {
+        Assertions.assertDoesNotThrow(() -> {
+            BackupService.validateBackupPaths(new SrcDestPair(existingFilePath,
+                    Path.of(existingFilePath).getParent().resolve("newDir").toFile().getAbsolutePath()));
+        });
+    }
+
+    @Test
+    void validateBackupPathsDestinationPathIsSubPathOfSourcePath() {
+        Assertions.assertThrows(DestinationPathIsInSourcePathException.class, () -> {
+            BackupService.validateBackupPaths(new SrcDestPair(existingDirPath,
+                    Path.of(existingFilePath).resolve("SubDir").toString()));
+        });
     }
 
     @Test

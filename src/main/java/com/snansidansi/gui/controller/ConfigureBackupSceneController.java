@@ -1,9 +1,11 @@
 package com.snansidansi.gui.controller;
 
 import com.snansidansi.BackupServiceInstance;
+import com.snansidansi.backup.exceptions.DestinationNoDirException;
+import com.snansidansi.backup.exceptions.DestinationPathIsInSourcePathException;
+import com.snansidansi.backup.exceptions.SourceDoesNotExistException;
+import com.snansidansi.backup.exceptions.StringsAreEqualException;
 import com.snansidansi.backup.service.BackupService;
-import com.snansidansi.backup.service.DestinationNoDirException;
-import com.snansidansi.backup.service.SourceDoesNotExistException;
 import com.snansidansi.backup.service.SrcDestPair;
 import com.snansidansi.gui.util.TableEntry;
 import com.snansidansi.gui.windows.AboutStage;
@@ -113,6 +115,7 @@ public class ConfigureBackupSceneController {
 
         File selectedFile = srcSelection.showOpenDialog(new Stage());
         srcPathTextField.setText(selectedFile.getAbsolutePath());
+        invalidSrcPathLabel.setVisible(false);
     }
 
     public void openSrcFolderSelection() {
@@ -121,6 +124,7 @@ public class ConfigureBackupSceneController {
 
         File selectedFolder = srcSelection.showDialog(new Stage());
         srcPathTextField.setText(selectedFolder.getAbsolutePath());
+        invalidSrcPathLabel.setVisible(false);
     }
 
     public void openDestSelection() {
@@ -129,6 +133,7 @@ public class ConfigureBackupSceneController {
 
         File selectedFolder = destSelection.showDialog(new Stage());
         destPathTextField.setText(selectedFolder.getAbsolutePath());
+        invalidDestPathLabel.setVisible(false);
     }
 
     public void runBackup() {
@@ -140,13 +145,34 @@ public class ConfigureBackupSceneController {
 
         try {
             BackupService.validateBackupPaths(pathPair);
+        } catch (StringsAreEqualException unused) {
+            invalidSrcPathLabel.setVisible(true);
+            invalidDestPathLabel.setVisible(false);
+            invalidSrcPathLabel.setText("Source and destination can't be the same.");
+            return;
         } catch (SourceDoesNotExistException unused) {
             invalidSrcPathLabel.setVisible(true);
-            invalidSrcPathLabel.setText("Source path does not exist");
+            invalidSrcPathLabel.setText("Source path does not exist.");
             return;
         } catch (DestinationNoDirException unused) {
             invalidDestPathLabel.setVisible(true);
-            invalidDestPathLabel.setText("Destination path is no directory");
+            invalidSrcPathLabel.setVisible((false));
+            invalidDestPathLabel.setText("Destination path is no directory.");
+            return;
+        } catch (DestinationPathIsInSourcePathException unused) {
+            invalidDestPathLabel.setVisible(true);
+            invalidSrcPathLabel.setVisible(false);
+            invalidDestPathLabel.setText("Destination directory can't be in the source directory.");
+        }
+
+        if (srcPathTextField.getText().isBlank()) {
+            invalidSrcPathLabel.setVisible(true);
+            invalidSrcPathLabel.setText("Source path can't be empty.");
+            return;
+        } else if (destPathTextField.getText().isBlank()) {
+            invalidDestPathLabel.setVisible(true);
+            invalidSrcPathLabel.setVisible(false);
+            invalidDestPathLabel.setText("Destination path can't be empty.");
             return;
         }
 
