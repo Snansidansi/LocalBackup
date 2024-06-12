@@ -30,8 +30,15 @@ public class ConfigureBackupScene {
         controller.bindMiddleLineToWindowWidth(configureBackupScene);
         controller.bindRemoveColToRight();
         controller.getDeleteConfirmLabel().setVisible(false);
+        controller.getInvalidSrcPathLabel().setVisible(false);
+        controller.getInvalidDestPathLabel().setVisible(false);
 
         setupTable(controller, backupService);
+    }
+
+    static public int addTableElementsNum() {
+        tableElementsNum++;
+        return tableElementsNum - 1;
     }
 
     static private void setupTable(ConfigureBackupSceneController controller, BackupService backupService) {

@@ -78,15 +78,35 @@
                         </Line>
                     </bottom>
                 </BorderPane>
-                <Label prefHeight="25.0" prefWidth="113.0" text="Add new backup:" underline="true" VBox.vgrow="NEVER">
-                    <font>
-                        <Font size="14.0"/>
-                    </font>
+                <HBox spacing="24.0" VBox.vgrow="NEVER">
                     <VBox.margin>
                         <Insets bottom="10.0" left="20.0" top="10.0"/>
                     </VBox.margin>
-                </Label>
-                <BorderPane prefHeight="39.0" prefWidth="200.0">
+                    <children>
+                        <Label prefHeight="25.0" prefWidth="113.0" text="Add new backup:" underline="true">
+                            <font>
+                                <Font size="14.0"/>
+                            </font>
+                        </Label>
+                        <VBox>
+                            <children>
+                                <Label fx:id="invalidSrcPathLabel" prefHeight="20.0" prefWidth="585.0"
+                                       text="Invalid source path" textFill="RED" wrapText="true">
+                                    <font>
+                                        <Font size="14.0"/>
+                                    </font>
+                                </Label>
+                                <Label fx:id="invalidDestPathLabel" prefHeight="20.0" prefWidth="585.0"
+                                       text="Invalid destination path" textFill="RED" wrapText="true">
+                                    <font>
+                                        <Font size="14.0"/>
+                                    </font>
+                                </Label>
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+                <BorderPane prefHeight="39.0" prefWidth="398.0">
                     <left>
                         <Label prefHeight="19.0" prefWidth="97.0" text="Sourcepath:" BorderPane.alignment="CENTER">
                             <font>
@@ -98,41 +118,64 @@
                         </Label>
                     </left>
                     <center>
-                        <TextField prefHeight="32.0" prefWidth="508.0" BorderPane.alignment="CENTER">
+                        <TextField fx:id="srcPathTextField" prefHeight="32.0" prefWidth="509.0"
+                                   BorderPane.alignment="CENTER">
                             <font>
                                 <Font size="14.0"/>
                             </font>
                         </TextField>
                     </center>
                     <right>
-                        <Button mnemonicParsing="false" onAction="#openSrcSelection" prefHeight="25.0" prefWidth="42.0"
-                                BorderPane.alignment="CENTER">
-                            <graphic>
-                                <ImageView>
-                                    <image>
-                                        <Image url="@../icons/openedFolder.png"/>
-                                    </image>
-                                </ImageView>
-                            </graphic>
+                        <HBox alignment="CENTER" fillHeight="false" prefHeight="66.0" prefWidth="0.0" spacing="10.0">
                             <BorderPane.margin>
                                 <Insets left="8.0"/>
                             </BorderPane.margin>
-                            <tooltip>
-                                <Tooltip text="Open the file explorer to select a file or folder.">
-                                    <font>
-                                        <Font size="14.0"/>
-                                    </font>
-                                </Tooltip>
-                            </tooltip>
+                            <children>
+                                <Button mnemonicParsing="false" onAction="#openSrcFileSelection" prefHeight="25.0"
+                                        prefWidth="42.0">
+                                    <graphic>
+                                        <ImageView fitHeight="25.0" fitWidth="25.0">
+                                            <image>
+                                                <Image url="@../icons/addFile.png"/>
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                    <tooltip>
+                                        <Tooltip text="Open the file explorer to select a file or files.">
+                                            <font>
+                                                <Font size="14.0"/>
+                                            </font>
+                                        </Tooltip>
+                                    </tooltip>
+                                </Button>
+                                <Button mnemonicParsing="false" onAction="#openSrcFolderSelection" prefHeight="25.0"
+                                        prefWidth="42.0">
+                                    <graphic>
+                                        <ImageView>
+                                            <image>
+                                                <Image url="@../icons/openedFolder.png"/>
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                    <tooltip>
+                                        <Tooltip text="Open the file explorer to select a folder.">
+                                            <font>
+                                                <Font size="14.0"/>
+                                            </font>
+                                        </Tooltip>
+                                    </tooltip>
                         </Button>
+                            </children>
+                        </HBox>
                     </right>
                     <VBox.margin>
-                        <Insets left="60.0" right="52.0"/>
+                        <Insets bottom="5.0" left="60.0" right="52.0"/>
                     </VBox.margin>
                 </BorderPane>
                 <BorderPane prefHeight="37.0" prefWidth="200.0">
                     <center>
-                        <TextField prefHeight="32.0" prefWidth="509.0" BorderPane.alignment="CENTER">
+                        <TextField fx:id="destPathTextField" prefHeight="32.0" prefWidth="509.0"
+                                   BorderPane.alignment="CENTER">
                             <font>
                                 <Font size="14.0"/>
                             </font>
