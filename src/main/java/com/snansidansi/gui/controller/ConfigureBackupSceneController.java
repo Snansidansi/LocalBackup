@@ -183,7 +183,11 @@ public class ConfigureBackupSceneController {
             return;
         }
 
-        BackupServiceInstance.backupService.addBackup(pathPair);
+        if (!BackupServiceInstance.backupService.addBackup(pathPair)) {
+            invalidSrcPathLabel.setVisible(true);
+            invalidSrcPathLabel.setText("Error: Backup could not be added (view log)");
+            return;
+        }
         tableView.getItems().add(new TableEntry(pathPair.srcPath(), pathPair.destPath(), numberOfTableElements));
         numberOfTableElements++;
 
