@@ -6,11 +6,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class SimpleBackupGUI extends Application {
+public class LocalBackupGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        primaryStage.setTitle("Simple Backup");
+        primaryStage.setTitle("Local Backup");
 
         Image appIcon = new Image("/icons/appIcon.png");
         primaryStage.getIcons().add(appIcon);
