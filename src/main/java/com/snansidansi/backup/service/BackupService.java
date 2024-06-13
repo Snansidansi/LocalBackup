@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class BackupService {
     private final String backupConfigFilePath;
-    private final List<SrcDestPair> allBackups;
+    private List<SrcDestPair> allBackups;
 
     public BackupService(String backupConfigFilePath) {
         this.backupConfigFilePath = Paths.get(backupConfigFilePath).toString();
@@ -68,10 +68,20 @@ public class BackupService {
     }
 
     public boolean addBackup(List<SrcDestPair> newBackups) {
-        try (CsvWriter csvWriter = new CsvWriter(this.backupConfigFilePath, true)) {
-            for (SrcDestPair data : newBackups)
+        boolean append = Files.exists(Path.of(this.backupConfigFilePath));
+
+        try {
+            if (!append) Files.createDirectories(Path.of(this.backupConfigFilePath).getParent());
+        } catch (IOException unused) {
+            return false;
+        }
+
+        try (CsvWriter csvWriter = new CsvWriter(this.backupConfigFilePath, append)) {
+            for (SrcDestPair data : newBackups) {
                 csvWriter.writeLine(Path.of(data.srcPath()).toAbsolutePath().toString(),
                         Path.of(data.destPath()).toAbsolutePath().toString());
+            }
+            this.allBackups = getAllBackups();
         } catch (IOException e) {
             return false;
         }
@@ -79,9 +89,18 @@ public class BackupService {
     }
 
     public boolean addBackup(SrcDestPair pathPair) {
-        try (CsvWriter csvWriter = new CsvWriter(this.backupConfigFilePath, true)) {
+        boolean append = Files.exists(Path.of(this.backupConfigFilePath));
+
+        try {
+            if (!append) Files.createDirectories(Path.of(this.backupConfigFilePath).getParent());
+        } catch (IOException unused) {
+            return false;
+        }
+
+        try (CsvWriter csvWriter = new CsvWriter(this.backupConfigFilePath, append)) {
             csvWriter.writeLine(Path.of(pathPair.srcPath()).toAbsolutePath().toString(),
                     Path.of(pathPair.destPath()).toAbsolutePath().toString());
+            this.allBackups.add(pathPair);
         } catch (IOException e) {
             return false;
         }
