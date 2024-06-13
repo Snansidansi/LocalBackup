@@ -216,4 +216,22 @@ public class ConfigureBackupSceneController {
     public void showAboutMessageBox() throws IOException {
         AboutStage.showWindow();
     }
+
+    public void checkSrcPathInput() {
+        if (!BackupService.validateSrcPath(srcPathTextField.getText())) {
+            invalidSrcPathLabel.setVisible(true);
+            invalidSrcPathLabel.setText("Source path does not exist");
+            return;
+        }
+        invalidSrcPathLabel.setVisible(false);
+    }
+
+    public void checkDestPathInput() {
+        if (!BackupService.validateDestPath(destPathTextField.getText())) {
+            invalidDestPathLabel.setVisible(true);
+            invalidDestPathLabel.setText("Destination path is no directory");
+            return;
+        }
+        invalidDestPathLabel.setVisible(false);
+    }
 }
