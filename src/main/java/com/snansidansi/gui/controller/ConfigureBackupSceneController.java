@@ -176,14 +176,19 @@ public class ConfigureBackupSceneController {
             return;
         }
 
+        if (BackupServiceInstance.backupService.checkIfBackupAlreadyExists(pathPair)) {
+            invalidSrcPathLabel.setVisible(true);
+            invalidSrcPathLabel.setText("Backup already exists.");
+            invalidDestPathLabel.setVisible(false);
+            return;
+        }
+
         BackupServiceInstance.backupService.addBackup(pathPair);
         tableView.getItems().add(new TableEntry(pathPair.srcPath(), pathPair.destPath(), numberOfTableElements));
         numberOfTableElements++;
 
         invalidSrcPathLabel.setVisible(false);
         invalidDestPathLabel.setVisible(false);
-        srcPathTextField.setText("");
-        destPathTextField.setText("");
     }
 
     public void deleteBackup() {
