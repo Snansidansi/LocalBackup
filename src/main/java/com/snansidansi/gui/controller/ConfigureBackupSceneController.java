@@ -142,7 +142,7 @@ public class ConfigureBackupSceneController {
     }
 
     public void runBackup() {
-        System.out.println("Run backup");
+        BackupServiceInstance.backupService.runBackup();
     }
 
     public void addBackup() {

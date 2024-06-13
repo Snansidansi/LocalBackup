@@ -31,6 +31,8 @@ public class BackupService {
     public void runBackup() {
         for (SrcDestPair pathPair : allBackups) {
             Path srcPath = Path.of(pathPair.srcPath());
+            if (Files.notExists(srcPath)) return;
+
             Path destPath = Path.of(pathPair.destPath()).resolve(srcPath.getFileName());
             if (Files.isDirectory(srcPath)) backupDir(srcPath, destPath);
             else if (Files.isRegularFile(srcPath)) backupFile(srcPath, destPath);
