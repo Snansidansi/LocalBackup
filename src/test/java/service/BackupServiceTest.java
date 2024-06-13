@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -27,9 +28,12 @@ public class BackupServiceTest {
     private final Path backupExSrc = Path.of("src/test/resources/service/backupExamples");
 
     private final SrcDestPair[] exampleData = {
-            new SrcDestPair("a", "aa"),
-            new SrcDestPair("b", "bb"),
-            new SrcDestPair("c", "cc")
+            new SrcDestPair(Paths.get("aa").toAbsolutePath().toString(),
+                    Paths.get("ab").toAbsolutePath().toString()),
+            new SrcDestPair(Paths.get("ba").toAbsolutePath().toString(),
+                    Paths.get("bb").toAbsolutePath().toString()),
+            new SrcDestPair(Paths.get("ca").toAbsolutePath().toString(),
+                    Paths.get("cb").toAbsolutePath().toString())
     };
 
     @TempDir(cleanup = CleanupMode.ALWAYS)
@@ -80,7 +84,7 @@ public class BackupServiceTest {
         String filePath = createBackupConfigFile("deleteBackup.csv", exampleData);
         BackupService backupService = new BackupService(filePath);
         backupService.removeBackup(1, 2);
-        assertFileContent(filePath, 1, "a;aa");
+        assertFileContent(filePath, 1, exampleData[0].srcPath() + ";" + exampleData[0].destPath());
     }
 
     @ParameterizedTest

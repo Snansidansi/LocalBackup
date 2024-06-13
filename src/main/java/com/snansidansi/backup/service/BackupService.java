@@ -65,7 +65,8 @@ public class BackupService {
     public boolean addBackup(List<SrcDestPair> newBackups) {
         try (CsvWriter csvWriter = new CsvWriter(this.backupConfigFilePath, true)) {
             for (SrcDestPair data : newBackups)
-                csvWriter.writeLine(data.srcPath(), data.destPath());
+                csvWriter.writeLine(Path.of(data.srcPath()).toAbsolutePath().toString(),
+                        Path.of(data.destPath()).toAbsolutePath().toString());
         } catch (IOException e) {
             return false;
         }
@@ -74,7 +75,8 @@ public class BackupService {
 
     public boolean addBackup(SrcDestPair pathPair) {
         try (CsvWriter csvWriter = new CsvWriter(this.backupConfigFilePath, true)) {
-            csvWriter.writeLine(pathPair.srcPath(), pathPair.destPath());
+            csvWriter.writeLine(Path.of(pathPair.srcPath()).toAbsolutePath().toString(),
+                    Path.of(pathPair.destPath()).toAbsolutePath().toString());
         } catch (IOException e) {
             return false;
         }
