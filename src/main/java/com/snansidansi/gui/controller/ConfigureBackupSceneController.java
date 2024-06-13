@@ -9,8 +9,6 @@ import com.snansidansi.backup.service.BackupService;
 import com.snansidansi.backup.service.SrcDestPair;
 import com.snansidansi.gui.util.TableEntry;
 import com.snansidansi.gui.windows.AboutStage;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -102,6 +100,13 @@ public class ConfigureBackupSceneController {
 
         removeTableCol.setCellValueFactory(
                 new PropertyValueFactory<>("checkBoxBox"));
+
+        fillTable();
+    }
+
+    private void fillTable() {
+        this.numberOfTableElements = 0;
+        tableView.getItems().clear();
 
         for (SrcDestPair pathPair : BackupServiceInstance.backupService.getAllBackups()) {
             tableView.getItems().add(new TableEntry(pathPair.srcPath(), pathPair.destPath(), numberOfTableElements));
@@ -203,16 +208,15 @@ public class ConfigureBackupSceneController {
         }
 
         List<Integer> indicesToRemove = new ArrayList<>();
-        ObservableList<TableEntry> selectedItems = FXCollections.observableArrayList();
         for (TableEntry entry : tableView.getItems()) {
             if (entry.getCheckBox().isSelected()) {
                 indicesToRemove.add(entry.getIndex());
-                selectedItems.add(entry);
             }
         }
 
         BackupServiceInstance.backupService.removeBackup(indicesToRemove.stream().mapToInt(i -> i).toArray());
-        tableView.getItems().removeAll(selectedItems);
+
+        fillTable();
 
         deleteConfirmLabel.setVisible(false);
         deletePressedOnce = false;
