@@ -149,16 +149,39 @@ public class BackupService {
         if (index[index.length - 1] > allBackups.size() - 1) return false;
         if (index[0] < 0) return false;
 
+        Path backupConfigFileCopyPath = Path.of(this.backupConfigFilePath).getParent()
+                .resolve(this.backupConfigFilePath.hashCode() + ".csv");
         try {
+            //Copies the file to the same location but with the hashcode as name
+            Files.copy(Path.of(backupConfigFilePath), backupConfigFileCopyPath, StandardCopyOption.REPLACE_EXISTING);
+
             Files.deleteIfExists(Path.of(this.backupConfigFilePath));
         } catch (IOException e) {
             return false;
         }
 
+        List<SrcDestPair> allBackupsCopy = new ArrayList<>(this.allBackups);
         for (int i = index.length - 1; i >= 0; i--)
             this.allBackups.remove(index[i]);
 
-        return addBackup(this.allBackups);
+        boolean addSuccessful = addBackup((this.allBackups));
+        if (!addSuccessful) {
+            try {
+                Files.deleteIfExists(Path.of(this.backupConfigFilePath));
+                Files.move(backupConfigFileCopyPath, Path.of(this.backupConfigFilePath));
+
+                this.allBackups.clear();
+                this.allBackups.addAll(allBackupsCopy);
+            } catch (IOException unused) {
+            }
+        } else {
+            try {
+                Files.delete(backupConfigFileCopyPath);
+            } catch (IOException unused) {
+            }
+        }
+
+        return addSuccessful;
     }
 
     private List<SrcDestPair> readBackups() {
