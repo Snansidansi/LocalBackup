@@ -105,10 +105,10 @@ public class ConfigureBackupSceneController {
         this.removeTableCol.setCellValueFactory(
                 new PropertyValueFactory<>("checkBoxHBox"));
 
-        refillTable(true, true);
+        refillTable(true);
     }
 
-    private void refillTable(boolean fullPath, boolean changedValues) {
+    private void refillTable(boolean changedValues) {
         this.numberOfTableElements = 0;
         List<Integer> checkedElements = null;
 
@@ -116,24 +116,30 @@ public class ConfigureBackupSceneController {
         this.tableView.getItems().clear();
 
         for (SrcDestPair pathPair : BackupServiceSingleton.backupService.getAllBackups()) {
-            Path srcPath = Path.of(pathPair.srcPath());
-            Path destPath = Path.of(pathPair.destPath());
-
-            if (!fullPath) {
-                if (srcPath.getFileName() != null) srcPath = srcPath.getFileName();
-                if (destPath.getFileName() != null) destPath = destPath.getFileName();
-            }
-
+            pathPair = adjustSrcDestPairToPathMode(pathPair);
             boolean checked = false;
+
             if (!changedValues && !checkedElements.isEmpty() && this.numberOfTableElements == checkedElements.getFirst()) {
                 checkedElements.removeFirst();
                 checked = true;
             }
 
             this.tableView.getItems().add(
-                    new TableEntry(srcPath.toString(), destPath.toString(), this.numberOfTableElements, checked));
+                    new TableEntry(pathPair.srcPath(), pathPair.destPath(), this.numberOfTableElements, checked));
             this.numberOfTableElements++;
         }
+    }
+
+    private SrcDestPair adjustSrcDestPairToPathMode(SrcDestPair pathPair) {
+        Path srcPath = Path.of(pathPair.srcPath());
+        Path destPath = Path.of(pathPair.destPath());
+
+        if (!this.showFullPathsCheckBox.isSelected()) {
+            if (srcPath.getFileName() != null) srcPath = srcPath.getFileName();
+            if (destPath.getFileName() != null) destPath = destPath.getFileName();
+        }
+
+        return new SrcDestPair(srcPath.toString(), destPath.toString());
     }
 
     private List<Integer> getCheckedElementsFromTable() {
@@ -245,6 +251,8 @@ public class ConfigureBackupSceneController {
             this.invalidSrcPathLabel.setText("Error: Backup could not be added (view log)");
             return;
         }
+
+        pathPair = adjustSrcDestPairToPathMode(pathPair);
         this.tableView.getItems().add(new TableEntry(pathPair.srcPath(), pathPair.destPath(), this.numberOfTableElements, false));
         numberOfTableElements++;
 
@@ -269,14 +277,14 @@ public class ConfigureBackupSceneController {
         List<Integer> indicesToRemove = getCheckedElementsFromTable();
         BackupServiceSingleton.backupService.removeBackup(indicesToRemove.stream().mapToInt(i -> i).toArray());
 
-        refillTable(this.showFullPathsCheckBox.isSelected(), true);
+        refillTable(true);
 
         this.deleteConfirmLabel.setVisible(false);
         this.deletePressedOnce = false;
     }
 
     public void toggleFullPath() {
-        refillTable(this.showFullPathsCheckBox.isSelected(), false);
+        refillTable(false);
     }
 
     public void showAboutMessageBox() throws IOException {
