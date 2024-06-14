@@ -1,14 +1,14 @@
 package com.snansidansi.gui.controller;
 
-import com.snansidansi.BackupServiceInstance;
 import com.snansidansi.backup.exceptions.DestinationNoDirException;
 import com.snansidansi.backup.exceptions.DestinationPathIsInSourcePathException;
 import com.snansidansi.backup.exceptions.SourceDoesNotExistException;
 import com.snansidansi.backup.exceptions.StringsAreEqualException;
 import com.snansidansi.backup.service.BackupService;
-import com.snansidansi.backup.service.SrcDestPair;
+import com.snansidansi.backup.util.SrcDestPair;
 import com.snansidansi.gui.util.TableEntry;
 import com.snansidansi.gui.windows.AboutStage;
+import com.snansidansi.singletons.BackupServiceInstance;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -70,37 +70,37 @@ public class ConfigureBackupSceneController {
         bindMiddleLineToWindowWidth();
         bindRemoveColToRight();
 
-        deleteConfirmLabel.setVisible(false);
-        invalidSrcPathLabel.setVisible(false);
-        invalidDestPathLabel.setVisible(false);
+        this.deleteConfirmLabel.setVisible(false);
+        this.invalidSrcPathLabel.setVisible(false);
+        this.invalidDestPathLabel.setVisible(false);
 
         setupTable();
     }
 
     private void bindMiddleLineToWindowWidth() {
-        middleLine.endXProperty().bind(mainContainer.widthProperty());
+        this.middleLine.endXProperty().bind(this.mainContainer.widthProperty());
     }
 
     private void bindRemoveColToRight() {
-        destinationTableCol.prefWidthProperty().bind(
-                tableView.widthProperty()
-                        .subtract(removeTableCol.getWidth())
-                        .subtract(sourceTableCol.widthProperty())
+        this.destinationTableCol.prefWidthProperty().bind(
+                this.tableView.widthProperty()
+                        .subtract(this.removeTableCol.getWidth())
+                        .subtract(this.sourceTableCol.widthProperty())
                         .subtract(2)
         );
     }
 
     private void setupTable() {
-        tableView.setPlaceholder(new Label("No backups found"));
+        this.tableView.setPlaceholder(new Label("No backups found"));
 
-        sourceTableCol.setCellValueFactory(
+        this.sourceTableCol.setCellValueFactory(
                 new PropertyValueFactory<>("srcPath"));
 
-        destinationTableCol.setCellValueFactory(
+        this.destinationTableCol.setCellValueFactory(
                 new PropertyValueFactory<>("destPath"));
 
-        removeTableCol.setCellValueFactory(
-                new PropertyValueFactory<>("checkBoxBox"));
+        this.removeTableCol.setCellValueFactory(
+                new PropertyValueFactory<>("checkBoxHBox"));
 
         refillTable(true, true);
     }
@@ -110,7 +110,7 @@ public class ConfigureBackupSceneController {
         List<Integer> checkedElements = null;
 
         if (!changedValues) checkedElements = getCheckedElementsFromTable();
-        tableView.getItems().clear();
+        this.tableView.getItems().clear();
 
         for (SrcDestPair pathPair : BackupServiceInstance.backupService.getAllBackups()) {
             Path srcPath = Path.of(pathPair.srcPath());
@@ -122,19 +122,20 @@ public class ConfigureBackupSceneController {
             }
 
             boolean checked = false;
-            if (!changedValues && !checkedElements.isEmpty() && numberOfTableElements == checkedElements.getFirst()) {
+            if (!changedValues && !checkedElements.isEmpty() && this.numberOfTableElements == checkedElements.getFirst()) {
                 checkedElements.removeFirst();
                 checked = true;
             }
 
-            tableView.getItems().add(new TableEntry(srcPath.toString(), destPath.toString(), numberOfTableElements, checked));
-            numberOfTableElements++;
+            this.tableView.getItems().add(
+                    new TableEntry(srcPath.toString(), destPath.toString(), this.numberOfTableElements, checked));
+            this.numberOfTableElements++;
         }
     }
 
     private List<Integer> getCheckedElementsFromTable() {
         List<Integer> indicesToRemove = new ArrayList<>();
-        for (TableEntry entry : tableView.getItems()) {
+        for (TableEntry entry : this.tableView.getItems()) {
             if (entry.getCheckBox().isSelected()) {
                 indicesToRemove.add(entry.getIndex());
             }
@@ -147,8 +148,8 @@ public class ConfigureBackupSceneController {
         srcSelection.setTitle("Select source file");
 
         File selectedFile = srcSelection.showOpenDialog(new Stage());
-        srcPathTextField.setText(selectedFile.getAbsolutePath());
-        invalidSrcPathLabel.setVisible(false);
+        this.srcPathTextField.setText(selectedFile.getAbsolutePath());
+        this.invalidSrcPathLabel.setVisible(false);
     }
 
     public void openSrcFolderSelection() {
@@ -156,8 +157,8 @@ public class ConfigureBackupSceneController {
         srcSelection.setTitle("Select source folder");
 
         File selectedFolder = srcSelection.showDialog(new Stage());
-        srcPathTextField.setText(selectedFolder.getAbsolutePath());
-        invalidSrcPathLabel.setVisible(false);
+        this.srcPathTextField.setText(selectedFolder.getAbsolutePath());
+        this.invalidSrcPathLabel.setVisible(false);
     }
 
     public void openDestSelection() {
@@ -165,8 +166,8 @@ public class ConfigureBackupSceneController {
         destSelection.setTitle("Select destination folder");
 
         File selectedFolder = destSelection.showDialog(new Stage());
-        destPathTextField.setText(selectedFolder.getAbsolutePath());
-        invalidDestPathLabel.setVisible(false);
+        this.destPathTextField.setText(selectedFolder.getAbsolutePath());
+        this.invalidDestPathLabel.setVisible(false);
     }
 
     public void runBackup() {
@@ -174,78 +175,78 @@ public class ConfigureBackupSceneController {
     }
 
     public void addBackup() {
-        SrcDestPair pathPair = new SrcDestPair(srcPathTextField.getText(), destPathTextField.getText());
+        SrcDestPair pathPair = new SrcDestPair(this.srcPathTextField.getText(), this.destPathTextField.getText());
 
         try {
             BackupService.validateBackupPaths(pathPair);
         } catch (StringsAreEqualException unused) {
-            invalidSrcPathLabel.setVisible(true);
-            invalidDestPathLabel.setVisible(false);
-            invalidSrcPathLabel.setText("Source and destination can't be the same.");
+            this.invalidSrcPathLabel.setVisible(true);
+            this.invalidDestPathLabel.setVisible(false);
+            this.invalidSrcPathLabel.setText("Source and destination can't be the same.");
             return;
         } catch (SourceDoesNotExistException unused) {
-            invalidSrcPathLabel.setVisible(true);
-            invalidSrcPathLabel.setText("Source path does not exist.");
+            this.invalidSrcPathLabel.setVisible(true);
+            this.invalidSrcPathLabel.setText("Source path does not exist.");
             return;
         } catch (DestinationNoDirException unused) {
-            invalidDestPathLabel.setVisible(true);
-            invalidSrcPathLabel.setVisible((false));
-            invalidDestPathLabel.setText("Destination path is no directory.");
+            this.invalidDestPathLabel.setVisible(true);
+            this.invalidSrcPathLabel.setVisible((false));
+            this.invalidDestPathLabel.setText("Destination path is no directory.");
             return;
         } catch (DestinationPathIsInSourcePathException unused) {
-            invalidDestPathLabel.setVisible(true);
-            invalidSrcPathLabel.setVisible(false);
-            invalidDestPathLabel.setText("Destination directory can't be in the source directory.");
+            this.invalidDestPathLabel.setVisible(true);
+            this.invalidSrcPathLabel.setVisible(false);
+            this.invalidDestPathLabel.setText("Destination directory can't be in the source directory.");
         }
 
         if (srcPathTextField.getText().isBlank()) {
-            invalidSrcPathLabel.setVisible(true);
-            invalidSrcPathLabel.setText("Source path can't be empty.");
+            this.invalidSrcPathLabel.setVisible(true);
+            this.invalidSrcPathLabel.setText("Source path can't be empty.");
             return;
         } else if (destPathTextField.getText().isBlank()) {
-            invalidDestPathLabel.setVisible(true);
-            invalidSrcPathLabel.setVisible(false);
-            invalidDestPathLabel.setText("Destination path can't be empty.");
+            this.invalidDestPathLabel.setVisible(true);
+            this.invalidSrcPathLabel.setVisible(false);
+            this.invalidDestPathLabel.setText("Destination path can't be empty.");
             return;
         }
 
         if (BackupServiceInstance.backupService.checkIfBackupAlreadyExists(pathPair)) {
-            invalidSrcPathLabel.setVisible(true);
-            invalidSrcPathLabel.setText("Backup already exists.");
-            invalidDestPathLabel.setVisible(false);
+            this.invalidSrcPathLabel.setVisible(true);
+            this.invalidSrcPathLabel.setText("Backup already exists.");
+            this.invalidDestPathLabel.setVisible(false);
             return;
         }
 
         if (!BackupServiceInstance.backupService.addBackup(pathPair)) {
-            invalidSrcPathLabel.setVisible(true);
-            invalidSrcPathLabel.setText("Error: Backup could not be added (view log)");
+            this.invalidSrcPathLabel.setVisible(true);
+            this.invalidSrcPathLabel.setText("Error: Backup could not be added (view log)");
             return;
         }
-        tableView.getItems().add(new TableEntry(pathPair.srcPath(), pathPair.destPath(), numberOfTableElements, false));
+        this.tableView.getItems().add(new TableEntry(pathPair.srcPath(), pathPair.destPath(), this.numberOfTableElements, false));
         numberOfTableElements++;
 
-        invalidSrcPathLabel.setVisible(false);
-        invalidDestPathLabel.setVisible(false);
+        this.invalidSrcPathLabel.setVisible(false);
+        this.invalidDestPathLabel.setVisible(false);
     }
 
     public void deleteBackup() {
-        if (!deletePressedOnce) {
-            deleteConfirmLabel.setVisible(true);
-            deletePressedOnce = true;
+        if (!this.deletePressedOnce) {
+            this.deleteConfirmLabel.setVisible(true);
+            this.deletePressedOnce = true;
             return;
         }
 
         List<Integer> indicesToRemove = getCheckedElementsFromTable();
         BackupServiceInstance.backupService.removeBackup(indicesToRemove.stream().mapToInt(i -> i).toArray());
 
-        refillTable(showFullPathsCheckBox.isSelected(), true);
+        refillTable(this.showFullPathsCheckBox.isSelected(), true);
 
-        deleteConfirmLabel.setVisible(false);
-        deletePressedOnce = false;
+        this.deleteConfirmLabel.setVisible(false);
+        this.deletePressedOnce = false;
     }
 
     public void toggleFullPath() {
-        refillTable(showFullPathsCheckBox.isSelected(), false);
+        refillTable(this.showFullPathsCheckBox.isSelected(), false);
     }
 
     public void showAboutMessageBox() throws IOException {
@@ -253,20 +254,20 @@ public class ConfigureBackupSceneController {
     }
 
     public void checkSrcPathInput() {
-        if (!BackupService.validateSrcPath(srcPathTextField.getText())) {
-            invalidSrcPathLabel.setVisible(true);
-            invalidSrcPathLabel.setText("Source path does not exist");
+        if (!BackupService.validateSrcPath(this.srcPathTextField.getText())) {
+            this.invalidSrcPathLabel.setVisible(true);
+            this.invalidSrcPathLabel.setText("Source path does not exist");
             return;
         }
-        invalidSrcPathLabel.setVisible(false);
+        this.invalidSrcPathLabel.setVisible(false);
     }
 
     public void checkDestPathInput() {
-        if (!BackupService.validateDestPath(destPathTextField.getText())) {
-            invalidDestPathLabel.setVisible(true);
-            invalidDestPathLabel.setText("Destination path is no directory");
+        if (!BackupService.validateDestPath(this.destPathTextField.getText())) {
+            this.invalidDestPathLabel.setVisible(true);
+            this.invalidDestPathLabel.setText("Destination path is no directory");
             return;
         }
-        invalidDestPathLabel.setVisible(false);
+        this.invalidDestPathLabel.setVisible(false);
     }
 }

@@ -9,17 +9,17 @@ public class CsvWriter implements AutoCloseable{
     BufferedWriter bufferedWriter;
 
     public CsvWriter(String filePath) throws IOException {
-        bufferedWriter = new BufferedWriter(new FileWriter(filePath));
+        this.bufferedWriter = new BufferedWriter(new FileWriter(filePath));
     }
 
     public CsvWriter(String filePath, boolean append) throws IOException {
-        bufferedWriter = new BufferedWriter(new FileWriter(filePath, append));
+        this.bufferedWriter = new BufferedWriter(new FileWriter(filePath, append));
     }
 
     public void writeLine(String... data) throws IOException {
         if (data.length > 0)
-            bufferedWriter.write(String.join(";", data));
-        bufferedWriter.newLine();
+            this.bufferedWriter.write(String.join(";", data));
+        this.bufferedWriter.newLine();
     }
 
     public void writeAllLines(List<String[]> data) throws IOException {
@@ -29,6 +29,6 @@ public class CsvWriter implements AutoCloseable{
 
     @Override
     public void close() throws IOException{
-        bufferedWriter.close();
+        this.bufferedWriter.close();
     }
 }

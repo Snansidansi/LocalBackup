@@ -1,5 +1,6 @@
 package com.snansidansi.gui;
 
+import com.snansidansi.gui.util.SceneManager;
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;

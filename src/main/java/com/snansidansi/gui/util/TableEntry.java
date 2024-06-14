@@ -7,7 +7,7 @@ import javafx.scene.layout.HBox;
 public class TableEntry {
     private String srcPath;
     private String destPath;
-    private HBox checkBoxBox;
+    private HBox checkBoxHBox;
     private CheckBox checkBox = new CheckBox();
     private int index;
 
@@ -16,29 +16,29 @@ public class TableEntry {
         this.destPath = destPath;
         this.index = index;
 
-        this.checkBoxBox = new HBox(checkBox);
-        this.checkBoxBox.setAlignment(Pos.CENTER);
+        this.checkBoxHBox = new HBox(this.checkBox);
+        this.checkBoxHBox.setAlignment(Pos.CENTER);
 
         this.checkBox.setSelected(checked);
     }
 
     public String getSrcPath() {
-        return srcPath;
+        return this.srcPath;
     }
 
     public String getDestPath() {
-        return destPath;
+        return this.destPath;
     }
 
     public CheckBox getCheckBox() {
-        return checkBox;
+        return this.checkBox;
     }
 
     public int getIndex() {
-        return index;
+        return this.index;
     }
 
-    public HBox getCheckBoxBox() {
-        return checkBoxBox;
+    public HBox getCheckBoxHBox() {
+        return this.checkBoxHBox;
     }
 }

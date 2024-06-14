@@ -1,6 +1,7 @@
 package com.snansidansi;
 
 import com.snansidansi.gui.LocalBackupGUI;
+import com.snansidansi.singletons.BackupServiceInstance;
 import javafx.application.Application;
 
 public class LocalBackupApp {

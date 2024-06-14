@@ -6,7 +6,7 @@ import com.snansidansi.backup.exceptions.DestinationPathIsInSourcePathException;
 import com.snansidansi.backup.exceptions.SourceDoesNotExistException;
 import com.snansidansi.backup.exceptions.StringsAreEqualException;
 import com.snansidansi.backup.service.BackupService;
-import com.snansidansi.backup.service.SrcDestPair;
+import com.snansidansi.backup.util.SrcDestPair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.CleanupMode;

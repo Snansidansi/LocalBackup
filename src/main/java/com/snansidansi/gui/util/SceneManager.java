@@ -1,4 +1,4 @@
-package com.snansidansi.gui;
+package com.snansidansi.gui.util;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,8 +19,8 @@ public class SceneManager {
         Parent root = loader.load();
         Scene configureBackupScene = new Scene(root);
 
-        stage.setScene(configureBackupScene);
-        stage.setMinWidth(520);
-        stage.setMinHeight(350);
+        this.stage.setScene(configureBackupScene);
+        this.stage.setMinWidth(520);
+        this.stage.setMinHeight(350);
     }
 }
