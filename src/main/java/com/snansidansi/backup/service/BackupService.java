@@ -126,7 +126,7 @@ public class BackupService {
                 csvWriter.writeLine(Path.of(data.srcPath()).toAbsolutePath().toString(),
                         Path.of(data.destPath()).toAbsolutePath().toString());
             }
-            this.allBackups = getAllBackups();
+            this.allBackups = readBackups();
         } catch (IOException unused) {
             return false;
         }
@@ -281,7 +281,7 @@ public class BackupService {
      * @return The backup-list (copy) as lists of {@link SrcDestPair}.
      */
     public List<SrcDestPair> getAllBackups() {
-        return List.copyOf(this.allBackups);
+        return this.allBackups;
     }
 
     /**
