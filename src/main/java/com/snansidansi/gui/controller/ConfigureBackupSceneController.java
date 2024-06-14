@@ -7,7 +7,7 @@ import com.snansidansi.backup.exceptions.StringsAreEqualException;
 import com.snansidansi.backup.service.BackupService;
 import com.snansidansi.backup.util.SrcDestPair;
 import com.snansidansi.gui.util.TableEntry;
-import com.snansidansi.gui.windows.AboutStage;
+import com.snansidansi.gui.windows.AboutWindow;
 import com.snansidansi.singletons.BackupServiceInstance;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -250,7 +250,7 @@ public class ConfigureBackupSceneController {
     }
 
     public void showAboutMessageBox() throws IOException {
-        AboutStage.showWindow();
+        AboutWindow.showWindow();
     }
 
     public void checkSrcPathInput() {
