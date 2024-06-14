@@ -29,6 +29,8 @@ import java.util.List;
 public class ConfigureBackupSceneController {
     private boolean deletePressedOnce = false;
     private int numberOfTableElements = 0;
+    private String lastSelectedSrcDirPath = "";
+    private String lastSelectedDestDirPath = "";
 
     @FXML
     private BorderPane mainContainer;
@@ -147,8 +149,10 @@ public class ConfigureBackupSceneController {
     public void openSrcFileSelection() {
         FileChooser srcSelection = new FileChooser();
         srcSelection.setTitle("Select source file");
+        if (!this.lastSelectedSrcDirPath.isEmpty()) srcSelection.setInitialDirectory(new File(lastSelectedSrcDirPath));
 
         File selectedFile = srcSelection.showOpenDialog(new Stage());
+        this.lastSelectedSrcDirPath = selectedFile.getParent();
         this.srcPathTextField.setText(selectedFile.getAbsolutePath());
         this.invalidSrcPathLabel.setVisible(false);
     }
@@ -156,8 +160,10 @@ public class ConfigureBackupSceneController {
     public void openSrcFolderSelection() {
         DirectoryChooser srcSelection = new DirectoryChooser();
         srcSelection.setTitle("Select source folder");
+        if (!this.lastSelectedSrcDirPath.isEmpty()) srcSelection.setInitialDirectory(new File(lastSelectedSrcDirPath));
 
         File selectedFolder = srcSelection.showDialog(new Stage());
+        this.lastSelectedSrcDirPath = selectedFolder.getPath();
         this.srcPathTextField.setText(selectedFolder.getAbsolutePath());
         this.invalidSrcPathLabel.setVisible(false);
     }
@@ -165,8 +171,11 @@ public class ConfigureBackupSceneController {
     public void openDestSelection() {
         DirectoryChooser destSelection = new DirectoryChooser();
         destSelection.setTitle("Select destination folder");
+        if (!this.lastSelectedDestDirPath.isEmpty())
+            destSelection.setInitialDirectory(new File(lastSelectedDestDirPath));
 
         File selectedFolder = destSelection.showDialog(new Stage());
+        this.lastSelectedDestDirPath = selectedFolder.getPath();
         this.destPathTextField.setText(selectedFolder.getAbsolutePath());
         this.invalidDestPathLabel.setVisible(false);
     }
