@@ -10,13 +10,13 @@ public class utility {
     private utility() {
     }
 
-    static public void copyTextToClipboard(String text) {
+    public static void copyTextToClipboard(String text) {
         StringSelection stringSelection = new StringSelection(text);
         java.awt.datatransfer.Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, null);
     }
 
-    static public Color getRandomJavaFXColor() {
+    public static Color getRandomJavaFXColor() {
         Random rand = new Random();
         return Color.rgb(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
     }
