@@ -8,7 +8,8 @@ import com.snansidansi.backup.service.BackupService;
 import com.snansidansi.backup.util.SrcDestPair;
 import com.snansidansi.gui.util.TableEntry;
 import com.snansidansi.gui.windows.AboutWindow;
-import com.snansidansi.singletons.BackupServiceInstance;
+import com.snansidansi.singletons.BackupServiceSingleton;
+import com.snansidansi.singletons.RunBackupThreadSingleton;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -112,7 +113,7 @@ public class ConfigureBackupSceneController {
         if (!changedValues) checkedElements = getCheckedElementsFromTable();
         this.tableView.getItems().clear();
 
-        for (SrcDestPair pathPair : BackupServiceInstance.backupService.getAllBackups()) {
+        for (SrcDestPair pathPair : BackupServiceSingleton.backupService.getAllBackups()) {
             Path srcPath = Path.of(pathPair.srcPath());
             Path destPath = Path.of(pathPair.destPath());
 
@@ -171,7 +172,7 @@ public class ConfigureBackupSceneController {
     }
 
     public void runBackup() {
-        BackupServiceInstance.backupService.runBackup();
+        RunBackupThreadSingleton.getThread().start();
     }
 
     public void addBackup() {
@@ -210,14 +211,21 @@ public class ConfigureBackupSceneController {
             return;
         }
 
-        if (BackupServiceInstance.backupService.checkIfBackupAlreadyExists(pathPair)) {
+        if (BackupServiceSingleton.backupService.checkIfBackupAlreadyExists(pathPair)) {
             this.invalidSrcPathLabel.setVisible(true);
             this.invalidSrcPathLabel.setText("Backup already exists.");
             this.invalidDestPathLabel.setVisible(false);
             return;
         }
 
-        if (!BackupServiceInstance.backupService.addBackup(pathPair)) {
+        if (RunBackupThreadSingleton.getThread().isAlive()) {
+            this.invalidSrcPathLabel.setVisible(true);
+            this.invalidSrcPathLabel.setText("Please wait for running backup to finish.");
+            this.invalidDestPathLabel.setVisible(false);
+            return;
+        }
+
+        if (!BackupServiceSingleton.backupService.addBackup(pathPair)) {
             this.invalidSrcPathLabel.setVisible(true);
             this.invalidSrcPathLabel.setText("Error: Backup could not be added (view log)");
             return;
@@ -230,14 +238,21 @@ public class ConfigureBackupSceneController {
     }
 
     public void deleteBackup() {
+        if (RunBackupThreadSingleton.getThread().isAlive()) {
+            this.deleteConfirmLabel.setVisible(true);
+            this.deleteConfirmLabel.setText("Please wait for running backup to finish.");
+            return;
+        }
+
         if (!this.deletePressedOnce) {
             this.deleteConfirmLabel.setVisible(true);
+            this.deleteConfirmLabel.setText("Are you sure to remove all the selected backups? Press again to confirm.");
             this.deletePressedOnce = true;
             return;
         }
 
         List<Integer> indicesToRemove = getCheckedElementsFromTable();
-        BackupServiceInstance.backupService.removeBackup(indicesToRemove.stream().mapToInt(i -> i).toArray());
+        BackupServiceSingleton.backupService.removeBackup(indicesToRemove.stream().mapToInt(i -> i).toArray());
 
         refillTable(this.showFullPathsCheckBox.isSelected(), true);
 

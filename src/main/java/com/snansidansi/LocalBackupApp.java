@@ -1,7 +1,7 @@
 package com.snansidansi;
 
 import com.snansidansi.gui.LocalBackupGUI;
-import com.snansidansi.singletons.BackupServiceInstance;
+import com.snansidansi.singletons.BackupServiceSingleton;
 import javafx.application.Application;
 
 public class LocalBackupApp {
@@ -9,7 +9,7 @@ public class LocalBackupApp {
         if (args.length == 0 || (args.length == 1 && args[0].equals("gui")))
             Application.launch(LocalBackupGUI.class);
         else if (args.length == 1 && args[0].equals("run")) {
-            BackupServiceInstance.backupService.runBackup();
+            BackupServiceSingleton.backupService.runBackup();
         } else
             System.out.println("Possible options: gui, run");
     }
