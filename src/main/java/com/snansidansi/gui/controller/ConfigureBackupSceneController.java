@@ -152,6 +152,8 @@ public class ConfigureBackupSceneController {
         if (!this.lastSelectedSrcDirPath.isEmpty()) srcSelection.setInitialDirectory(new File(lastSelectedSrcDirPath));
 
         File selectedFile = srcSelection.showOpenDialog(new Stage());
+        if (selectedFile == null) return;
+
         this.lastSelectedSrcDirPath = selectedFile.getParent();
         this.srcPathTextField.setText(selectedFile.getAbsolutePath());
         this.invalidSrcPathLabel.setVisible(false);
@@ -163,6 +165,8 @@ public class ConfigureBackupSceneController {
         if (!this.lastSelectedSrcDirPath.isEmpty()) srcSelection.setInitialDirectory(new File(lastSelectedSrcDirPath));
 
         File selectedFolder = srcSelection.showDialog(new Stage());
+        if (selectedFolder == null) return;
+
         this.lastSelectedSrcDirPath = selectedFolder.getPath();
         this.srcPathTextField.setText(selectedFolder.getAbsolutePath());
         this.invalidSrcPathLabel.setVisible(false);
@@ -175,6 +179,8 @@ public class ConfigureBackupSceneController {
             destSelection.setInitialDirectory(new File(lastSelectedDestDirPath));
 
         File selectedFolder = destSelection.showDialog(new Stage());
+        if (selectedFolder == null) return;
+
         this.lastSelectedDestDirPath = selectedFolder.getPath();
         this.destPathTextField.setText(selectedFolder.getAbsolutePath());
         this.invalidDestPathLabel.setVisible(false);
