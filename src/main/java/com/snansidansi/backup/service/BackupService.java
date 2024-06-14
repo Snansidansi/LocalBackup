@@ -126,10 +126,10 @@ public class BackupService {
                 csvWriter.writeLine(Path.of(data.srcPath()).toAbsolutePath().toString(),
                         Path.of(data.destPath()).toAbsolutePath().toString());
             }
-            this.allBackups = readBackups();
         } catch (IOException unused) {
             return false;
         }
+        this.allBackups = readBackups();
         return true;
     }
 
