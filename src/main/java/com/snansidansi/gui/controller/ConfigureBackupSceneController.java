@@ -10,10 +10,7 @@ import com.snansidansi.backup.service.SrcDestPair;
 import com.snansidansi.gui.util.TableEntry;
 import com.snansidansi.gui.windows.AboutStage;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -24,6 +21,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +63,9 @@ public class ConfigureBackupSceneController {
     private Label invalidDestPathLabel;
 
     @FXML
+    private CheckBox showFullPathsCheckBox;
+
+    @FXML
     public void initialize() {
         bindMiddleLineToWindowWidth();
         bindRemoveColToRight();
@@ -101,17 +102,44 @@ public class ConfigureBackupSceneController {
         removeTableCol.setCellValueFactory(
                 new PropertyValueFactory<>("checkBoxBox"));
 
-        fillTable();
+        refillTable(true, true);
     }
 
-    private void fillTable() {
+    private void refillTable(boolean fullPath, boolean changedValues) {
         this.numberOfTableElements = 0;
+        List<Integer> checkedElements = null;
+
+        if (!changedValues) checkedElements = getCheckedElementsFromTable();
         tableView.getItems().clear();
 
         for (SrcDestPair pathPair : BackupServiceInstance.backupService.getAllBackups()) {
-            tableView.getItems().add(new TableEntry(pathPair.srcPath(), pathPair.destPath(), numberOfTableElements));
+            Path srcPath = Path.of(pathPair.srcPath());
+            Path destPath = Path.of(pathPair.destPath());
+
+            if (!fullPath) {
+                if (srcPath.getFileName() != null) srcPath = srcPath.getFileName();
+                if (destPath.getFileName() != null) destPath = destPath.getFileName();
+            }
+
+            boolean checked = false;
+            if (!changedValues && !checkedElements.isEmpty() && numberOfTableElements == checkedElements.getFirst()) {
+                checkedElements.removeFirst();
+                checked = true;
+            }
+
+            tableView.getItems().add(new TableEntry(srcPath.toString(), destPath.toString(), numberOfTableElements, checked));
             numberOfTableElements++;
         }
+    }
+
+    private List<Integer> getCheckedElementsFromTable() {
+        List<Integer> indicesToRemove = new ArrayList<>();
+        for (TableEntry entry : tableView.getItems()) {
+            if (entry.getCheckBox().isSelected()) {
+                indicesToRemove.add(entry.getIndex());
+            }
+        }
+        return indicesToRemove;
     }
 
     public void openSrcFileSelection() {
@@ -193,7 +221,7 @@ public class ConfigureBackupSceneController {
             invalidSrcPathLabel.setText("Error: Backup could not be added (view log)");
             return;
         }
-        tableView.getItems().add(new TableEntry(pathPair.srcPath(), pathPair.destPath(), numberOfTableElements));
+        tableView.getItems().add(new TableEntry(pathPair.srcPath(), pathPair.destPath(), numberOfTableElements, false));
         numberOfTableElements++;
 
         invalidSrcPathLabel.setVisible(false);
@@ -207,23 +235,17 @@ public class ConfigureBackupSceneController {
             return;
         }
 
-        List<Integer> indicesToRemove = new ArrayList<>();
-        for (TableEntry entry : tableView.getItems()) {
-            if (entry.getCheckBox().isSelected()) {
-                indicesToRemove.add(entry.getIndex());
-            }
-        }
-
+        List<Integer> indicesToRemove = getCheckedElementsFromTable();
         BackupServiceInstance.backupService.removeBackup(indicesToRemove.stream().mapToInt(i -> i).toArray());
 
-        fillTable();
+        refillTable(showFullPathsCheckBox.isSelected(), true);
 
         deleteConfirmLabel.setVisible(false);
         deletePressedOnce = false;
     }
 
     public void toggleFullPath() {
-        System.out.println("Toggle full path");
+        refillTable(showFullPathsCheckBox.isSelected(), false);
     }
 
     public void showAboutMessageBox() throws IOException {

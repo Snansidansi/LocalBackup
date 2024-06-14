@@ -11,13 +11,15 @@ public class TableEntry {
     private CheckBox checkBox = new CheckBox();
     private int index;
 
-    public TableEntry(String srcPath, String destPath, int index) {
+    public TableEntry(String srcPath, String destPath, int index, boolean checked) {
         this.srcPath = srcPath;
         this.destPath = destPath;
         this.index = index;
 
         this.checkBoxBox = new HBox(checkBox);
         this.checkBoxBox.setAlignment(Pos.CENTER);
+
+        this.checkBox.setSelected(checked);
     }
 
     public String getSrcPath() {

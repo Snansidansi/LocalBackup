@@ -51,7 +51,9 @@
                         </HBox>
                     </left>
                     <right>
-                        <CheckBox mnemonicParsing="false" onAction="#toggleFullPath" prefHeight="20.0" prefWidth="123.0" text="Show full paths" BorderPane.alignment="CENTER">
+                        <CheckBox fx:id="showFullPathsCheckBox" mnemonicParsing="false" onAction="#toggleFullPath"
+                                  prefHeight="20.0" prefWidth="123.0" selected="true" text="Show full paths"
+                                  BorderPane.alignment="CENTER">
                             <font>
                                 <Font size="14.0" />
                             </font>
