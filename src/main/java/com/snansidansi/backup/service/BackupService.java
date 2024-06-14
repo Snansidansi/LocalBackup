@@ -21,11 +21,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BackupService {
-    private final String backupConfigFilePath;
+    private final String backupListPath;
     private List<SrcDestPair> allBackups;
 
-    public BackupService(String backupConfigFilePath) {
-        this.backupConfigFilePath = Paths.get(backupConfigFilePath).toString();
+    /**
+     * Creates a new {@code BackupService} object.
+     *
+     * @param backupListPath Path to the backup-list file as string.
+     */
+    public BackupService(String backupListPath) {
+        this.backupListPath = Paths.get(backupListPath).toString();
         this.allBackups = readBackups();
     }
 
@@ -71,15 +76,15 @@ public class BackupService {
     }
 
     public boolean addBackup(List<SrcDestPair> newBackups) {
-        boolean append = Files.exists(Path.of(this.backupConfigFilePath));
+        boolean append = Files.exists(Path.of(this.backupListPath));
 
         try {
-            if (!append) Files.createDirectories(Path.of(this.backupConfigFilePath).getParent());
+            if (!append) Files.createDirectories(Path.of(this.backupListPath).getParent());
         } catch (IOException unused) {
             return false;
         }
 
-        try (CsvWriter csvWriter = new CsvWriter(this.backupConfigFilePath, append)) {
+        try (CsvWriter csvWriter = new CsvWriter(this.backupListPath, append)) {
             for (SrcDestPair data : newBackups) {
                 csvWriter.writeLine(Path.of(data.srcPath()).toAbsolutePath().toString(),
                         Path.of(data.destPath()).toAbsolutePath().toString());
@@ -92,15 +97,15 @@ public class BackupService {
     }
 
     public boolean addBackup(SrcDestPair pathPair) {
-        boolean append = Files.exists(Path.of(this.backupConfigFilePath));
+        boolean append = Files.exists(Path.of(this.backupListPath));
 
         try {
-            if (!append) Files.createDirectories(Path.of(this.backupConfigFilePath).getParent());
+            if (!append) Files.createDirectories(Path.of(this.backupListPath).getParent());
         } catch (IOException unused) {
             return false;
         }
 
-        try (CsvWriter csvWriter = new CsvWriter(this.backupConfigFilePath, append)) {
+        try (CsvWriter csvWriter = new CsvWriter(this.backupListPath, append)) {
             csvWriter.writeLine(Path.of(pathPair.srcPath()).toAbsolutePath().toString(),
                     Path.of(pathPair.destPath()).toAbsolutePath().toString());
             this.allBackups.add(pathPair);
@@ -129,7 +134,7 @@ public class BackupService {
     }
 
     public static boolean validateSrcPath(String srcPath) {
-        return !Files.notExists(Path.of(srcPath));
+        return Files.exists(Path.of(srcPath));
     }
 
     public static boolean validateDestPath(String destPathString) {
@@ -152,11 +157,13 @@ public class BackupService {
 
         Path backupConfigFileCopyPath = Path.of(this.backupConfigFilePath).getParent()
                 .resolve(this.backupConfigFilePath.hashCode() + ".csv");
+        Path backupConfigFileCopyPath = Path.of(this.backupListPath).getParent()
+                .resolve(this.backupListPath.hashCode() + ".csv");
         try {
             //Copies the file to the same location but with the hashcode as name
-            Files.copy(Path.of(this.backupConfigFilePath), backupConfigFileCopyPath, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(Path.of(this.backupListPath), backupConfigFileCopyPath, StandardCopyOption.REPLACE_EXISTING);
 
-            Files.deleteIfExists(Path.of(this.backupConfigFilePath));
+            Files.deleteIfExists(Path.of(this.backupListPath));
         } catch (IOException unused) {
             return false;
         }
@@ -168,8 +175,8 @@ public class BackupService {
         boolean addSuccessful = addBackup((this.allBackups));
         if (!addSuccessful) {
             try {
-                Files.deleteIfExists(Path.of(this.backupConfigFilePath));
-                Files.move(backupConfigFileCopyPath, Path.of(this.backupConfigFilePath));
+                Files.deleteIfExists(Path.of(this.backupListPath));
+                Files.move(backupConfigFileCopyPath, Path.of(this.backupListPath));
 
                 this.allBackups.clear();
                 this.allBackups.addAll(allBackupsCopy);
@@ -187,7 +194,7 @@ public class BackupService {
 
     private List<SrcDestPair> readBackups() {
         List<String[]> allBackupsFromFile;
-        try (CsvReader csvReader = new CsvReader(this.backupConfigFilePath)) {
+        try (CsvReader csvReader = new CsvReader(this.backupListPath)) {
             allBackupsFromFile = csvReader.readAllLines();
         } catch (IOException unused) {
             return new ArrayList<>();
@@ -201,7 +208,7 @@ public class BackupService {
     }
 
     public List<SrcDestPair> getAllBackups() {
-        return this.allBackups;
+        return List.copyOf(this.allBackups);
     }
 
     public boolean checkIfBackupAlreadyExists(SrcDestPair paths) {
