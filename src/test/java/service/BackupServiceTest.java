@@ -1,12 +1,12 @@
 package service;
 
-import com.snansidansi.backup.csv.CsvWriter;
 import com.snansidansi.backup.exceptions.DestinationNoDirException;
 import com.snansidansi.backup.exceptions.DestinationPathIsInSourcePathException;
 import com.snansidansi.backup.exceptions.SourceDoesNotExistException;
 import com.snansidansi.backup.exceptions.StringsAreEqualException;
 import com.snansidansi.backup.service.BackupService;
 import com.snansidansi.backup.util.SrcDestPair;
+import com.snansidansi.csv.CsvWriter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.CleanupMode;

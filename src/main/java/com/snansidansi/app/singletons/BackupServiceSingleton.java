@@ -1,4 +1,4 @@
-package com.snansidansi.singletons;
+package com.snansidansi.app.singletons;
 
 import com.snansidansi.backup.service.BackupService;
 

@@ -1,12 +1,12 @@
 package com.snansidansi.backup.service;
 
-import com.snansidansi.backup.csv.CsvReader;
-import com.snansidansi.backup.csv.CsvWriter;
 import com.snansidansi.backup.exceptions.DestinationNoDirException;
 import com.snansidansi.backup.exceptions.DestinationPathIsInSourcePathException;
 import com.snansidansi.backup.exceptions.SourceDoesNotExistException;
 import com.snansidansi.backup.exceptions.StringsAreEqualException;
 import com.snansidansi.backup.util.SrcDestPair;
+import com.snansidansi.csv.CsvReader;
+import com.snansidansi.csv.CsvWriter;
 
 import java.io.File;
 import java.io.IOException;

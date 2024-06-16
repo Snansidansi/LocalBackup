@@ -1,4 +1,4 @@
-package com.snansidansi.singletons;
+package com.snansidansi.app.singletons;
 
 public class RunBackupThreadSingleton extends Thread {
     private static final RunBackupThreadSingleton thread = new RunBackupThreadSingleton();

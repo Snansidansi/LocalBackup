@@ -1,6 +1,6 @@
 package csv;
 
-import com.snansidansi.backup.csv.CsvWriter;
+import com.snansidansi.csv.CsvWriter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

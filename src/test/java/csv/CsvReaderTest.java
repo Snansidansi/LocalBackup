@@ -1,6 +1,6 @@
 package csv;
 
-import com.snansidansi.backup.csv.CsvReader;
+import com.snansidansi.csv.CsvReader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

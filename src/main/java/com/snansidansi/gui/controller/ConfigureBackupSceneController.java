@@ -1,5 +1,7 @@
 package com.snansidansi.gui.controller;
 
+import com.snansidansi.app.singletons.BackupServiceSingleton;
+import com.snansidansi.app.singletons.RunBackupThreadSingleton;
 import com.snansidansi.backup.exceptions.DestinationNoDirException;
 import com.snansidansi.backup.exceptions.DestinationPathIsInSourcePathException;
 import com.snansidansi.backup.exceptions.SourceDoesNotExistException;
@@ -8,8 +10,6 @@ import com.snansidansi.backup.service.BackupService;
 import com.snansidansi.backup.util.SrcDestPair;
 import com.snansidansi.gui.util.TableEntry;
 import com.snansidansi.gui.windows.AboutWindow;
-import com.snansidansi.singletons.BackupServiceSingleton;
-import com.snansidansi.singletons.RunBackupThreadSingleton;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
