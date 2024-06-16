@@ -72,4 +72,18 @@ public class Logger {
             }
         }
     }
+
+    /**
+     * @return The name of the log file as string.
+     */
+    public String getFilename() {
+        return this.logFile.getName();
+    }
+
+    /**
+     * @return The path of the log file as string.
+     */
+    public String getFilePath() {
+        return this.logFile.getPath();
+    }
 }
