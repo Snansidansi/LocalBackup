@@ -22,7 +22,7 @@ public class Logger {
 
     /**
      * Creates a {@code Logger} object. The name of the logfile is the current date and time
-     * (format: {@code yyyy-MM-dd_hh-mm-ss}). Also creates any missing directories in the {@code outputDir} path.
+     * (format: {@code yyyy-MM-dd_HH-mm-ss}). Also creates any missing directories in the {@code outputDir} path.
      *
      * @param outputDir The output directory for the log file as string.
      * @param debugMode Boolean value if the program runs in debug mode. When true: error messages from the
@@ -32,7 +32,7 @@ public class Logger {
         this.outputDir = Path.of(outputDir);
         this.debugMode = debugMode;
 
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_hh-mm-ss");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
         LocalDateTime now = LocalDateTime.now();
         this.logFile = this.outputDir.resolve(now.format(dateTimeFormatter) + ".txt").toFile();
 
@@ -73,12 +73,12 @@ public class Logger {
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(this.logFile, true))) {
             if (this.firstLogMessage && this.logHeader != null) {
-                bufferedWriter.write(this.logHeader);
+                bufferedWriter.write(this.logHeader + "\n\n");
                 this.firstLogMessage = false;
             }
 
             for (String line : input)
-                bufferedWriter.write(line);
+                bufferedWriter.write(line + "\n");
 
             bufferedWriter.newLine();
         } catch (IOException e) {
@@ -109,9 +109,5 @@ public class Logger {
      */
     public String getFilePath() {
         return this.logFile.getPath();
-    }
-
-    public boolean getSuccessfulSetup() {
-        return this.successfulSetup;
     }
 }

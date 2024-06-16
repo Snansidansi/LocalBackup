@@ -7,6 +7,7 @@ import com.snansidansi.backup.exceptions.StringsAreEqualException;
 import com.snansidansi.backup.util.SrcDestPair;
 import com.snansidansi.csv.CsvReader;
 import com.snansidansi.csv.CsvWriter;
+import com.snansidansi.log.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,15 +39,40 @@ import java.util.stream.Collectors;
 public class BackupService {
     private final String backupListPath;
     private List<SrcDestPair> allBackups;
+    private final Logger backupLog;
+    private final Logger errorLog;
+
+    private int copiedFilesDuringDirBackup = 0;
 
     /**
-     * Creates a new {@code BackupService} object.
+     * Creates a new {@code BackupService} object with a {@link Logger} in debug mode.
      *
      * @param backupListPath Path to the backup-list file as string.
      */
     public BackupService(String backupListPath) {
         this.backupListPath = Paths.get(backupListPath).toString();
         this.allBackups = readBackups();
+        this.backupLog = new Logger("log/backup", false);
+        this.errorLog = new Logger("log/error", false);
+
+        this.backupLog.setLogHeader("---Backup log file from local backup program: " + this.backupLog.getFilename() + "---");
+        this.errorLog.setLogHeader("---Error log file form local backup program: " + this.errorLog.getFilename() + "---");
+    }
+
+    /**
+     * Creates a new {@code BackupService} object.
+     *
+     * @param backupListPath Path to the backup-list file as string.
+     * @param debugMode      Boolean value if the {@link Logger} should run in debug mode.
+     */
+    public BackupService(String backupListPath, boolean debugMode) {
+        this.backupListPath = Paths.get(backupListPath).toString();
+        this.allBackups = readBackups();
+        this.backupLog = new Logger("log/backup", debugMode);
+        this.errorLog = new Logger("log/error", debugMode);
+
+        this.backupLog.setLogHeader("---Backup log file from local backup program: " + this.backupLog.getFilename() + "---");
+        this.errorLog.setLogHeader("---Error log file form local backup program: " + this.errorLog.getFilename() + "---");
     }
 
     /**
@@ -58,8 +84,19 @@ public class BackupService {
             if (Files.notExists(srcPath)) return;
 
             Path destPath = Path.of(pathPair.destPath()).resolve(srcPath.getFileName());
-            if (Files.isDirectory(srcPath)) backupDir(srcPath, destPath);
-            else if (Files.isRegularFile(srcPath)) backupFile(srcPath, destPath);
+            if (Files.isDirectory(srcPath)) {
+                this.copiedFilesDuringDirBackup = 0;
+                if (backupDir(srcPath, destPath))
+                    this.backupLog.log("Directory backup.",
+                            "Source: " + pathPair.srcPath(),
+                            "Destination: " + pathPair.destPath(),
+                            "Number of copied files: " + this.copiedFilesDuringDirBackup);
+            } else if (Files.isRegularFile(srcPath)) {
+                if (backupFile(srcPath, destPath))
+                    this.backupLog.log("File backup.",
+                            "Source: " + pathPair.srcPath(),
+                            "Destination: " + pathPair.destPath());
+            }
         }
     }
 
@@ -73,16 +110,21 @@ public class BackupService {
      * @return Returns true if any backups in the dir or the sub-dirs were successfully done.
      * Returns false if no backups were done.
      */
-    public static boolean backupDir(Path srcPath, Path destPath) {
-        if (!Files.exists(destPath))
-            if (!destPath.toFile().mkdirs()) return false;
-
+    public boolean backupDir(Path srcPath, Path destPath) {
         boolean changedAnything = false;
+
+        if (!Files.exists(destPath)) {
+            if (destPath.toFile().mkdirs()) changedAnything = true;
+            else return false;
+        }
+
         for (File subFile : srcPath.toFile().listFiles()) {
             if (subFile.isDirectory() && backupDir(subFile.toPath(), destPath.resolve(subFile.getName())))
                 changedAnything = true;
-            else if (subFile.isFile() && backupFile(subFile.toPath(), destPath.resolve(subFile.getName())))
+            else if (subFile.isFile() && backupFile(subFile.toPath(), destPath.resolve(subFile.getName()))) {
                 changedAnything = true;
+                this.copiedFilesDuringDirBackup++;
+            }
         }
 
         return changedAnything;
@@ -95,7 +137,7 @@ public class BackupService {
      * @param destPath Destination path as {@code path}.
      * @return Boolean value if the backup was successful.
      */
-    public static boolean backupFile(Path srcPath, Path destPath) {
+    public boolean backupFile(Path srcPath, Path destPath) {
         try {
             if (!Files.exists(destPath)
                     || srcPath.toFile().lastModified() != destPath.toFile().lastModified()) {
@@ -103,7 +145,12 @@ public class BackupService {
                 Files.copy(srcPath, destPath, StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
                 return true;
             }
-        } catch (IOException ignored) {}
+        } catch (IOException e) {
+            this.errorLog.log("Error during file backup.",
+                    "Source: " + srcPath,
+                    "Destination: " + destPath,
+                    "Error message. " + e.getMessage());
+        }
         return false;
     }
 
@@ -115,18 +162,16 @@ public class BackupService {
     public boolean addBackup(List<SrcDestPair> newBackups) {
         boolean append = Files.exists(Path.of(this.backupListPath));
 
-        try {
-            if (!append) Files.createDirectories(Path.of(this.backupListPath).getParent());
-        } catch (IOException unused) {
-            return false;
-        }
+        if (!append && !createBackupListDirs()) return false;
 
         try (CsvWriter csvWriter = new CsvWriter(this.backupListPath, append)) {
             for (SrcDestPair data : newBackups) {
                 csvWriter.writeLine(Path.of(data.srcPath()).toAbsolutePath().toString(),
                         Path.of(data.destPath()).toAbsolutePath().toString());
             }
-        } catch (IOException unused) {
+        } catch (IOException e) {
+            this.errorLog.log("Error when adding a new backup to the backup list.",
+                    "Error message. " + e.getMessage());
             return false;
         }
         this.allBackups = readBackups();
@@ -141,17 +186,30 @@ public class BackupService {
     public boolean addBackup(SrcDestPair pathPair) {
         boolean append = Files.exists(Path.of(this.backupListPath));
 
-        try {
-            if (!append) Files.createDirectories(Path.of(this.backupListPath).getParent());
-        } catch (IOException unused) {
-            return false;
-        }
+        if (!append && !createBackupListDirs()) return false;
 
         try (CsvWriter csvWriter = new CsvWriter(this.backupListPath, append)) {
             csvWriter.writeLine(Path.of(pathPair.srcPath()).toAbsolutePath().toString(),
                     Path.of(pathPair.destPath()).toAbsolutePath().toString());
             this.allBackups.add(pathPair);
-        } catch (IOException unused) {
+        } catch (IOException e) {
+            this.errorLog.log("Error when adding backup to the backup list.",
+                    "New backup source: " + pathPair.srcPath(),
+                    "New backup destination: " + pathPair.destPath(),
+                    "Error message: " + e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean createBackupListDirs() {
+        try {
+            Files.createDirectories(Path.of(this.backupListPath).getParent());
+        } catch (IOException e) {
+            this.errorLog.log("Error when adding a backup to the backup list.",
+                    "Could not create all missing directories in path: " + Path.of(this.backupListPath).getParent(),
+                    "Error message: " + e.getMessage());
             return false;
         }
         return true;
@@ -226,12 +284,16 @@ public class BackupService {
         // Copy of old backup-list if new backup-list can't be created.
         Path backupConfigFileCopyPath = Path.of(this.backupListPath).getParent()
                 .resolve(this.backupListPath.hashCode() + ".csv");
+
         try {
             //Copies the file to the same location but with the hashcode as name
             Files.copy(Path.of(this.backupListPath), backupConfigFileCopyPath, StandardCopyOption.REPLACE_EXISTING);
 
             Files.deleteIfExists(Path.of(this.backupListPath));
-        } catch (IOException unused) {
+        } catch (IOException e) {
+            this.errorLog.log("Error when removing a backup from the backup list.",
+                    "Error when creating a temporary copy of the old backup list.",
+                    "Error message: " + e.getMessage());
             return false;
         }
 
@@ -250,12 +312,18 @@ public class BackupService {
 
                 this.allBackups.clear();
                 this.allBackups.addAll(allBackupsCopy);
-            } catch (IOException unused) {
+            } catch (IOException e) {
+                this.errorLog.log("Error when removing a backup from the backup list.",
+                        "Error during cleanup after failed remove operation.",
+                        "Error message: " + e.getMessage());
             }
         } else {
             try {
                 Files.delete(backupConfigFileCopyPath);
-            } catch (IOException unused) {
+            } catch (IOException e) {
+                this.errorLog.log("Error when removing a backup from the backup list.",
+                        "Error during cleanup of the temporary copy of the backup list after successful remove operation",
+                        "Error message: " + e.getMessage());
             }
         }
 

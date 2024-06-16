@@ -145,7 +145,9 @@ public class BackupServiceTest {
     void backupFileToNotExistingDestinationWithAttributesAndContent() {
         Path srcPath = backupExSrc.resolve("exampleFile.txt");
         Path destPath = tempDir.resolve("backupFileToNotExistingDest/a.txt");
-        Assertions.assertTrue(BackupService.backupFile(srcPath, destPath));
+        BackupService backupService = new BackupService("");
+
+        Assertions.assertTrue(backupService.backupFile(srcPath, destPath));
 
         try {
             Assertions.assertTrue(Files.exists(srcPath));
@@ -160,6 +162,7 @@ public class BackupServiceTest {
     void backupUnmodifiedFileToExistingDestination() {
         Path srcPath = tempDir.resolve("backupUnmodifiedFileSrc/a.txt");
         Path destpath = tempDir.resolve("backupUnmodifiedFileDest/a.txt");
+        BackupService backupService = new BackupService("");
 
         try {
             Files.createDirectory(srcPath.getParent());
@@ -168,7 +171,7 @@ public class BackupServiceTest {
             Files.createFile(destpath);
             Files.setLastModifiedTime(destpath, Files.getLastModifiedTime(srcPath));
 
-            Assertions.assertFalse(BackupService.backupFile(srcPath, destpath));
+            Assertions.assertFalse(backupService.backupFile(srcPath, destpath));
         } catch (IOException e) {
             Assertions.fail(e.getMessage());
         }
@@ -178,6 +181,7 @@ public class BackupServiceTest {
     void backupModifiedFileToExistingDestination() {
         Path srcPath = backupExSrc.resolve("ExampleFile.txt");
         Path destPath = tempDir.resolve("backupModifiedFileDest/ExampleFile.txt");
+        BackupService backupService = new BackupService("");
 
         try {
             Files.createDirectory(destPath.getParent());
@@ -185,15 +189,16 @@ public class BackupServiceTest {
         } catch (IOException e) {
             Assertions.fail(e.getMessage());
         }
-        Assertions.assertTrue(BackupService.backupFile(srcPath, destPath));
+        Assertions.assertTrue(backupService.backupFile(srcPath, destPath));
     }
 
     @Test
     void backupDirWithFilesToNotExistingDestination() {
         Path srcPath = backupExSrc.resolve("dirWithFiles");
         Path destPath = tempDir.resolve("dirWithFilesToNotExistingDest/dirWithFiles");
+        BackupService backupService = new BackupService("");
 
-        Assertions.assertTrue(BackupService.backupDir(srcPath, destPath));
+        Assertions.assertTrue(backupService.backupDir(srcPath, destPath));
         assertDirTree(srcPath, destPath);
     }
 
@@ -201,8 +206,9 @@ public class BackupServiceTest {
     void backupDirWithSubDirAndFilesToNotExistingDestination() {
         Path srcpath = backupExSrc.resolve("dirWithSubDirsAndFiles");
         Path destPath = tempDir.resolve("dirWithSubDirsAndFilesToNotExistingDestination/dirWithSubDirsAndFiles");
+        BackupService backupService = new BackupService("");
 
-        Assertions.assertTrue(BackupService.backupDir(srcpath, destPath));
+        Assertions.assertTrue(backupService.backupDir(srcpath, destPath));
         assertDirTree(srcpath, destPath);
     }
 
@@ -210,24 +216,26 @@ public class BackupServiceTest {
     void backupUnchangedDir() {
         Path srcPath = backupExSrc.resolve("dirWithFiles");
         Path destPath = tempDir.resolve("backupUnchangedDir/dirWithFiles");
+        BackupService backupService = new BackupService("");
 
-        BackupService.backupDir(srcPath, destPath);
-        Assertions.assertFalse(BackupService.backupDir(srcPath, destPath));
+        backupService.backupDir(srcPath, destPath);
+        Assertions.assertFalse(backupService.backupDir(srcPath, destPath));
     }
 
     @Test
     void backupDirToExistingButChangedDir() {
         Path srcPath = backupExSrc.resolve("dirWithFiles");
         Path destPath = tempDir.resolve("backupDirToExistingButChangedDir/dirWithFiles");
+        BackupService backupService = new BackupService("");
 
-        BackupService.backupDir(srcPath, destPath);
+        backupService.backupDir(srcPath, destPath);
         try {
             Assertions.assertTrue(Files.deleteIfExists(destPath.resolve("1.txt")));
         } catch (IOException e) {
             Assertions.fail(e.getMessage());
         }
 
-        Assertions.assertTrue(BackupService.backupDir(srcPath, destPath));
+        Assertions.assertTrue(backupService.backupDir(srcPath, destPath));
         assertDirTree(srcPath, destPath);
     }
 
