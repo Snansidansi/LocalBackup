@@ -33,8 +33,8 @@ public class LoggerTest {
 
         try {
             List<String> result = Files.readAllLines(Path.of(logger.getFilePath()));
-            Assertions.assertEquals(1, result.size());
-            Assertions.assertEquals(logMessage, result.getFirst());
+            Assertions.assertEquals(2, result.size());
+            Assertions.assertEquals(logMessage, result.getFirst() + result.get(1));
         } catch (IOException e) {
             Assertions.fail(e.getMessage());
         }
