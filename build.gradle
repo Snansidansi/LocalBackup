@@ -23,7 +23,7 @@ java {
 }
 
 application {
-    mainClass = 'com.snansidansi.LocalBackupApp'
+    mainClass = 'com.snansidansi.app.LocalBackupApp'
 }
 
 dependencies {
