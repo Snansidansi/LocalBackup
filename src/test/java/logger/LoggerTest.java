@@ -1,7 +1,6 @@
 package logger;
 
 import com.snansidansi.log.Logger;
-import com.snansidansi.log.NoSuchRootException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.CleanupMode;
@@ -19,23 +18,15 @@ public class LoggerTest {
     @Test
     void setupLogCorrectly() {
         String destPath = tempDir.resolve("successfulSetup").toString();
+        Logger logger = new Logger(destPath, false);
 
-        Assertions.assertDoesNotThrow(() -> {
-            Logger logger = Logger.init(destPath, false);
-            Assertions.assertTrue(Files.exists(Path.of(logger.getFilePath()).getParent()));
-        });
+        Assertions.assertTrue(Files.exists(Path.of(logger.getFilePath()).getParent()));
     }
 
     @Test
     void successfulLogMessage() {
         String destPath = tempDir.resolve("successfulLog").toString();
-        Logger logger = null;
-
-        try {
-            logger = Logger.init(destPath, false);
-        } catch (NoSuchRootException e) {
-            Assertions.fail(e.getMessage());
-        }
+        Logger logger = new Logger(destPath, false);
 
         String logMessage = "This is a log entry.";
         logger.log(logMessage);
