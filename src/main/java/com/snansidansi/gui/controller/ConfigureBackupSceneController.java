@@ -10,6 +10,7 @@ import com.snansidansi.backup.service.BackupService;
 import com.snansidansi.backup.util.SrcDestPair;
 import com.snansidansi.gui.util.TableEntry;
 import com.snansidansi.gui.windows.AboutWindow;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -31,6 +32,7 @@ public class ConfigureBackupSceneController {
     private int numberOfTableElements = 0;
     private String lastSelectedSrcDirPath = "";
     private String lastSelectedDestDirPath = "";
+    private double lastSourceColWidth = 0.0;
 
     @FXML
     private BorderPane mainContainer;
@@ -71,7 +73,8 @@ public class ConfigureBackupSceneController {
     @FXML
     public void initialize() {
         bindMiddleLineToWindowWidth();
-        bindRemoveColToRight();
+
+        Platform.runLater(this::setupTableColumnSizeProperties);
 
         this.deleteConfirmLabel.setVisible(false);
         this.invalidSrcPathLabel.setVisible(false);
@@ -84,13 +87,33 @@ public class ConfigureBackupSceneController {
         this.middleLine.endXProperty().bind(this.mainContainer.widthProperty());
     }
 
-    private void bindRemoveColToRight() {
+    private void setupTableColumnSizeProperties() {
         this.destinationTableCol.prefWidthProperty().bind(
                 this.tableView.widthProperty()
                         .subtract(this.removeTableCol.getWidth())
                         .subtract(this.sourceTableCol.widthProperty())
-                        .subtract(2)
         );
+
+        this.destinationTableCol.maxWidthProperty().bind(
+                this.tableView.widthProperty()
+                        .subtract(this.removeTableCol.getWidth())
+                        .subtract(this.sourceTableCol.widthProperty())
+        );
+
+        this.sourceTableCol.maxWidthProperty().bind(
+                this.tableView.widthProperty()
+                        .subtract(this.removeTableCol.getWidth())
+                        .subtract(this.destinationTableCol.minWidthProperty())
+        );
+
+        this.destinationTableCol.widthProperty().addListener((observableValue, oldWidth, newWidth) -> {
+            if (this.sourceTableCol.getWidth() != this.lastSourceColWidth) {
+                this.lastSourceColWidth = this.sourceTableCol.getWidth();
+                this.destinationTableCol.setResizable(true);
+                return;
+            }
+            this.destinationTableCol.setResizable(false);
+        });
     }
 
     private void setupTable() {

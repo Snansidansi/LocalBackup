@@ -10,8 +10,10 @@
     <center>
         <TableView fx:id="tableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="246.0" prefWidth="749.0" BorderPane.alignment="CENTER">
             <columns>
-                <TableColumn fx:id="sourceTableCol" editable="false" maxWidth="1.7976931348623157E308" minWidth="340.0" prefWidth="340.0" sortable="false" text="Source" />
-                <TableColumn fx:id="destinationTableCol" editable="false" maxWidth="1.7976931348623157E308" minWidth="340.0" prefWidth="340.0" sortable="false" text="Destination" />
+                <TableColumn fx:id="sourceTableCol" editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0"
+                             prefWidth="340.0" sortable="false" text="Source"/>
+                <TableColumn fx:id="destinationTableCol" editable="false" maxWidth="1.7976931348623157E308"
+                             minWidth="100.0" prefWidth="340.0" sortable="false" text="Destination"/>
                 <TableColumn fx:id="removeTableCol" editable="false" maxWidth="69.0" minWidth="69.0" prefWidth="69.0" resizable="false" sortable="false" text="Remove" />
             </columns>
         </TableView>
@@ -70,7 +72,7 @@
                         </Line>
                     </bottom>
                 </BorderPane>
-                <HBox spacing="24.0" VBox.vgrow="NEVER">
+                <HBox prefHeight="40.0" prefWidth="501.0" spacing="24.0" VBox.vgrow="NEVER">
                     <VBox.margin>
                         <Insets bottom="10.0" left="20.0" top="10.0" />
                     </VBox.margin>
@@ -80,7 +82,7 @@
                                 <Font size="14.0" />
                             </font>
                         </Label>
-                        <VBox>
+                        <VBox fillWidth="false" prefHeight="40.0" prefWidth="352.0">
                             <children>
                                 <Label fx:id="invalidSrcPathLabel" prefHeight="20.0" prefWidth="585.0" text="Invalid source path" textFill="RED" wrapText="true">
                                     <font>
