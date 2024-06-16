@@ -6,6 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * A class for creating simple logfiles with a {@code .txt} extension.
@@ -16,17 +18,20 @@ public class Logger {
     private boolean debugMode;
 
     /**
-     * Creates a {@code Logger} object.
+     * Creates a {@code Logger} object. The name of the logfile is the current date and time
+     * (format: yyyy-MM-dd hh-mm-ss)
      *
      * @param outputDir The output directory for the log file as string.
-     * @param logName   The name for the log file as string.
      * @param debugMode Boolean value if the program runs in debug mode. When true: error messages from the
      *                  {@code Logger} class itself will be printed to the console.
      */
-    public Logger(String outputDir, String logName, boolean debugMode) {
+    public Logger(String outputDir, boolean debugMode) {
         this.outputDir = Path.of(outputDir);
-        this.logFile = this.outputDir.resolve(logName + ".txt").toFile();
         this.debugMode = debugMode;
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh-mm-ss");
+        LocalDateTime now = LocalDateTime.now();
+        this.logFile = this.outputDir.resolve(now.format(dateTimeFormatter) + ".txt").toFile();
     }
 
     /**
@@ -35,7 +40,7 @@ public class Logger {
      * @throws NoSuchRootException Gets thrown when the root of the given {@code outputDir} in the constructor of the
      * {@code Logger} object does not exist.
      */
-    private void setup() throws NoSuchRootException {
+    public void setup() throws NoSuchRootException {
         if (Files.notExists(this.outputDir.getRoot()))
             throw new NoSuchRootException(this.outputDir.getRoot().toString());
 
