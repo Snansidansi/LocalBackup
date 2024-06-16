@@ -1,6 +1,7 @@
 package com.snansidansi.gui.controller;
 
 import com.snansidansi.app.singletons.BackupServiceSingleton;
+import com.snansidansi.app.singletons.PrimaryStageSceneMangerSingleton;
 import com.snansidansi.app.singletons.RunBackupThreadSingleton;
 import com.snansidansi.backup.exceptions.DestinationNoDirException;
 import com.snansidansi.backup.exceptions.DestinationPathIsInSourcePathException;
@@ -330,5 +331,12 @@ public class ConfigureBackupSceneController {
             return;
         }
         this.invalidDestPathLabel.setVisible(false);
+    }
+
+    public void switchToLogScene() {
+        try {
+            PrimaryStageSceneMangerSingleton.getSceneManager().setLogScene();
+        } catch (IOException unused) {
+        }
     }
 }
