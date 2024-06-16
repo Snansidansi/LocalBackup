@@ -17,6 +17,8 @@ public class Logger {
     private final File logFile;
     private final boolean debugMode;
     private boolean successfulSetup = false;
+    private boolean firstLogMessage = true;
+    private String logHeader = null;
 
     /**
      * Creates a {@code Logger} object. The name of the logfile is the current date and time
@@ -55,6 +57,10 @@ public class Logger {
         }
     }
 
+    public void setLogHeader(String input) {
+        this.logHeader = input;
+    }
+
     /**
      * Logs the input to the logfile. Does not work if the root directory of the {@code outputDir} does not exist.
      * @param input Log message as string.
@@ -64,9 +70,16 @@ public class Logger {
             System.out.println("Cannot log message without successful setup of the Logger.");
             return;
         }
+
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(this.logFile, true))) {
+            if (this.firstLogMessage && this.logHeader != null) {
+                bufferedWriter.write(this.logHeader);
+                this.firstLogMessage = false;
+            }
+
             for (String line : input)
                 bufferedWriter.write(line);
+
             bufferedWriter.newLine();
         } catch (IOException e) {
             if (this.debugMode) {
