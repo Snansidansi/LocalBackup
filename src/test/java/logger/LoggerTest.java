@@ -19,19 +19,20 @@ public class LoggerTest {
     @Test
     void setupLogCorrectly() {
         String destPath = tempDir.resolve("successfulSetup").toString();
-        Logger logger = new Logger(destPath, false);
 
-        Assertions.assertDoesNotThrow(logger::setup);
-        Assertions.assertTrue(Files.exists(Path.of(logger.getFilePath())));
+        Assertions.assertDoesNotThrow(() -> {
+            Logger logger = Logger.init(destPath, false);
+            Assertions.assertTrue(Files.exists(Path.of(logger.getFilePath()).getParent()));
+        });
     }
 
     @Test
     void successfulLogMessage() {
         String destPath = tempDir.resolve("successfulLog").toString();
-        Logger logger = new Logger(destPath, false);
+        Logger logger = null;
 
         try {
-            logger.setup();
+            logger = Logger.init(destPath, false);
         } catch (NoSuchRootException e) {
             Assertions.fail(e.getMessage());
         }
