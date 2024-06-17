@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
@@ -8,7 +7,8 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.*?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="437.0"
-            prefWidth="672.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+            prefWidth="672.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.snansidansi.gui.controller.LogController">
     <top>
         <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
                 minWidth="-Infinity" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0"
@@ -37,7 +37,7 @@
         </Button>
     </top>
     <left>
-        <VBox prefHeight="380.0" prefWidth="140.0" style="-fx-background-color: cccccc;" BorderPane.alignment="CENTER">
+        <VBox fx:id="logFileListVBox" prefHeight="380.0" prefWidth="140.0" BorderPane.alignment="CENTER">
             <children>
                 <HBox>
                     <children>
@@ -72,6 +72,12 @@
                         <Insets bottom="5.0"/>
                     </VBox.margin>
                 </HBox>
+                <ScrollPane fx:id="logFileListScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER"
+                            prefHeight="349.0" prefWidth="140.0">
+                    <content>
+                        <VBox fx:id="logFileListVBox" prefHeight="200.0" prefWidth="100.0"/>
+                    </content>
+                </ScrollPane>
             </children>
             <BorderPane.margin>
                 <Insets bottom="10.0" left="5.0"/>

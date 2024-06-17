@@ -6,8 +6,8 @@ import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.util.Random;
 
-public class utility {
-    private utility() {
+public class Utility {
+    private Utility() {
     }
 
     public static void copyTextToClipboard(String text) {

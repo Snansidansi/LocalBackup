@@ -1,6 +1,6 @@
 package com.snansidansi.gui.controller;
 
-import com.snansidansi.gui.util.utility;
+import com.snansidansi.gui.util.Utility;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
@@ -12,12 +12,12 @@ public class AboutSceneController {
     private Label icons8LinkLabel;
 
     public void copyGithubLinkToClipboard() {
-        utility.copyTextToClipboard(githubLinkLabel.getText());
-        githubLinkLabel.setTextFill(utility.getRandomJavaFXColor());
+        Utility.copyTextToClipboard(githubLinkLabel.getText());
+        githubLinkLabel.setTextFill(Utility.getRandomJavaFXColor());
     }
 
     public void copyIcons8LinkToClipboard() {
-        utility.copyTextToClipboard(icons8LinkLabel.getText());
-        icons8LinkLabel.setTextFill(utility.getRandomJavaFXColor());
+        Utility.copyTextToClipboard(icons8LinkLabel.getText());
+        icons8LinkLabel.setTextFill(Utility.getRandomJavaFXColor());
     }
 }
