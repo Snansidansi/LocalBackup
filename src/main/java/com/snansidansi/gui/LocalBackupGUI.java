@@ -1,6 +1,6 @@
 package com.snansidansi.gui;
 
-import com.snansidansi.app.singletons.PrimaryStageSceneMangerSingleton;
+import com.snansidansi.gui.util.SceneManager;
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -16,8 +16,7 @@ public class LocalBackupGUI extends Application {
         Image appIcon = new Image("/icons/appIcon.png");
         primaryStage.getIcons().add(appIcon);
 
-        PrimaryStageSceneMangerSingleton.init(primaryStage);
-        PrimaryStageSceneMangerSingleton.getSceneManager().setConfigureBackupsScene();
+        SceneManager.setConfigureBackupsScene(primaryStage);
 
         primaryStage.show();
     }

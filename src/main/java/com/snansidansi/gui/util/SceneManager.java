@@ -8,39 +8,37 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class SceneManager {
-    private final Stage stage;
 
-    public SceneManager(Stage stage) {
-        this.stage = stage;
+    private SceneManager() {
     }
 
-    public void setConfigureBackupsScene() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/configureBackup.fxml"));
+    public static void setConfigureBackupsScene(Stage stage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource("/scenes/configureBackup.fxml"));
         Parent root = loader.load();
         Scene configureBackupScene = new Scene(root);
 
-        this.stage.setScene(configureBackupScene);
-        this.stage.setMinWidth(520);
-        this.stage.setMinHeight(350);
+        stage.setScene(configureBackupScene);
+        stage.setMinWidth(520);
+        stage.setMinHeight(350);
     }
 
-    public void setAboutScene() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/about.fxml"));
+    public static void setAboutScene(Stage stage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource("/scenes/about.fxml"));
         Parent root = loader.load();
         Scene aboutScene = new Scene(root);
 
-        this.stage.setScene(aboutScene);
-        this.stage.setMinWidth(root.prefWidth(-1) + 20);
-        this.stage.setMaxWidth(root.prefWidth(-1) + 20);
-        this.stage.setMinHeight(root.prefHeight(-1) + 40);
-        this.stage.setMaxHeight(root.prefHeight(-1) + 40);
+        stage.setScene(aboutScene);
+        stage.setMinWidth(root.prefWidth(-1) + 20);
+        stage.setMaxWidth(root.prefWidth(-1) + 20);
+        stage.setMinHeight(root.prefHeight(-1) + 40);
+        stage.setMaxHeight(root.prefHeight(-1) + 40);
     }
 
-    public void setLogScene() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/log.fxml"));
+    public static void setLogScene(Stage stage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource("/scenes/log.fxml"));
         Parent root = loader.load();
         Scene logScene = new Scene(root);
 
-        this.stage.setScene(logScene);
+        stage.setScene(logScene);
     }
 }

@@ -15,8 +15,7 @@ public class AboutWindow {
         Image windowIcon = new Image("/icons/info.png");
         aboutStage.getIcons().add(windowIcon);
 
-        SceneManager sceneManager = new SceneManager(aboutStage);
-        sceneManager.setAboutScene();
+        SceneManager.setAboutScene(aboutStage);
 
         aboutStage.show();
     }
