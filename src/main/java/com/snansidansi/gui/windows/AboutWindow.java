@@ -16,6 +16,7 @@ public class AboutWindow {
         aboutStage.getIcons().add(windowIcon);
 
         SceneManager.setAboutScene(aboutStage);
+        aboutStage.setResizable(false);
 
         aboutStage.show();
     }

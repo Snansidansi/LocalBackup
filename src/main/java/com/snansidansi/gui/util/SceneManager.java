@@ -13,32 +13,33 @@ public class SceneManager {
     }
 
     public static void setConfigureBackupsScene(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource("/scenes/configureBackup.fxml"));
-        Parent root = loader.load();
-        Scene configureBackupScene = new Scene(root);
-
-        stage.setScene(configureBackupScene);
-        stage.setMinWidth(520);
-        stage.setMinHeight(350);
+        changeScene(stage, "/scenes/configureBackup.fxml");
+        changeStageSizeBounds(stage, 520, 350, -1, -1);
     }
 
     public static void setAboutScene(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource("/scenes/about.fxml"));
-        Parent root = loader.load();
-        Scene aboutScene = new Scene(root);
+        Parent root = changeScene(stage, "/scenes/about.fxml");
 
-        stage.setScene(aboutScene);
-        stage.setMinWidth(root.prefWidth(-1) + 20);
-        stage.setMaxWidth(root.prefWidth(-1) + 20);
-        stage.setMinHeight(root.prefHeight(-1) + 40);
-        stage.setMaxHeight(root.prefHeight(-1) + 40);
+        stage.setWidth(root.prefWidth(-1) + 20);
+        stage.setHeight(root.prefHeight(-1) + 40);
     }
 
     public static void setLogScene(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource("/scenes/log.fxml"));
-        Parent root = loader.load();
-        Scene logScene = new Scene(root);
+        changeScene(stage, "/scenes/log.fxml");
+    }
 
-        stage.setScene(logScene);
+    public static void changeStageSizeBounds(Stage stage, double minWidth, double minHeight, double maxWidth, double maxHeight) {
+        stage.setMinWidth(minWidth);
+        stage.setMinHeight(minHeight);
+        stage.setMaxWidth(maxWidth == -1 ? Double.MAX_VALUE : maxWidth);
+        stage.setMaxHeight(maxHeight == -1 ? Double.MAX_VALUE : maxHeight);
+    }
+
+    private static Parent changeScene(Stage stage, String resource) throws IOException {
+        Parent root = new FXMLLoader((SceneManager.class.getResource(resource))).load();
+        Scene currentScene = stage.getScene();
+        if (currentScene == null) stage.setScene(new Scene(root));
+        else currentScene.setRoot(root);
+        return root;
     }
 }
