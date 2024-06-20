@@ -111,7 +111,7 @@
                                 </ImageView>
                             </graphic>
                             <tooltip>
-                                <Tooltip text="Delete the opend log file.">
+                                <Tooltip text="Delete the opened log file.">
                                     <font>
                                         <Font size="14.0"/>
                                     </font>
