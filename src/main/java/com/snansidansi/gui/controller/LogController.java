@@ -4,10 +4,7 @@ import com.snansidansi.gui.uielements.LogFileButton;
 import com.snansidansi.gui.util.SceneManager;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -43,12 +40,17 @@ public class LogController {
     TextFlow logFileContentTextFlow;
 
     @FXML
+    Label noLogFilesLabel;
+
+    @FXML
     public void initialize() {
         ToggleGroup logTypeTGroup = new ToggleGroup();
         this.errorLogTButton.setToggleGroup(logTypeTGroup);
         this.backupLogTButton.setToggleGroup(logTypeTGroup);
 
         setupTextSizeSpinner();
+
+        this.noLogFilesLabel.setVisible(false);
     }
 
     private void setupTextSizeSpinner() {
@@ -86,6 +88,12 @@ public class LogController {
 
         var container = this.logFileListVBox.getChildren();
         container.clear();
+
+        if (files.length == 0) {
+            this.noLogFilesLabel.setVisible(true);
+            container.add(this.noLogFilesLabel);
+            return;
+        }
 
         for (File file : files) {
             LogFileButton logFileButton = new LogFileButton(file.getName(), 14, 32);
