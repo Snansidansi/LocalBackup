@@ -106,11 +106,20 @@
                 <Insets bottom="12.0" left="10.0" right="10.0"/>
             </BorderPane.margin>
             <children>
-                <HBox alignment="CENTER_RIGHT">
+                <HBox alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="519.0">
                     <children>
+                        <Label fx:id="confirmDeleteLabel" prefHeight="30.0" prefWidth="202.0"
+                               text="Press again to confirm deletion." textFill="RED">
+                            <HBox.margin>
+                                <Insets right="5.0"/>
+                            </HBox.margin>
+                            <font>
+                                <Font size="14.0"/>
+                            </font>
+                        </Label>
                         <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity"
-                                minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0"
-                                prefWidth="30.0" text="Delete log">
+                                minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteLog"
+                                prefHeight="30.0" prefWidth="30.0" text="Delete log">
                             <font>
                                 <Font size="14.0"/>
                             </font>
@@ -133,8 +142,8 @@
                             </tooltip>
                         </Button>
                         <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity"
-                                minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0"
-                                prefWidth="30.0" text="Export log">
+                                minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#exportLog"
+                                prefHeight="30.0" prefWidth="30.0" text="Export log">
                             <font>
                                 <Font size="14.0"/>
                             </font>
