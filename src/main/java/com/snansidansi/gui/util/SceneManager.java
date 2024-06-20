@@ -26,6 +26,7 @@ public class SceneManager {
 
     public static void setLogScene(Stage stage) throws IOException {
         changeScene(stage, "/scenes/log.fxml");
+        changeStageSizeBounds(stage, 370, 160, -1, -1);
     }
 
     public static void changeStageSizeBounds(Stage stage, double minWidth, double minHeight, double maxWidth, double maxHeight) {

@@ -6,8 +6,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.*?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="437.0"
-            prefWidth="672.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane fx:id="mainBorderPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.snansidansi.gui.controller.LogController">
     <top>
         <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
@@ -37,12 +37,13 @@
         </Button>
     </top>
     <left>
-        <VBox fx:id="logFileListVBox" prefHeight="380.0" prefWidth="140.0" BorderPane.alignment="CENTER">
+        <VBox prefHeight="380.0" prefWidth="140.0" BorderPane.alignment="CENTER">
             <children>
                 <HBox>
                     <children>
-                        <ToggleButton maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-                                      minWidth="-Infinity" mnemonicParsing="false" prefWidth="70.0" text="Backup">
+                        <ToggleButton fx:id="backupLogTButton" maxHeight="-Infinity" maxWidth="-Infinity"
+                                      minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
+                                      onAction="#showBackupLogs" prefWidth="70.0" text="Backup">
                             <font>
                                 <Font size="14.0"/>
                             </font>
@@ -54,8 +55,9 @@
                                 </Tooltip>
                             </tooltip>
                         </ToggleButton>
-                        <ToggleButton maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-                                      minWidth="-Infinity" mnemonicParsing="false" prefWidth="70.0" text="Error">
+                        <ToggleButton fx:id="errorLogTButton" maxHeight="-Infinity" maxWidth="-Infinity"
+                                      minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
+                                      onAction="#showErrorLogs" prefWidth="70.0" text="Error">
                             <font>
                                 <Font size="14.0"/>
                             </font>
@@ -73,9 +75,9 @@
                     </VBox.margin>
                 </HBox>
                 <ScrollPane fx:id="logFileListScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER"
-                            prefHeight="349.0" prefWidth="140.0">
+                            prefHeight="349.0" prefWidth="140.0" VBox.vgrow="ALWAYS">
                     <content>
-                        <VBox fx:id="logFileListVBox" prefHeight="200.0" prefWidth="100.0"/>
+                        <VBox prefHeight="200.0" prefWidth="100.0"/>
                     </content>
                 </ScrollPane>
             </children>
@@ -90,7 +92,7 @@
                 <Insets bottom="10.0" left="10.0" right="10.0"/>
             </BorderPane.margin>
             <children>
-                <HBox alignment="CENTER_RIGHT">
+                <HBox fx:id="toolButtonHBox" alignment="CENTER_RIGHT">
                     <children>
                         <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity"
                                 minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0"
@@ -150,13 +152,14 @@
                                 <Insets right="3.0"/>
                             </HBox.margin>
                         </Label>
-                        <Spinner editable="true" prefHeight="25.0" prefWidth="56.0"/>
+                        <Spinner fx:id="textSizeSpinner" editable="true" prefWidth="60.0"/>
                     </children>
                     <VBox.margin>
                         <Insets bottom="5.0"/>
                     </VBox.margin>
                 </HBox>
-                <TextFlow prefHeight="325.0" prefWidth="507.0" style="-fx-background-color: e9e9e9;"/>
+                <TextFlow prefHeight="346.0" prefWidth="515.0" style="-fx-background-color: e9e9e9;"
+                          VBox.vgrow="ALWAYS"/>
             </children>
         </VBox>
     </center>
