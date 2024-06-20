@@ -19,6 +19,7 @@ public class Logger {
     private boolean successfulSetup = false;
     private boolean firstLogMessage = true;
     private String logHeader = null;
+    private boolean enabled = true;
 
     /**
      * Creates a {@code Logger} object. The name of the logfile is the current date and time
@@ -66,6 +67,7 @@ public class Logger {
      * @param input Log message as string.
      */
     public void log(String... input) {
+        if (!enabled) return;
         if (!this.successfulSetup) {
             System.out.println("Cannot log message without successful setup of the Logger.");
             return;
@@ -109,5 +111,9 @@ public class Logger {
      */
     public String getFilePath() {
         return this.logFile.getPath();
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

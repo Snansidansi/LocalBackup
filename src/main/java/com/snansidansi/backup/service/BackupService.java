@@ -52,8 +52,12 @@ public class BackupService {
     public BackupService(String backupListPath) {
         this.backupListPath = Paths.get(backupListPath).toString();
         this.allBackups = readBackups();
+
         this.backupLog = new Logger("log/backup", false);
         this.errorLog = new Logger("log/error", false);
+
+        this.backupLog.setEnabled(false);
+        this.errorLog.setEnabled(false);
 
         this.backupLog.setLogHeader("---Backup log file from local backup program: " + this.backupLog.getFilename() + "---");
         this.errorLog.setLogHeader("---Error log file form local backup program: " + this.errorLog.getFilename() + "---");
@@ -363,5 +367,10 @@ public class BackupService {
                 return true;
         }
         return false;
+    }
+
+    public void setLoggerEnabled(boolean enabled) {
+        this.errorLog.setEnabled(enabled);
+        this.backupLog.setEnabled(enabled);
     }
 }
