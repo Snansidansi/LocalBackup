@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Comparator;
 
 public class LogController {
     File currentFile = null;
@@ -94,6 +96,8 @@ public class LogController {
             container.add(this.noLogFilesLabel);
             return;
         }
+
+        Arrays.sort(files, Comparator.comparing(File::getName).reversed());
 
         for (File file : files) {
             LogFileButton logFileButton = new LogFileButton(file.getName(), 14, 32);
