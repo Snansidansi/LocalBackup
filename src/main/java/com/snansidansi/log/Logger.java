@@ -1,9 +1,7 @@
 package com.snansidansi.log;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -73,7 +71,10 @@ public class Logger {
             return;
         }
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(this.logFile, true))) {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(this.logFile, true);
+             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
+             BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)) {
+
             if (this.firstLogMessage && this.logHeader != null) {
                 bufferedWriter.write(this.logHeader + "\n\n");
                 this.firstLogMessage = false;
