@@ -15,6 +15,7 @@ public class LogFileButton extends HBox {
             LogFileButton.class.getResource("/icons/document.png").toString()));
 
     public LogFileButton(String text, int fontSize, int imageSize) {
+        super();
         this.setAlignment(Pos.CENTER_LEFT);
         this.setBorder(Border.stroke(Color.GRAY));
 
