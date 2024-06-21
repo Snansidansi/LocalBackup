@@ -12,10 +12,6 @@ public class CheckBoxSettingsRow extends SettingsRow {
         super.getControlHBox().getChildren().add(this.checkBox);
     }
 
-    public void setStandardValue(boolean checked) {
-        this.checkBox.setSelected(checked);
-    }
-
     @Override
     public String getValue() {
         return String.valueOf(this.checkBox.isSelected());
