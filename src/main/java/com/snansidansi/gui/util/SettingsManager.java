@@ -11,9 +11,10 @@ public class SettingsManager {
     private static final Path settingsFilePath = Path.of("data/settings.txt");
     private static final Map<String, String> defaultSettingsMap = new HashMap<>();
     private static final Map<String, String> settingsMap = new HashMap<>();
+    private static final Map<String, String> tempSettingsMap = new HashMap<>();
 
     static {
-        // Name of the setting in lowercase letters
+        // Add new settings here.
     }
 
     private SettingsManager() {
@@ -28,7 +29,7 @@ public class SettingsManager {
      */
     public static boolean load() {
         if (Files.notExists(settingsFilePath)) {
-            save(); // Writes default settings to file
+            saveToFile(); // Writes default settings to file
             return true;
         }
 
@@ -55,12 +56,13 @@ public class SettingsManager {
 
     public static void restoreDefaults() {
         settingsMap.clear();
+        saveToFile();
     }
 
     /**
      * @return Boolean value if writing the settings to the settings file happened without an IOException.
      */
-    public static boolean save() {
+    private static boolean saveToFile() {
         try (FileOutputStream fileOutputStream = new FileOutputStream(settingsFilePath.toFile());
              OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
              BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)) {
@@ -82,4 +84,26 @@ public class SettingsManager {
         return true;
     }
 
+    public static boolean applyChanges() {
+        Map<String, String> backupSettingsMap = new HashMap<>(settingsMap);
+
+        for (var setting : tempSettingsMap.entrySet()) {
+            if (defaultSettingsMap.containsKey(setting.getKey()))
+                settingsMap.put(setting.getKey(), setting.getValue());
+        }
+
+        if (saveToFile()) return true;
+        settingsMap.clear();
+        settingsMap.putAll(backupSettingsMap);
+        saveToFile();
+        return false;
+    }
+
+    public static void discardChanges() {
+        tempSettingsMap.clear();
+    }
+
+    public static void changeSetting(String settingID, String value) {
+        tempSettingsMap.put(settingID, value);
+    }
 }
