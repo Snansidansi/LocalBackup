@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
@@ -39,7 +38,7 @@
             </VBox.margin>
             <children>
                 <Button mnemonicParsing="false" onAction="#restoreDefaultSettings" text="Restore default settings"/>
-                <Button mnemonicParsing="false" onAction="#abortChanges" text="Abort changes"/>
+                <Button mnemonicParsing="false" onAction="#discardChanges" text="Discard changes"/>
                 <Button mnemonicParsing="false" onAction="#saveChanges" text="Save"/>
             </children>
         </HBox>
