@@ -2,7 +2,7 @@ package com.snansidansi.app;
 
 import com.snansidansi.app.singletons.BackupServiceSingleton;
 import com.snansidansi.gui.LocalBackupGUI;
-import com.snansidansi.gui.util.SettingsManager;
+import com.snansidansi.settings.SettingsManager;
 import javafx.application.Application;
 
 public class LocalBackupApp {

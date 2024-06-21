@@ -2,7 +2,7 @@ package com.snansidansi.gui.controller;
 
 import com.snansidansi.gui.uielements.settingsrow.SettingsRow;
 import com.snansidansi.gui.util.SceneManager;
-import com.snansidansi.gui.util.SettingsManager;
+import com.snansidansi.settings.SettingsManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;

@@ -1,4 +1,5 @@
 package com.snansidansi.gui.util;
+package com.snansidansi.settings;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
