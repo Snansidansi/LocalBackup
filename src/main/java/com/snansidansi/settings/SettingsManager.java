@@ -1,5 +1,6 @@
-package com.snansidansi.gui.util;
 package com.snansidansi.settings;
+
+import javafx.util.Pair;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -48,11 +49,13 @@ public class SettingsManager {
         String[] splitLine = line.split(":", 2);
         if (splitLine.length != 2) return;
 
-        String setting = splitLine[0].strip().toLowerCase();
-        if (!defaultSettingsMap.containsKey(setting)) return;
+        String settingID = splitLine[0].strip().toLowerCase();
+        if (!defaultSettingsMap.containsKey(settingID)) return;
 
         String value = splitLine[1].strip();
-        settingsMap.put(setting, value);
+
+        if (isValidSettingsValue(Setting.getEnumFromID(settingID), value))
+            settingsMap.put(settingID, value);
     }
 
     public static void restoreDefaults() {
@@ -89,8 +92,11 @@ public class SettingsManager {
         Map<String, String> backupSettingsMap = new HashMap<>(settingsMap);
 
         for (var setting : tempSettingsMap.entrySet()) {
-            if (defaultSettingsMap.containsKey(setting.getKey()))
+            if (defaultSettingsMap.containsKey(setting.getKey())
+                    && isValidSettingsValue(Setting.getEnumFromID(setting.getKey()), setting.getValue())) {
+
                 settingsMap.put(setting.getKey(), setting.getValue());
+            }
         }
 
         if (saveToFile()) return true;
@@ -106,5 +112,40 @@ public class SettingsManager {
 
     public static void changeSetting(String settingID, String value) {
         tempSettingsMap.put(settingID, value);
+    }
+
+    public static Pair<String, ?> getSetting(Setting setting) {
+        String settingValue;
+        if ((settingValue = settingsMap.get(setting.getID())) == null)
+            settingValue = defaultSettingsMap.get(setting.getID());
+
+        return switch (setting.getType()) {
+            case INTEGER -> new Pair<>(setting.getID(), Integer.parseInt(settingValue));
+            case BOOLEAN -> new Pair<>(setting.getID(), Boolean.parseBoolean(settingValue));
+            case STRING -> new Pair<>(setting.getID(), settingValue);
+        };
+    }
+
+    private static boolean isValidSettingsValue(Setting setting, String value) {
+        if (setting == null) return false;
+
+        switch (setting.getType()) {
+            case INTEGER:
+                try {
+                    Integer.parseInt(value);
+                    return true;
+                } catch (NumberFormatException unused) {
+                    return false;
+                }
+            case BOOLEAN:
+                return value.equals("true") || value.equals("false");
+            case STRING:
+                return true;
+        }
+        return false;
+    }
+
+    private static void newDefaultSetting(Setting setting, String defaultValue) {
+        defaultSettingsMap.put(setting.toString(), defaultValue);
     }
 }
