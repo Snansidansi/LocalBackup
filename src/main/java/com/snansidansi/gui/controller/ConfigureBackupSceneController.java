@@ -1,6 +1,6 @@
 package com.snansidansi.gui.controller;
 
-import com.snansidansi.app.singletons.BackupServiceSingleton;
+import com.snansidansi.app.instances.BackupServiceInstance;
 import com.snansidansi.app.singletons.RunBackupThreadSingleton;
 import com.snansidansi.backup.exceptions.DestinationNoDirException;
 import com.snansidansi.backup.exceptions.DestinationPathIsInSourcePathException;
@@ -139,7 +139,7 @@ public class ConfigureBackupSceneController {
         if (!changedValues) checkedElements = getCheckedElementsFromTable();
         this.tableView.getItems().clear();
 
-        for (SrcDestPair pathPair : BackupServiceSingleton.backupService.getAllBackups()) {
+        for (SrcDestPair pathPair : BackupServiceInstance.backupService.getAllBackups()) {
             pathPair = adjustSrcDestPairToPathMode(pathPair);
             boolean checked = false;
 
@@ -256,7 +256,7 @@ public class ConfigureBackupSceneController {
             return;
         }
 
-        if (BackupServiceSingleton.backupService.checkIfBackupAlreadyExists(pathPair)) {
+        if (BackupServiceInstance.backupService.checkIfBackupAlreadyExists(pathPair)) {
             this.invalidSrcPathLabel.setVisible(true);
             this.invalidSrcPathLabel.setText("Backup already exists.");
             this.invalidDestPathLabel.setVisible(false);
@@ -270,7 +270,7 @@ public class ConfigureBackupSceneController {
             return;
         }
 
-        if (!BackupServiceSingleton.backupService.addBackup(pathPair)) {
+        if (!BackupServiceInstance.backupService.addBackup(pathPair)) {
             this.invalidSrcPathLabel.setVisible(true);
             this.invalidSrcPathLabel.setText("Error: Backup could not be added (view log)");
             return;
@@ -299,7 +299,7 @@ public class ConfigureBackupSceneController {
         }
 
         List<Integer> indicesToRemove = getCheckedElementsFromTable();
-        BackupServiceSingleton.backupService.removeBackup(indicesToRemove.stream().mapToInt(i -> i).toArray());
+        BackupServiceInstance.backupService.removeBackup(indicesToRemove.stream().mapToInt(i -> i).toArray());
 
         refillTable(true);
 
