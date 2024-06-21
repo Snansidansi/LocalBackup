@@ -339,4 +339,11 @@ public class ConfigureBackupSceneController {
         } catch (IOException unused) {
         }
     }
+
+    public void switchToSettingsScene() {
+        try {
+            SceneManager.setSettingsScene((Stage) this.mainContainer.getScene().getWindow());
+        } catch (IOException unused) {
+        }
+    }
 }

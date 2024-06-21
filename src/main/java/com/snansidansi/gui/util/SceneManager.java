@@ -29,6 +29,11 @@ public class SceneManager {
         changeStageSizeBounds(stage, 370, 160, -1, -1);
     }
 
+    public static void setSettingsScene(Stage stage) throws IOException {
+        changeScene(stage, "/scenes/settings.fxml");
+        changeStageSizeBounds(stage, 330, 200, -1, -1);
+    }
+
     public static void changeStageSizeBounds(Stage stage, double minWidth, double minHeight, double maxWidth, double maxHeight) {
         stage.setMinWidth(minWidth);
         stage.setMinHeight(minHeight);

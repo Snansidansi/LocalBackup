@@ -242,7 +242,11 @@
                         <MenuItem mnemonicParsing="false" onAction="#runBackup" text="Run backup" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Settings" />
+                <Menu mnemonicParsing="false" text="Settings">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#switchToSettingsScene" text="Change Settings"/>
+                    </items>
+                </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#showAboutMessageBox" text="About" />
