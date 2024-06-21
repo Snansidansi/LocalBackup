@@ -70,7 +70,7 @@ public class LogController {
             try {
                 Integer.parseInt(newValue);
             } catch (NumberFormatException unused) {
-                textSizeSpinner.getEditor().setText(oldValue);
+                this.textSizeSpinner.getEditor().setText(oldValue);
             }
         });
     }
