@@ -13,8 +13,8 @@ import java.util.Map;
 public class SettingsManager<T extends Enum<T> & Settings> {
     private final Path settingsFilePath;
     private final Class<T> enumClass;
-    private final Map<String, String> settingsMap = new HashMap<>();
-    private final Map<String, String> tempSettingsMap = new HashMap<>();
+    private final Map<T, String> settingsMap = new HashMap<>();
+    private final Map<T, String> tempSettingsMap = new HashMap<>();
 
     public SettingsManager(String filePath, Class<T> settingEnum) throws InvalidPathException {
         this.settingsFilePath = Path.of(filePath);
@@ -30,7 +30,6 @@ public class SettingsManager<T extends Enum<T> & Settings> {
      */
     public boolean load() {
         if (Files.notExists(this.settingsFilePath)) {
-            saveToFile(); // Writes default settings to file
             return true;
         }
 
@@ -54,7 +53,7 @@ public class SettingsManager<T extends Enum<T> & Settings> {
 
         String value = splitLine[1].strip();
         if (isValidSettingsValue(defaultSetting, value))
-            this.settingsMap.put(settingID, value);
+            this.settingsMap.put(defaultSetting, value);
     }
 
     public void restoreDefaults() {
@@ -73,8 +72,8 @@ public class SettingsManager<T extends Enum<T> & Settings> {
             for (T defaultSetting : this.enumClass.getEnumConstants()) {
                 String key = defaultSetting.getID();
 
-                if (this.settingsMap.containsKey(key)) {
-                    bufferedWriter.write(key + ":" + this.settingsMap.get(key));
+                if (this.settingsMap.containsKey(defaultSetting)) {
+                    bufferedWriter.write(key + ":" + this.settingsMap.get(defaultSetting));
                     bufferedWriter.newLine();
                     continue;
                 }
@@ -88,11 +87,10 @@ public class SettingsManager<T extends Enum<T> & Settings> {
     }
 
     public boolean applyChanges() {
-        Map<String, String> backupSettingsMap = new HashMap<>(this.settingsMap);
+        Map<T, String> backupSettingsMap = new HashMap<>(this.settingsMap);
 
         for (var setting : this.tempSettingsMap.entrySet()) {
-            T enumValue = getEnumFromID(setting.getKey());
-            if (isValidSettingsValue(enumValue, setting.getValue()))
+            if (isValidSettingsValue(setting.getKey(), setting.getValue()))
                 this.settingsMap.put(setting.getKey(), setting.getValue());
         }
 
@@ -107,19 +105,19 @@ public class SettingsManager<T extends Enum<T> & Settings> {
         this.tempSettingsMap.clear();
     }
 
-    public void changeSetting(String settingID, String value) {
-        this.tempSettingsMap.put(settingID, value);
+    public void changeSetting(T setting, String value) {
+        this.tempSettingsMap.put(setting, value);
     }
 
-    public Pair<String, ?> getSetting(T backupSetting) {
+    public Pair<String, ?> getSetting(T setting) {
         String settingValue;
-        if ((settingValue = this.settingsMap.get(backupSetting.getID())) == null)
-            settingValue = backupSetting.getStandardValue();
+        if ((settingValue = this.settingsMap.get(setting)) == null)
+            settingValue = setting.getStandardValue();
 
-        return switch (backupSetting.getType()) {
-            case INTEGER -> new Pair<>(backupSetting.getID(), Integer.parseInt(settingValue));
-            case BOOLEAN -> new Pair<>(backupSetting.getID(), Boolean.parseBoolean(settingValue));
-            case STRING -> new Pair<>(backupSetting.getID(), settingValue);
+        return switch (setting.getType()) {
+            case INTEGER -> new Pair<>(setting.getID(), Integer.parseInt(settingValue));
+            case BOOLEAN -> new Pair<>(setting.getID(), Boolean.parseBoolean(settingValue));
+            case STRING -> new Pair<>(setting.getID(), settingValue);
         };
     }
 
