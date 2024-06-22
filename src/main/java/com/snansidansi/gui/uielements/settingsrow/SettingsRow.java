@@ -51,4 +51,8 @@ public abstract class SettingsRow extends HBox {
     public abstract void restoreStandardValue();
 
     public abstract void setStandardValue(String value);
+
+    public String getStandardValue() {
+        return this.standardValue;
+    }
 }
