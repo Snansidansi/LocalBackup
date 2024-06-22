@@ -5,21 +5,21 @@ import javafx.util.Pair;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SettingsManager {
-    private static final Path settingsFilePath = Path.of("data/settings.txt");
-    private static final Map<String, String> defaultSettingsMap = new HashMap<>();
-    private static final Map<String, String> settingsMap = new HashMap<>();
-    private static final Map<String, String> tempSettingsMap = new HashMap<>();
+public class SettingsManager<T extends Enum<T> & Settings> {
+    private final Path settingsFilePath;
+    private final Class<T> enumClass;
+    private final Map<String, String> defaultSettingsMap = new HashMap<>();
+    private final Map<String, String> settingsMap = new HashMap<>();
+    private final Map<String, String> tempSettingsMap = new HashMap<>();
 
-    static {
-        // Add new settings here.
-    }
-
-    private SettingsManager() {
+    public SettingsManager(String filePath, Class<T> settingEnum) throws InvalidPathException {
+        this.settingsFilePath = Path.of(filePath);
+        this.enumClass = settingEnum;
     }
 
     /**
@@ -29,13 +29,13 @@ public class SettingsManager {
      * default values were loaded. Returns false if an IOException occurred when reading the file and default values
      * were used.
      */
-    public static boolean load() {
-        if (Files.notExists(settingsFilePath)) {
+    public boolean load() {
+        if (Files.notExists(this.settingsFilePath)) {
             saveToFile(); // Writes default settings to file
             return true;
         }
 
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(settingsFilePath.toFile()))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(this.settingsFilePath.toFile()))) {
             String line;
             while ((line = bufferedReader.readLine()) != null)
                 addToSettingsMap(line);
@@ -45,37 +45,37 @@ public class SettingsManager {
         return true;
     }
 
-    private static void addToSettingsMap(String line) {
+    private void addToSettingsMap(String line) {
         String[] splitLine = line.split(":", 2);
         if (splitLine.length != 2) return;
 
         String settingID = splitLine[0].strip().toLowerCase();
-        if (!defaultSettingsMap.containsKey(settingID)) return;
+        if (!this.defaultSettingsMap.containsKey(settingID)) return;
 
         String value = splitLine[1].strip();
 
-        if (isValidSettingsValue(Setting.getEnumFromID(settingID), value))
-            settingsMap.put(settingID, value);
+        if (isValidSettingsValue(getEnumFromID(settingID), value))
+            this.settingsMap.put(settingID, value);
     }
 
-    public static void restoreDefaults() {
-        settingsMap.clear();
+    public void restoreDefaults() {
+        this.settingsMap.clear();
         saveToFile();
     }
 
     /**
      * @return Boolean value if writing the settings to the settings file happened without an IOException.
      */
-    private static boolean saveToFile() {
-        try (FileOutputStream fileOutputStream = new FileOutputStream(settingsFilePath.toFile());
+    private boolean saveToFile() {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(this.settingsFilePath.toFile());
              OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
              BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)) {
 
-            for (var defaultSetting : defaultSettingsMap.entrySet()) {
+            for (var defaultSetting : this.defaultSettingsMap.entrySet()) {
                 String key = defaultSetting.getKey();
 
-                if (settingsMap.containsKey(key)) {
-                    bufferedWriter.write(key + ":" + settingsMap.get(key));
+                if (this.settingsMap.containsKey(key)) {
+                    bufferedWriter.write(key + ":" + this.settingsMap.get(key));
                     bufferedWriter.newLine();
                     continue;
                 }
@@ -88,48 +88,48 @@ public class SettingsManager {
         return true;
     }
 
-    public static boolean applyChanges() {
-        Map<String, String> backupSettingsMap = new HashMap<>(settingsMap);
+    public boolean applyChanges() {
+        Map<String, String> backupSettingsMap = new HashMap<>(this.settingsMap);
 
-        for (var setting : tempSettingsMap.entrySet()) {
-            if (defaultSettingsMap.containsKey(setting.getKey())
-                    && isValidSettingsValue(Setting.getEnumFromID(setting.getKey()), setting.getValue())) {
+        for (var setting : this.tempSettingsMap.entrySet()) {
+            if (this.defaultSettingsMap.containsKey(setting.getKey())
+                    && isValidSettingsValue(getEnumFromID(setting.getKey()), setting.getValue())) {
 
-                settingsMap.put(setting.getKey(), setting.getValue());
+                this.settingsMap.put(setting.getKey(), setting.getValue());
             }
         }
 
         if (saveToFile()) return true;
-        settingsMap.clear();
-        settingsMap.putAll(backupSettingsMap);
+        this.settingsMap.clear();
+        this.settingsMap.putAll(backupSettingsMap);
         saveToFile();
         return false;
     }
 
-    public static void discardChanges() {
-        tempSettingsMap.clear();
+    public void discardChanges() {
+        this.tempSettingsMap.clear();
     }
 
-    public static void changeSetting(String settingID, String value) {
-        tempSettingsMap.put(settingID, value);
+    public void changeSetting(String settingID, String value) {
+        this.tempSettingsMap.put(settingID, value);
     }
 
-    public static Pair<String, ?> getSetting(Setting setting) {
+    public Pair<String, ?> getSetting(T backupSetting) {
         String settingValue;
-        if ((settingValue = settingsMap.get(setting.getID())) == null)
-            settingValue = defaultSettingsMap.get(setting.getID());
+        if ((settingValue = this.settingsMap.get(backupSetting.getID())) == null)
+            settingValue = this.defaultSettingsMap.get(backupSetting.getID());
 
-        return switch (setting.getType()) {
-            case INTEGER -> new Pair<>(setting.getID(), Integer.parseInt(settingValue));
-            case BOOLEAN -> new Pair<>(setting.getID(), Boolean.parseBoolean(settingValue));
-            case STRING -> new Pair<>(setting.getID(), settingValue);
+        return switch (backupSetting.getType()) {
+            case INTEGER -> new Pair<>(backupSetting.getID(), Integer.parseInt(settingValue));
+            case BOOLEAN -> new Pair<>(backupSetting.getID(), Boolean.parseBoolean(settingValue));
+            case STRING -> new Pair<>(backupSetting.getID(), settingValue);
         };
     }
 
-    private static boolean isValidSettingsValue(Setting setting, String value) {
-        if (setting == null) return false;
+    private boolean isValidSettingsValue(T backupSetting, String value) {
+        if (backupSetting == null) return false;
 
-        switch (setting.getType()) {
+        switch (backupSetting.getType()) {
             case INTEGER:
                 try {
                     Integer.parseInt(value);
@@ -145,7 +145,10 @@ public class SettingsManager {
         return false;
     }
 
-    private static void newDefaultSetting(Setting setting, String defaultValue) {
-        defaultSettingsMap.put(setting.toString(), defaultValue);
+    private T getEnumFromID(String id) {
+        for (T setting : this.enumClass.getEnumConstants()) {
+            if (id.equals(setting.getID())) return setting;
+        }
+        return null;
     }
 }
