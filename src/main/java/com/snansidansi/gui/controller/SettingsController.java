@@ -58,7 +58,7 @@ public class SettingsController {
 
     public void saveChanges() {
         for (SettingsRow settingsRow : this.availableSettingsRows) {
-            //SettingsManagerInstance.settingsManager.changeSetting(settingsRow.getSetting(), settingsRow.getValue());
+            SettingsManagerInstance.settingsManager.changeSetting(settingsRow.getSetting(), settingsRow.getValue());
             settingsRow.setStandardValue(settingsRow.getValue());
         }
 

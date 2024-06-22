@@ -1,14 +1,19 @@
 package com.snansidansi.gui.uielements.settingsrow;
 
+import com.snansidansi.settings.BackupSetting;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.control.CheckBox;
 
 public class CheckBoxSettingsRow extends SettingsRow {
-    private CheckBox checkBox = new CheckBox();
-    private String standardValue = "false";
+    private final CheckBox checkBox = new CheckBox();
+    private String standardValue;
 
-    public CheckBoxSettingsRow(String settingName, int fontSize, String settingID, ReadOnlyDoubleProperty widthProperty) {
-        super(settingName, fontSize, settingID, widthProperty);
+    public CheckBoxSettingsRow(BackupSetting setting,
+                               String standardValue,
+                               int fontSize,
+                               ReadOnlyDoubleProperty widthProperty) {
+
+        super(setting, standardValue, fontSize, widthProperty);
         super.getControlHBox().getChildren().add(this.checkBox);
     }
 

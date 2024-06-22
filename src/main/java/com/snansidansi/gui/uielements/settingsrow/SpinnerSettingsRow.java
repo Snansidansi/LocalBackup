@@ -1,15 +1,20 @@
 package com.snansidansi.gui.uielements.settingsrow;
 
+import com.snansidansi.settings.BackupSetting;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 
 public class SpinnerSettingsRow extends SettingsRow {
-    private Spinner<Integer> spinner = new Spinner<>();
-    private String standardValue = "0";
+    private final Spinner<Integer> spinner = new Spinner<>();
+    private String standardValue;
 
-    public SpinnerSettingsRow(String settingName, int fontSize, String settingID, ReadOnlyDoubleProperty widthProperty) {
-        super(settingName, fontSize, settingID, widthProperty);
+    public SpinnerSettingsRow(BackupSetting setting,
+                              String standardValue,
+                              int fontSize,
+                              ReadOnlyDoubleProperty widthProperty) {
+
+        super(setting, standardValue, fontSize, widthProperty);
         super.getControlHBox().getChildren().add(this.spinner);
 
         this.spinner.setEditable(true);
