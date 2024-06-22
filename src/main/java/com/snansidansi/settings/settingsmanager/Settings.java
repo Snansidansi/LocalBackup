@@ -1,4 +1,4 @@
-package com.snansidansi.settings;
+package com.snansidansi.settings.settingsmanager;
 
 public interface Settings {
     String getID();

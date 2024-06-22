@@ -1,7 +1,7 @@
 package com.snansidansi.app.instances;
 
 import com.snansidansi.settings.BackupSetting;
-import com.snansidansi.settings.SettingsManager;
+import com.snansidansi.settings.settingsmanager.SettingsManager;
 
 public class SettingsManagerInstance {
     public static final SettingsManager<BackupSetting> settingsManager =

@@ -1,5 +1,8 @@
 package com.snansidansi.settings;
 
+import com.snansidansi.settings.settingsmanager.SettingType;
+import com.snansidansi.settings.settingsmanager.Settings;
+
 public enum BackupSetting implements Settings {
     NONE("none", "Nothing", "null", SettingType.BOOLEAN, false);
 
