@@ -6,13 +6,13 @@ import javafx.scene.control.TextField;
 
 public class TextFieldSettingsRow extends SettingsRow {
     private final TextField textField = new TextField();
-    private String standardValue;
+    private String initValue;
 
     public TextFieldSettingsRow(BackupSetting setting,
-                                String standardValue,
+                                String initValue,
                                 int fontSize,
                                 ReadOnlyDoubleProperty widthProperty) {
-        super(setting, standardValue, fontSize, widthProperty);
+        super(setting, initValue, fontSize, widthProperty);
         super.getControlHBox().getChildren().add(textField);
     }
 
@@ -28,12 +28,12 @@ public class TextFieldSettingsRow extends SettingsRow {
 
     @Override
     public void restoreStandardValue() {
-        this.textField.setText(standardValue);
+        this.textField.setText(initValue);
     }
 
     @Override
-    public void setStandardValue(String value) {
-        this.standardValue = value;
+    public void setInitValue(String value) {
+        this.initValue = value;
         restoreStandardValue();
     }
 

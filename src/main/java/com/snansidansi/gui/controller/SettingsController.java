@@ -70,7 +70,7 @@ public class SettingsController {
     public void saveChanges() {
         for (SettingsRow settingsRow : this.availableSettingsRows) {
             SettingsManagerInstance.settingsManager.changeSetting(settingsRow.getSetting(), settingsRow.getValue());
-            settingsRow.setStandardValue(settingsRow.getValue());
+            settingsRow.setInitValue(settingsRow.getValue());
         }
 
         if (SettingsManagerInstance.settingsManager.applyChanges()) return;
@@ -79,7 +79,7 @@ public class SettingsController {
 
     private boolean settingsChanged() {
         for (SettingsRow settingsRow : this.availableSettingsRows) {
-            if (!settingsRow.getValue().equals(settingsRow.getStandardValue()))
+            if (!settingsRow.getValue().equals(settingsRow.getInitValue()))
                 return true;
         }
         return false;

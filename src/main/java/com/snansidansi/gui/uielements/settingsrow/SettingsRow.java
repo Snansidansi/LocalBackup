@@ -11,16 +11,16 @@ import javafx.scene.text.Font;
 public abstract class SettingsRow extends HBox {
     private final HBox controlHBox = new HBox();
     private final BackupSetting setting;
-    protected String standardValue;
+    protected String initValue;
 
     public SettingsRow(BackupSetting setting,
-                       String standardValue,
+                       String initValue,
                        int fontSize,
                        ReadOnlyDoubleProperty widthProperty) {
 
         super();
         this.setting = setting;
-        this.standardValue = standardValue;
+        this.initValue = initValue;
 
         Font fontSizeFont = new Font(fontSize);
         Label nameLabel = new Label(this.setting.getDisplayText());
@@ -50,9 +50,9 @@ public abstract class SettingsRow extends HBox {
 
     public abstract void restoreStandardValue();
 
-    public abstract void setStandardValue(String value);
+    public abstract void setInitValue(String value);
 
-    public String getStandardValue() {
-        return this.standardValue;
+    public String getInitValue() {
+        return this.initValue;
     }
 }

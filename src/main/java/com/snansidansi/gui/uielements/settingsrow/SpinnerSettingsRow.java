@@ -7,7 +7,7 @@ import javafx.scene.control.SpinnerValueFactory;
 
 public class SpinnerSettingsRow extends SettingsRow {
     private final Spinner<Integer> spinner = new Spinner<>();
-    private String standardValue;
+    private String initValue;
 
     public SpinnerSettingsRow(BackupSetting setting,
                               String standardValue,
@@ -33,7 +33,7 @@ public class SpinnerSettingsRow extends SettingsRow {
                 .IntegerSpinnerValueFactory(minValue, maxValue, standardValue);
         this.spinner.setValueFactory(valueFactory);
 
-        this.standardValue = String.valueOf(standardValue);
+        this.initValue = String.valueOf(standardValue);
     }
 
     public void setSpinnerWidth(int width) {
@@ -48,12 +48,12 @@ public class SpinnerSettingsRow extends SettingsRow {
 
     @Override
     public void restoreStandardValue() {
-        this.spinner.getEditor().setText(this.standardValue);
+        this.spinner.getEditor().setText(this.initValue);
     }
 
     @Override
-    public void setStandardValue(String value) {
-        this.standardValue = value;
+    public void setInitValue(String value) {
+        this.initValue = value;
         restoreStandardValue();
     }
 }
