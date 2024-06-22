@@ -1,7 +1,5 @@
 package com.snansidansi.settings.settingsmanager;
 
-import javafx.util.Pair;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -109,16 +107,18 @@ public class SettingsManager<T extends Enum<T> & Settings> {
         this.tempSettingsMap.put(setting, value);
     }
 
-    public Pair<String, ?> getSetting(T setting) {
+    /**
+     * Gets the value of a loaded setting.
+     *
+     * @param setting The setting whose value should be returned as enum value.
+     * @return The value of the requested setting as string.
+     */
+    public String getSetting(T setting) {
         String settingValue;
         if ((settingValue = this.settingsMap.get(setting)) == null)
             settingValue = setting.getStandardValue();
 
-        return switch (setting.getType()) {
-            case INTEGER -> new Pair<>(setting.getID(), Integer.parseInt(settingValue));
-            case BOOLEAN -> new Pair<>(setting.getID(), Boolean.parseBoolean(settingValue));
-            case STRING -> new Pair<>(setting.getID(), settingValue);
-        };
+        return settingValue;
     }
 
     private boolean isValidSettingsValue(T backupSetting, String value) {
