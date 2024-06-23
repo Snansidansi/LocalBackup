@@ -158,13 +158,16 @@ public class SettingsManager<T extends Enum<T> & Settings> {
     }
 
     /**
-     * @return Boolean value if it is a valid settings value. Returns also false if the type {@link SettingType} of the
-     * setting is not implemented in this method.
+     * Checks if a string value has the correct type for a specific setting. If the declared settings type in the given
+     * settings enum value is {@code INTEGER} the method checks if the value string contains a valid integer.
+     * @param setting A setting as enum value.
+     * @param value A settings value as string.
+     * @return Boolean value if it is a valid settings value.
      */
-    private boolean isValidSettingsValue(T backupSetting, String value) {
-        if (backupSetting == null) return false;
+    public boolean isValidSettingsValue(T setting, String value) {
+        if (setting == null) return false;
 
-        switch (backupSetting.getType()) {
+        switch (setting.getType()) {
             case INTEGER:
                 try {
                     Integer.parseInt(value);
@@ -181,9 +184,11 @@ public class SettingsManager<T extends Enum<T> & Settings> {
     }
 
     /**
+     * Gets the enum value that belongs to a settings id.
+     * @param id A setting id as string.
      * @return Returns the enum value to a settings id. Returns null if no enum value is associated with this id.
      */
-    private T getEnumFromID(String id) {
+    public T getEnumFromID(String id) {
         for (T setting : this.enumClass.getEnumConstants()) {
             if (id.equals(setting.getID())) return setting;
         }
