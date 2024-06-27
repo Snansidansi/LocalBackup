@@ -6,11 +6,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * A class for creating simple logfiles with a {@code .txt} extension.
  */
 public class Logger {
+    private final int maxNumberOfLogs = 1;
     private final Path outputDir;
     private final File logFile;
     private final boolean debugMode;
@@ -75,10 +78,7 @@ public class Logger {
              OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
              BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)) {
 
-            if (this.firstLogMessage && this.logHeader != null) {
-                bufferedWriter.write(this.logHeader + "\n\n");
-                this.firstLogMessage = false;
-            }
+            if (this.firstLogMessage) prepareFirstLogMessage(bufferedWriter);
 
             for (String line : input)
                 bufferedWriter.write(line + "\n");
@@ -98,6 +98,24 @@ public class Logger {
                 System.out.println("-----");
             }
         }
+    }
+
+    private void prepareFirstLogMessage(BufferedWriter bufferedWriter) throws IOException {
+        FilenameFilter logFileFilter = (dir, name) -> name.endsWith(".txt");
+
+        File[] logFiles = this.outputDir.toFile().listFiles(logFileFilter);
+        if (logFiles == null) return;
+        Arrays.sort(logFiles, Comparator.comparing(File::getName));
+
+        int numberOfLogFiles = logFiles.length;
+        if (numberOfLogFiles > this.maxNumberOfLogs) {
+            for (int i = 0; i < numberOfLogFiles - this.maxNumberOfLogs; i++)
+                logFiles[i].delete();
+        }
+
+        if (this.logHeader != null) bufferedWriter.write(this.logHeader + "\n\n");
+
+        this.firstLogMessage = false;
     }
 
     /**
