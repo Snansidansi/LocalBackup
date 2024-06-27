@@ -194,4 +194,8 @@ public class SettingsManager<T extends Enum<T> & Settings> {
         }
         return null;
     }
+
+    public String getSettingsFilePath() {
+        return this.settingsFilePath.toString();
+    }
 }
