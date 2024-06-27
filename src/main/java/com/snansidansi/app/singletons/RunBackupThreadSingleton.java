@@ -2,17 +2,25 @@ package com.snansidansi.app.singletons;
 
 import com.snansidansi.app.instances.BackupServiceInstance;
 
-public class RunBackupThreadSingleton extends Thread {
-    private static final RunBackupThreadSingleton thread = new RunBackupThreadSingleton();
+public class RunBackupThreadSingleton {
+    private static runBackupThread thread = null;
 
     private RunBackupThreadSingleton() {
     }
 
-    public void run() {
-        BackupServiceInstance.backupService.runBackup();
+    private static class runBackupThread extends Thread {
+        public void run() {
+            BackupServiceInstance.backupService.runBackup();
+        }
     }
 
-    public static RunBackupThreadSingleton getThread() {
-        return thread;
+    public static void start() {
+        thread = new runBackupThread();
+        thread.start();
+    }
+
+    public static boolean isAlive() {
+        if (thread == null) return false;
+        return thread.isAlive();
     }
 }

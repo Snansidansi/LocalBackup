@@ -217,7 +217,8 @@ public class ConfigureBackupSceneController {
     }
 
     public void runBackup() {
-        RunBackupThreadSingleton.getThread().start();
+        if (RunBackupThreadSingleton.isAlive()) return;
+        RunBackupThreadSingleton.start();
     }
 
     public void addBackup() {
@@ -263,7 +264,7 @@ public class ConfigureBackupSceneController {
             return;
         }
 
-        if (RunBackupThreadSingleton.getThread().isAlive()) {
+        if (RunBackupThreadSingleton.isAlive()) {
             this.invalidSrcPathLabel.setVisible(true);
             this.invalidSrcPathLabel.setText("Please wait for running backup to finish.");
             this.invalidDestPathLabel.setVisible(false);
@@ -285,7 +286,7 @@ public class ConfigureBackupSceneController {
     }
 
     public void deleteBackup() {
-        if (RunBackupThreadSingleton.getThread().isAlive()) {
+        if (RunBackupThreadSingleton.isAlive()) {
             this.deleteConfirmLabel.setVisible(true);
             this.deleteConfirmLabel.setText("Please wait for running backup to finish.");
             return;
