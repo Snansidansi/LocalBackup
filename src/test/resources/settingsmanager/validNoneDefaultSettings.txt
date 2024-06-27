@@ -1,0 +1,3 @@
+ainteger:55
+aboolean:false
+astring:manual

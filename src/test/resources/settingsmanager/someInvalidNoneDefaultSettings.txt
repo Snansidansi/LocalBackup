@@ -1,0 +1,3 @@
+ainteger:invalid
+aboolean:invalid
+astring:valid
