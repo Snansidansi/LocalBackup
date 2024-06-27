@@ -15,7 +15,7 @@ import java.util.Comparator;
 public class Logger {
     private final int maxNumberOfLogs = 1;
     private final Path outputDir;
-    private final File logFile;
+    private File logFile;
     private final boolean debugMode;
     private boolean successfulSetup = false;
     private boolean firstLogMessage = true;
@@ -33,15 +33,21 @@ public class Logger {
     public Logger(String outputDir, boolean debugMode) {
         this.outputDir = Path.of(outputDir);
         this.debugMode = debugMode;
+        setup();
+    }
 
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
-        LocalDateTime now = LocalDateTime.now();
-        this.logFile = this.outputDir.resolve(now.format(dateTimeFormatter) + ".txt").toFile();
-
+    public void finishLog() {
+        this.firstLogMessage = true;
+        this.logHeader = null;
+        this.successfulSetup = false;
         setup();
     }
 
     private void setup() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+        LocalDateTime now = LocalDateTime.now();
+        this.logFile = this.outputDir.resolve(now.format(dateTimeFormatter) + ".txt").toFile();
+
         try {
             Files.createDirectories(this.outputDir);
             Files.deleteIfExists(logFile.toPath());

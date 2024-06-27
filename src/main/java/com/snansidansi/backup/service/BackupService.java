@@ -90,18 +90,23 @@ public class BackupService {
             Path destPath = Path.of(pathPair.destPath()).resolve(srcPath.getFileName());
             if (Files.isDirectory(srcPath)) {
                 this.copiedFilesDuringDirBackup = 0;
-                if (backupDir(srcPath, destPath))
+                if (backupDir(srcPath, destPath)) {
                     this.backupLog.log("Directory backup.",
                             "Source: " + pathPair.srcPath(),
                             "Destination: " + pathPair.destPath(),
                             "Number of copied files: " + this.copiedFilesDuringDirBackup);
+                }
             } else if (Files.isRegularFile(srcPath)) {
-                if (backupFile(srcPath, destPath))
+                if (backupFile(srcPath, destPath)) {
                     this.backupLog.log("File backup.",
                             "Source: " + pathPair.srcPath(),
                             "Destination: " + pathPair.destPath());
+                }
             }
         }
+
+        this.backupLog.finishLog();
+        this.errorLog.finishLog();
     }
 
     /**
