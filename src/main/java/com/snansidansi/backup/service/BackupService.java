@@ -108,7 +108,10 @@ public class BackupService {
         }
 
         this.backupLog.finishLog();
+        this.backupLog.setLogHeader("---Backup log file from local backup program: " + this.backupLog.getFilename() + "---");
+
         this.errorLog.finishLog();
+        this.errorLog.setLogHeader("---Error log file form local backup program: " + this.errorLog.getFilename() + "---");
     }
 
     /**
