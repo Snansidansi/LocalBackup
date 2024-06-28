@@ -23,6 +23,7 @@ public class CsvReaderTest {
     void fileNotFoundTest() {
         Assertions.assertThrows(FileNotFoundException.class, () -> {
             CsvReader csvReader = new CsvReader("");
+            csvReader.close();
         });
     }
 
@@ -46,8 +47,9 @@ public class CsvReaderTest {
             expected.add(new String[]{"c", "cc"});
 
             List<String[]> result = csvReader.readAllLines();
-            for (int i = 0; i < expected.size(); i++)
+            for (int i = 0; i < expected.size(); i++) {
                 Assertions.assertArrayEquals(expected.get(i), result.get(i));
+            }
         } catch (IOException e) {
             Assertions.fail(e.getMessage());
         }

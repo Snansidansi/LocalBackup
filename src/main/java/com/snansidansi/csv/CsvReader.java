@@ -18,8 +18,9 @@ public class CsvReader implements AutoCloseable{
      */
     public CsvReader (String filename) throws FileNotFoundException {
         File inputFile = new File(filename);
-        if (!inputFile.exists())
+        if (!inputFile.exists()) {
             throw new FileNotFoundException("CSV file not found: " + filename);
+        }
         this.bufferedReader = new BufferedReader(new FileReader(inputFile));
     }
 
@@ -30,7 +31,9 @@ public class CsvReader implements AutoCloseable{
      */
     public String[] readLine() throws IOException {
         String line = this.bufferedReader.readLine();
-        if (line == null) return null;
+        if (line == null) {
+            return null;
+        }
         return line.split(";");
     }
 
@@ -44,8 +47,9 @@ public class CsvReader implements AutoCloseable{
         String[] line;
         List<String[]> allLines = new ArrayList<>();
 
-        while ((line = readLine()) != null)
+        while ((line = readLine()) != null) {
             allLines.add(line);
+        }
         return allLines;
     }
 

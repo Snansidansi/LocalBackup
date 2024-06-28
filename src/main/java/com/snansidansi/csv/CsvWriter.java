@@ -37,8 +37,9 @@ public class CsvWriter implements AutoCloseable{
      * @throws IOException
      */
     public void writeLine(String... data) throws IOException {
-        if (data.length > 0)
+        if (data.length > 0) {
             this.bufferedWriter.write(String.join(";", data));
+        }
         this.bufferedWriter.newLine();
     }
 
@@ -49,8 +50,12 @@ public class CsvWriter implements AutoCloseable{
      * @throws IOException
      */
     public void writeAllLines(List<String[]> data) throws IOException {
-        if (data.isEmpty()) return;
-        for (String[] line : data) this.writeLine(line);
+        if (data.isEmpty()) {
+            return;
+        }
+        for (String[] line : data) {
+            this.writeLine(line);
+        }
     }
 
     /**

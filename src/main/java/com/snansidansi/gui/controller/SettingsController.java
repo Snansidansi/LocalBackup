@@ -73,8 +73,9 @@ public class SettingsController {
     }
 
     public void restoreDefaultSettings() {
-        if (!showConfirmAlert("Restore default Settings", "Are you sure to restore the default settings?"))
+        if (!showConfirmAlert("Restore default Settings", "Are you sure to restore the default settings?")) {
             return;
+        }
 
         SettingsManagerInstance.settingsManager.restoreDefaults();
         createSettingsRows();
@@ -82,8 +83,9 @@ public class SettingsController {
     }
 
     public void discardChanges() {
-        for (SettingsRow settingsRow : this.availableSettingsRows)
+        for (SettingsRow settingsRow : this.availableSettingsRows) {
             settingsRow.restoreStandardValue();
+        }
     }
 
     public void saveChanges() {
@@ -92,7 +94,9 @@ public class SettingsController {
             settingsRow.setInitValue(settingsRow.getValue());
         }
 
-        if (!SettingsManagerInstance.settingsManager.applyChanges()) return;
+        if (!SettingsManagerInstance.settingsManager.applyChanges()) {
+            return;
+        }
         SettingsManagerInstance.reloadSettings();
         createSettingsRows();
         displaySettingsRows();
@@ -100,8 +104,9 @@ public class SettingsController {
 
     private boolean settingsChanged() {
         for (SettingsRow settingsRow : this.availableSettingsRows) {
-            if (!settingsRow.getValue().equals(settingsRow.getInitValue()))
+            if (!settingsRow.getValue().equals(settingsRow.getInitValue())) {
                 return true;
+            }
         }
         return false;
     }

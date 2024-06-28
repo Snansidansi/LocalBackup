@@ -20,7 +20,9 @@ public class RunBackupThreadSingleton {
     }
 
     public static boolean isAlive() {
-        if (thread == null) return false;
+        if (thread == null) {
+            return false;
+        }
         return thread.isAlive();
     }
 }

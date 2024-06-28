@@ -136,7 +136,9 @@ public class ConfigureBackupSceneController {
         this.numberOfTableElements = 0;
         List<Integer> checkedElements = null;
 
-        if (!changedValues) checkedElements = getCheckedElementsFromTable();
+        if (!changedValues) {
+            checkedElements = getCheckedElementsFromTable();
+        }
         this.tableView.getItems().clear();
 
         for (SrcDestPair pathPair : BackupServiceInstance.backupService.getAllBackups()) {
@@ -159,8 +161,12 @@ public class ConfigureBackupSceneController {
         Path destPath = Path.of(pathPair.destPath());
 
         if (!this.showFullPathsCheckBox.isSelected()) {
-            if (srcPath.getFileName() != null) srcPath = srcPath.getFileName();
-            if (destPath.getFileName() != null) destPath = destPath.getFileName();
+            if (srcPath.getFileName() != null) {
+                srcPath = srcPath.getFileName();
+            }
+            if (destPath.getFileName() != null) {
+                destPath = destPath.getFileName();
+            }
         }
 
         return new SrcDestPair(srcPath.toString(), destPath.toString());
@@ -179,10 +185,14 @@ public class ConfigureBackupSceneController {
     public void openSrcFileSelection() {
         FileChooser srcSelection = new FileChooser();
         srcSelection.setTitle("Select source file");
-        if (!this.lastSelectedSrcDirPath.isEmpty()) srcSelection.setInitialDirectory(new File(lastSelectedSrcDirPath));
+        if (!this.lastSelectedSrcDirPath.isEmpty()) {
+            srcSelection.setInitialDirectory(new File(lastSelectedSrcDirPath));
+        }
 
         File selectedFile = srcSelection.showOpenDialog(new Stage());
-        if (selectedFile == null) return;
+        if (selectedFile == null) {
+            return;
+        }
 
         this.lastSelectedSrcDirPath = selectedFile.getParent();
         this.srcPathTextField.setText(selectedFile.getAbsolutePath());
@@ -192,10 +202,14 @@ public class ConfigureBackupSceneController {
     public void openSrcFolderSelection() {
         DirectoryChooser srcSelection = new DirectoryChooser();
         srcSelection.setTitle("Select source folder");
-        if (!this.lastSelectedSrcDirPath.isEmpty()) srcSelection.setInitialDirectory(new File(lastSelectedSrcDirPath));
+        if (!this.lastSelectedSrcDirPath.isEmpty()) {
+            srcSelection.setInitialDirectory(new File(lastSelectedSrcDirPath));
+        }
 
         File selectedFolder = srcSelection.showDialog(new Stage());
-        if (selectedFolder == null) return;
+        if (selectedFolder == null) {
+            return;
+        }
 
         this.lastSelectedSrcDirPath = selectedFolder.getPath();
         this.srcPathTextField.setText(selectedFolder.getAbsolutePath());
@@ -205,11 +219,14 @@ public class ConfigureBackupSceneController {
     public void openDestSelection() {
         DirectoryChooser destSelection = new DirectoryChooser();
         destSelection.setTitle("Select destination folder");
-        if (!this.lastSelectedDestDirPath.isEmpty())
+        if (!this.lastSelectedDestDirPath.isEmpty()) {
             destSelection.setInitialDirectory(new File(lastSelectedDestDirPath));
+        }
 
         File selectedFolder = destSelection.showDialog(new Stage());
-        if (selectedFolder == null) return;
+        if (selectedFolder == null) {
+            return;
+        }
 
         this.lastSelectedDestDirPath = selectedFolder.getPath();
         this.destPathTextField.setText(selectedFolder.getAbsolutePath());
@@ -217,7 +234,9 @@ public class ConfigureBackupSceneController {
     }
 
     public void runBackup() {
-        if (RunBackupThreadSingleton.isAlive()) return;
+        if (RunBackupThreadSingleton.isAlive()) {
+            return;
+        }
         RunBackupThreadSingleton.start();
     }
 

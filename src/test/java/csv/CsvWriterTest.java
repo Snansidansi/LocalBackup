@@ -72,8 +72,9 @@ public class CsvWriterTest {
 
     private void writeToCsvFile(Path filePath, boolean append, String[]... data) {
         try (CsvWriter csvWriter = new CsvWriter(filePath.toString(), append)) {
-            for (String[] line : data)
+            for (String[] line : data) {
                 csvWriter.writeLine(line);
+            }
         } catch (IOException e) {
             Assertions.fail(e.getMessage());
         }

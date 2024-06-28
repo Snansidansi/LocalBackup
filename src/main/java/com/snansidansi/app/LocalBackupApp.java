@@ -9,11 +9,12 @@ public class LocalBackupApp {
     public static void main(String[] args) {
         SettingsManagerInstance.reloadSettings();
 
-        if (args.length == 0 || (args.length == 1 && args[0].equals("gui")))
+        if (args.length == 0 || (args.length == 1 && args[0].equals("gui"))) {
             Application.launch(LocalBackupGUI.class);
-        else if (args.length == 1 && args[0].equals("run")) {
+        } else if (args.length == 1 && args[0].equals("run")) {
             BackupServiceInstance.backupService.runBackup();
-        } else
+        } else {
             System.out.println("Possible options: gui, run");
+        }
     }
 }

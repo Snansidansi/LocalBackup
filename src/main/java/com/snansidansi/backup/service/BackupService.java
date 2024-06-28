@@ -85,7 +85,9 @@ public class BackupService {
     public void runBackup() {
         for (SrcDestPair pathPair : this.allBackups) {
             Path srcPath = Path.of(pathPair.srcPath());
-            if (Files.notExists(srcPath)) return;
+            if (Files.notExists(srcPath)) {
+                return;
+            }
 
             Path destPath = Path.of(pathPair.destPath()).resolve(srcPath.getFileName());
             if (Files.isDirectory(srcPath)) {
@@ -123,14 +125,17 @@ public class BackupService {
         boolean changedAnything = false;
 
         if (!Files.exists(destPath)) {
-            if (destPath.toFile().mkdirs()) changedAnything = true;
-            else return false;
+            if (destPath.toFile().mkdirs()) {
+                changedAnything = true;
+            } else {
+                return false;
+            }
         }
 
         for (File subFile : srcPath.toFile().listFiles()) {
-            if (subFile.isDirectory() && backupDir(subFile.toPath(), destPath.resolve(subFile.getName())))
+            if (subFile.isDirectory() && backupDir(subFile.toPath(), destPath.resolve(subFile.getName()))) {
                 changedAnything = true;
-            else if (subFile.isFile() && backupFile(subFile.toPath(), destPath.resolve(subFile.getName()))) {
+            } else if (subFile.isFile() && backupFile(subFile.toPath(), destPath.resolve(subFile.getName()))) {
                 changedAnything = true;
                 this.copiedFilesDuringDirBackup++;
             }
@@ -171,7 +176,9 @@ public class BackupService {
     public boolean addBackup(List<SrcDestPair> newBackups) {
         boolean append = Files.exists(Path.of(this.backupListPath));
 
-        if (!append && !createBackupListDirs()) return false;
+        if (!append && !createBackupListDirs()) {
+            return false;
+        }
 
         try (CsvWriter csvWriter = new CsvWriter(this.backupListPath, append)) {
             for (SrcDestPair data : newBackups) {
@@ -195,7 +202,9 @@ public class BackupService {
     public boolean addBackup(SrcDestPair pathPair) {
         boolean append = Files.exists(Path.of(this.backupListPath));
 
-        if (!append && !createBackupListDirs()) return false;
+        if (!append && !createBackupListDirs()) {
+            return false;
+        }
 
         try (CsvWriter csvWriter = new CsvWriter(this.backupListPath, append)) {
             csvWriter.writeLine(Path.of(pathPair.srcPath()).toAbsolutePath().toString(),
@@ -236,19 +245,29 @@ public class BackupService {
     public static void validateBackupPaths(SrcDestPair pathPair)
             throws SourceDoesNotExistException, DestinationNoDirException, StringsAreEqualException,
             DestinationPathIsInSourcePathException {
-        if (pathPair.srcPath().equals(pathPair.destPath())) throw new StringsAreEqualException();
-        if (!validateSrcPath(pathPair.srcPath())) throw new SourceDoesNotExistException();
-        if (!validateDestPath(pathPair.destPath())) throw new DestinationNoDirException();
+        if (pathPair.srcPath().equals(pathPair.destPath())) {
+            throw new StringsAreEqualException();
+        }
+        if (!validateSrcPath(pathPair.srcPath())) {
+            throw new SourceDoesNotExistException();
+        }
+        if (!validateDestPath(pathPair.destPath())) {
+            throw new DestinationNoDirException();
+        }
 
         // Check if the destination path is a sub path of the source path
         Iterator<Path> srcPathIterator = Path.of(pathPair.srcPath()).iterator();
         Iterator<Path> destPathIterator = Path.of(pathPair.destPath()).iterator();
 
         while (srcPathIterator.hasNext() && destPathIterator.hasNext()) {
-            if (!srcPathIterator.next().equals(destPathIterator.next())) return;
+            if (!srcPathIterator.next().equals(destPathIterator.next())) {
+                return;
+            }
         }
 
-        if (!srcPathIterator.hasNext()) throw new DestinationPathIsInSourcePathException();
+        if (!srcPathIterator.hasNext()) {
+            throw new DestinationPathIsInSourcePathException();
+        }
     }
 
     /**
@@ -267,9 +286,13 @@ public class BackupService {
      */
     public static boolean validateDestPath(String destPathString) {
         Path destPath = Path.of(destPathString);
-        if (Files.isDirectory(destPath)) return true;
+        if (Files.isDirectory(destPath)) {
+            return true;
+        }
         try {
-            if (Files.notExists(destPath.getRoot())) return false;
+            if (Files.notExists(destPath.getRoot())) {
+                return false;
+            }
         } catch (NullPointerException unused) {
             return false;
         }
@@ -284,11 +307,17 @@ public class BackupService {
      * @return Boolean value if the method was successful.
      */
     public boolean removeBackup(int... index) {
-        if (index.length == 0) return false;
+        if (index.length == 0) {
+            return false;
+        }
 
         Arrays.sort(index);
-        if (index[index.length - 1] > this.allBackups.size() - 1) return false;
-        if (index[0] < 0) return false;
+        if (index[index.length - 1] > this.allBackups.size() - 1) {
+            return false;
+        }
+        if (index[0] < 0) {
+            return false;
+        }
 
         // Copy of old backup-list if new backup-list can't be created.
         Path backupConfigFileCopyPath = Path.of(this.backupListPath).getParent()
@@ -308,8 +337,9 @@ public class BackupService {
 
         // Remove backups
         List<SrcDestPair> allBackupsCopy = new ArrayList<>(this.allBackups);
-        for (int i = index.length - 1; i >= 0; i--)
+        for (int i = index.length - 1; i >= 0; i--) {
             this.allBackups.remove(index[i]);
+        }
 
         boolean addSuccessful = addBackup((this.allBackups));
 
@@ -347,7 +377,9 @@ public class BackupService {
             return new ArrayList<>();
         }
 
-        if (allBackupsFromFile.isEmpty()) return new ArrayList<>();
+        if (allBackupsFromFile.isEmpty()) {
+            return new ArrayList<>();
+        }
 
         return allBackupsFromFile.stream()
                 .map(e -> new SrcDestPair(e[0], e[1]))
@@ -368,8 +400,9 @@ public class BackupService {
      */
     public boolean checkIfBackupAlreadyExists(SrcDestPair paths) {
         for (SrcDestPair backupPaths : this.allBackups) {
-            if (backupPaths.srcPath().equals(paths.srcPath()) && backupPaths.destPath().equals(paths.destPath()))
+            if (backupPaths.srcPath().equals(paths.srcPath()) && backupPaths.destPath().equals(paths.destPath())) {
                 return true;
+            }
         }
         return false;
     }

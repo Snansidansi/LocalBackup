@@ -113,32 +113,28 @@ public class BackupServiceTest {
 
     @Test
     void validateBackupPathsSourceAndDestinationAreEqual() {
-        Assertions.assertThrows(StringsAreEqualException.class, () -> {
-            BackupService.validateBackupPaths(new SrcDestPair(existingDirPath, existingDirPath));
-        });
+        Assertions.assertThrows(StringsAreEqualException.class,
+                () -> BackupService.validateBackupPaths(new SrcDestPair(existingDirPath, existingDirPath)));
     }
 
     @Test
     void validateBackupPathsSourceAndDestinationAreValid() {
-        Assertions.assertDoesNotThrow(() -> {
-            BackupService.validateBackupPaths(new SrcDestPair(existingFilePath, existingDirPath));
-        });
+        Assertions.assertDoesNotThrow(
+                () -> BackupService.validateBackupPaths(new SrcDestPair(existingFilePath, existingDirPath)));
     }
 
     @Test
     void validateBackupsPathsDestinationIsDirButDoesNotExist() {
-        Assertions.assertDoesNotThrow(() -> {
-            BackupService.validateBackupPaths(new SrcDestPair(existingFilePath,
-                    Path.of(existingFilePath).getParent().resolve("newDir").toFile().getAbsolutePath()));
-        });
+        Assertions.assertDoesNotThrow(
+                () -> BackupService.validateBackupPaths(new SrcDestPair(existingFilePath,
+                        Path.of(existingFilePath).getParent().resolve("newDir").toFile().getAbsolutePath())));
     }
 
     @Test
     void validateBackupPathsDestinationPathIsSubPathOfSourcePath() {
-        Assertions.assertThrows(DestinationPathIsInSourcePathException.class, () -> {
-            BackupService.validateBackupPaths(new SrcDestPair(existingDirPath,
-                    Path.of(existingFilePath).resolve("SubDir").toString()));
-        });
+        Assertions.assertThrows(DestinationPathIsInSourcePathException.class,
+                () -> BackupService.validateBackupPaths(new SrcDestPair(existingDirPath,
+                        Path.of(existingFilePath).resolve("SubDir").toString())));
     }
 
     @Test
@@ -256,8 +252,9 @@ public class BackupServiceTest {
     private String createBackupConfigFile(String fileName, SrcDestPair... pathPairs) {
         Path filePath = tempDir.resolve(fileName);
         try (CsvWriter csvWriter = new CsvWriter(filePath.toString())) {
-            for (SrcDestPair pathPair : pathPairs)
+            for (SrcDestPair pathPair : pathPairs) {
                 csvWriter.writeLine(pathPair.srcPath(), pathPair.destPath());
+            }
         } catch (IOException e) {
             Assertions.fail(e.getMessage());
         }
@@ -276,7 +273,9 @@ public class BackupServiceTest {
                 } catch (IOException e) {
                     Assertions.fail(e.getMessage());
                 }
-            } else assertDirTree(subFile.toPath(), destFilePath);
+            } else {
+                assertDirTree(subFile.toPath(), destFilePath);
+            }
         });
     }
 
@@ -290,7 +289,8 @@ public class BackupServiceTest {
         }
 
         Assertions.assertEquals(expectedSize, result.size());
-        for (int i = 0; i < expectedData.length; i++)
+        for (int i = 0; i < expectedData.length; i++) {
             Assertions.assertEquals(expectedData[i], result.get(i));
+        }
     }
 }

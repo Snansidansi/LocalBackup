@@ -5,11 +5,11 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.layout.HBox;
 
 public class TableEntry {
-    private String srcPath;
-    private String destPath;
-    private HBox checkBoxHBox;
-    private CheckBox checkBox = new CheckBox();
-    private int index;
+    private final String srcPath;
+    private final String destPath;
+    private final HBox checkBoxHBox;
+    private final CheckBox checkBox = new CheckBox();
+    private final int index;
 
     public TableEntry(String srcPath, String destPath, int index, boolean checked) {
         this.srcPath = srcPath;

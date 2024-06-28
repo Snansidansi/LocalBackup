@@ -76,12 +76,16 @@ public class LogController {
     }
 
     public void showBackupLogs() {
-        if (!this.backupLogTButton.isSelected()) this.backupLogTButton.setSelected(true); // Disables deselection
+        if (!this.backupLogTButton.isSelected()) {
+            this.backupLogTButton.setSelected(true); // Disables deselection
+        }
         listLogsAsLogFileButton("backup");
     }
 
     public void showErrorLogs() {
-        if (!this.errorLogTButton.isSelected()) this.errorLogTButton.setSelected(true); // Disables deselection
+        if (!this.errorLogTButton.isSelected()) {
+            this.errorLogTButton.setSelected(true); // Disables deselection
+        }
         listLogsAsLogFileButton("error");
     }
 
@@ -110,7 +114,9 @@ public class LogController {
             LogFileButton logFileButton = new LogFileButton(file.getName(), 14, 32);
 
             logFileButton.setOnMouseClicked((event) -> {
-                if (this.currendDisplayedFile != null && this.currendDisplayedFile.equals(file)) return;
+                if (this.currendDisplayedFile != null && this.currendDisplayedFile.equals(file)) {
+                    return;
+                }
 
                 displayFileContent(file.toPath());
                 this.currendDisplayedFile = file;
@@ -147,7 +153,9 @@ public class LogController {
     }
 
     public void deleteLog() {
-        if (this.currendDisplayedFile == null) return;
+        if (this.currendDisplayedFile == null) {
+            return;
+        }
         this.confirmDeleteLabel.setVisible(false);
 
         if (!this.deletePressedOnce) {
@@ -162,8 +170,11 @@ public class LogController {
             this.currendDisplayedFile = null;
             this.deletePressedOnce = false;
 
-            if (this.backupLogTButton.isSelected()) listLogsAsLogFileButton("backup");
-            else listLogsAsLogFileButton("error");
+            if (this.backupLogTButton.isSelected()) {
+                listLogsAsLogFileButton("backup");
+            } else {
+                listLogsAsLogFileButton("error");
+            }
             return;
         }
 
@@ -173,21 +184,28 @@ public class LogController {
     }
 
     public void exportLog() {
-        if (this.currendDisplayedFile == null) return;
+        if (this.currendDisplayedFile == null) {
+            return;
+        }
         this.confirmDeleteLabel.setVisible(false);
 
         FileChooser destSelection = new FileChooser();
         destSelection.setTitle("Select an export location");
-        if (!this.lastSelectedExportPath.isEmpty())
+        if (!this.lastSelectedExportPath.isEmpty()) {
             destSelection.setInitialDirectory(new File(this.lastSelectedExportPath));
+        }
         destSelection.getExtensionFilters().add(new FileChooser.ExtensionFilter("txt-files (*.txt)", "*.txt"));
         destSelection.setInitialFileName(this.currendDisplayedFile.getName());
 
         File result = destSelection.showSaveDialog(new Stage());
-        if (result == null) return;
+        if (result == null) {
+            return;
+        }
 
         String exportPath = result.getAbsolutePath();
-        if (!exportPath.endsWith(".txt")) exportPath = exportPath + ".txt";
+        if (!exportPath.endsWith(".txt")) {
+            exportPath = exportPath + ".txt";
+        }
 
         try {
             Files.copy(this.currendDisplayedFile.toPath(), Path.of(exportPath));

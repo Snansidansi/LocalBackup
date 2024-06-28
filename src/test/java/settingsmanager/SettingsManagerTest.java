@@ -19,7 +19,7 @@ import java.util.List;
 public class SettingsManagerTest {
     private int settingsFileID = 0;
     private SettingsManager<TestSettings> settingsManager;
-    private Path testResourcesPath = Path.of("src/test/resources/settingsmanager");
+    private final Path testResourcesPath = Path.of("src/test/resources/settingsmanager");
 
     @TempDir(cleanup = CleanupMode.ALWAYS)
     private static Path tempdir;

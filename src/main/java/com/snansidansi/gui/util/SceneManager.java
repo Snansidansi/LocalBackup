@@ -44,8 +44,11 @@ public class SceneManager {
     private static Parent changeScene(Stage stage, String resource) throws IOException {
         Parent root = new FXMLLoader((SceneManager.class.getResource(resource))).load();
         Scene currentScene = stage.getScene();
-        if (currentScene == null) stage.setScene(new Scene(root));
-        else currentScene.setRoot(root);
+        if (currentScene == null) {
+            stage.setScene(new Scene(root));
+        } else {
+            currentScene.setRoot(root);
+        }
         return root;
     }
 }

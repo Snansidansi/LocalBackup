@@ -74,7 +74,9 @@ public class Logger {
      * @param input Log message as string.
      */
     public void log(String... input) {
-        if (!enabled) return;
+        if (!enabled) {
+            return;
+        }
         if (!this.successfulSetup) {
             System.out.println("Cannot log message without successful setup of the Logger.");
             return;
@@ -84,10 +86,13 @@ public class Logger {
              OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
              BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)) {
 
-            if (this.firstLogMessage) prepareFirstLogMessage(bufferedWriter);
+            if (this.firstLogMessage) {
+                prepareFirstLogMessage(bufferedWriter);
+            }
 
-            for (String line : input)
+            for (String line : input) {
                 bufferedWriter.write(line + "\n");
+            }
 
             bufferedWriter.newLine();
         } catch (IOException e) {
@@ -95,8 +100,9 @@ public class Logger {
                 System.out.println("-----");
                 System.out.println("Error when logging a message:");
                 System.out.println("Message:");
-                for (String line : input)
+                for (String line : input) {
                     System.out.println(line);
+                }
                 System.out.println();
 
                 System.out.println("Error:");
@@ -110,16 +116,21 @@ public class Logger {
         FilenameFilter logFileFilter = (dir, name) -> name.endsWith(".txt");
 
         File[] logFiles = this.outputDir.toFile().listFiles(logFileFilter);
-        if (logFiles == null) return;
+        if (logFiles == null) {
+            return;
+        }
         Arrays.sort(logFiles, Comparator.comparing(File::getName));
 
         int numberOfLogFiles = logFiles.length;
         if (numberOfLogFiles > this.maxNumberOfLogs) {
-            for (int i = 0; i < numberOfLogFiles - this.maxNumberOfLogs; i++)
+            for (int i = 0; i < numberOfLogFiles - this.maxNumberOfLogs; i++) {
                 logFiles[i].delete();
+            }
         }
 
-        if (this.logHeader != null) bufferedWriter.write(this.logHeader + "\n\n");
+        if (this.logHeader != null) {
+            bufferedWriter.write(this.logHeader + "\n\n");
+        }
 
         this.firstLogMessage = false;
     }

@@ -53,8 +53,9 @@ public class SettingsManager<T extends Enum<T> & Settings> {
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(this.settingsFilePath.toFile()))) {
             String line;
-            while ((line = bufferedReader.readLine()) != null)
+            while ((line = bufferedReader.readLine()) != null) {
                 addToSettingsMap(line);
+            }
         } catch (IOException e) {
             return false;
         }
@@ -63,15 +64,20 @@ public class SettingsManager<T extends Enum<T> & Settings> {
 
     private void addToSettingsMap(String line) {
         String[] splitLine = line.split(":", 2);
-        if (splitLine.length != 2) return;
+        if (splitLine.length != 2) {
+            return;
+        }
 
         String settingID = splitLine[0].strip().toLowerCase();
         T defaultSetting = getEnumFromID(settingID);
-        if (defaultSetting == null) return;
+        if (defaultSetting == null) {
+            return;
+        }
 
         String value = splitLine[1].strip();
-        if (isValidSettingsValue(defaultSetting, value))
+        if (isValidSettingsValue(defaultSetting, value)) {
             this.settingsMap.put(defaultSetting, value);
+        }
     }
 
     /**
@@ -120,11 +126,14 @@ public class SettingsManager<T extends Enum<T> & Settings> {
         Map<T, String> backupSettingsMap = new HashMap<>(this.settingsMap);
 
         for (var setting : this.tempSettingsMap.entrySet()) {
-            if (isValidSettingsValue(setting.getKey(), setting.getValue()))
+            if (isValidSettingsValue(setting.getKey(), setting.getValue())) {
                 this.settingsMap.put(setting.getKey(), setting.getValue());
+            }
         }
 
-        if (saveToFile()) return true;
+        if (saveToFile()) {
+            return true;
+        }
 
         this.settingsMap.clear();
         this.settingsMap.putAll(backupSettingsMap);
@@ -157,8 +166,9 @@ public class SettingsManager<T extends Enum<T> & Settings> {
      */
     public String getSetting(T setting) {
         String settingValue;
-        if ((settingValue = this.settingsMap.get(setting)) == null)
+        if ((settingValue = this.settingsMap.get(setting)) == null) {
             settingValue = setting.getStandardValue();
+        }
 
         return settingValue;
     }
@@ -171,7 +181,9 @@ public class SettingsManager<T extends Enum<T> & Settings> {
      * @return Boolean value if it is a valid settings value.
      */
     public boolean isValidSettingsValue(T setting, String value) {
-        if (setting == null) return false;
+        if (setting == null) {
+            return false;
+        }
 
         switch (setting.getType()) {
             case INTEGER:
@@ -196,7 +208,9 @@ public class SettingsManager<T extends Enum<T> & Settings> {
      */
     public T getEnumFromID(String id) {
         for (T setting : this.enumClass.getEnumConstants()) {
-            if (id.equals(setting.getID())) return setting;
+            if (id.equals(setting.getID())) {
+                return setting;
+            }
         }
         return null;
     }
