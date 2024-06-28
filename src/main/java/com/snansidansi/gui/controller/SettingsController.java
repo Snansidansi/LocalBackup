@@ -2,7 +2,9 @@ package com.snansidansi.gui.controller;
 
 import com.snansidansi.app.instances.SettingsManagerInstance;
 import com.snansidansi.gui.uielements.settingsrow.SettingsRow;
+import com.snansidansi.gui.uielements.settingsrow.SpinnerSettingsRow;
 import com.snansidansi.gui.util.SceneManager;
+import com.snansidansi.settings.BackupSetting;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -29,17 +31,33 @@ public class SettingsController {
 
     @FXML
     public void initialize() {
-        displaySettings();
+        createSettingsRows();
+        displaySettingsRows();
     }
 
-    private void displaySettings() {
-        this.settingsVBox.getChildren().clear();
+    private void createSettingsRows() {
         var widthProperty = this.settingsScrollPane.widthProperty();
+        final int FONTSIZE = 14;
+        this.availableSettingsRows.clear();
+
+        this.availableSettingsRows.add(new SpinnerSettingsRow(
+                BackupSetting.MAX_ERROR_LOGS,
+                SettingsManagerInstance.settingsManager.getSetting(BackupSetting.MAX_ERROR_LOGS),
+                "Max number of error logs:",
+                FONTSIZE,
+                widthProperty));
+
+        this.availableSettingsRows.add(new SpinnerSettingsRow(
+                BackupSetting.MAX_BACKUP_LOGS,
+                SettingsManagerInstance.settingsManager.getSetting(BackupSetting.MAX_BACKUP_LOGS),
+                "Max number of backup logs:",
+                FONTSIZE,
+                widthProperty));
     }
 
-    private <T extends SettingsRow> void addSettingsRow(T settingsRow) {
-        this.settingsVBox.getChildren().add(settingsRow);
-        this.availableSettingsRows.add(settingsRow);
+    private void displaySettingsRows() {
+        this.settingsVBox.getChildren().clear();
+        this.settingsVBox.getChildren().addAll(this.availableSettingsRows);
     }
 
     public void backToConfigureBackupScene() {
@@ -59,7 +77,8 @@ public class SettingsController {
             return;
 
         SettingsManagerInstance.settingsManager.restoreDefaults();
-        displaySettings();
+        createSettingsRows();
+        displaySettingsRows();
     }
 
     public void discardChanges() {
@@ -73,8 +92,10 @@ public class SettingsController {
             settingsRow.setInitValue(settingsRow.getValue());
         }
 
-        if (SettingsManagerInstance.settingsManager.applyChanges()) return;
-        displaySettings();
+        if (!SettingsManagerInstance.settingsManager.applyChanges()) return;
+        SettingsManagerInstance.reloadSettings();
+        createSettingsRows();
+        displaySettingsRows();
     }
 
     private boolean settingsChanged() {
