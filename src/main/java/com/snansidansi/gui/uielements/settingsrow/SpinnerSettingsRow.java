@@ -10,16 +10,16 @@ public class SpinnerSettingsRow extends SettingsRow {
     private String initValue;
 
     public SpinnerSettingsRow(BackupSetting setting,
-                              String standardValue,
+                              String initValue,
                               String displayText,
                               int fontSize,
                               ReadOnlyDoubleProperty widthProperty) {
 
-        super(setting, standardValue, displayText, fontSize, widthProperty);
+        super(setting, initValue, displayText, fontSize, widthProperty);
         super.getControlHBox().getChildren().add(this.spinner);
 
         this.spinner.setEditable(true);
-        setBounds(0, 100, 0);
+        setBounds(0, 100, Integer.parseInt(initValue));
         this.spinner.getEditor().textProperty().addListener(((observableValue, oldValue, newValue) -> {
             try {
                 Integer.parseInt(newValue);

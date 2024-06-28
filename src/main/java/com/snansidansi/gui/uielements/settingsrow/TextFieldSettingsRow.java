@@ -6,7 +6,6 @@ import javafx.scene.control.TextField;
 
 public class TextFieldSettingsRow extends SettingsRow {
     private final TextField textField = new TextField();
-    private String initValue;
 
     public TextFieldSettingsRow(BackupSetting setting,
                                 String initValue,
@@ -16,6 +15,7 @@ public class TextFieldSettingsRow extends SettingsRow {
 
         super(setting, initValue, displayText, fontSize, widthProperty);
         super.getControlHBox().getChildren().add(textField);
+        restoreStandardValue();
     }
 
     public void setTextFieldWidth(int width) {

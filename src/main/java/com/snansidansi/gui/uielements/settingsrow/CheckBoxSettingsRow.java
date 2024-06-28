@@ -6,16 +6,16 @@ import javafx.scene.control.CheckBox;
 
 public class CheckBoxSettingsRow extends SettingsRow {
     private final CheckBox checkBox = new CheckBox();
-    private String intValue;
 
     public CheckBoxSettingsRow(BackupSetting setting,
-                               String intValue,
+                               String initValue,
                                String displayText,
                                int fontSize,
                                ReadOnlyDoubleProperty widthProperty) {
 
-        super(setting, intValue, displayText, fontSize, widthProperty);
+        super(setting, initValue, displayText, fontSize, widthProperty);
         super.getControlHBox().getChildren().add(this.checkBox);
+        restoreStandardValue();
     }
 
     @Override
@@ -25,12 +25,12 @@ public class CheckBoxSettingsRow extends SettingsRow {
 
     @Override
     public void restoreStandardValue() {
-        this.checkBox.setSelected(Boolean.parseBoolean(this.intValue));
+        this.checkBox.setSelected(Boolean.parseBoolean(this.initValue));
     }
 
     @Override
     public void setInitValue(String value) {
-        this.intValue = value;
+        this.initValue = value;
         restoreStandardValue();
     }
 }
