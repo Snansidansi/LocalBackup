@@ -378,4 +378,12 @@ public class BackupService {
         this.errorLog.setEnabled(enabled);
         this.backupLog.setEnabled(enabled);
     }
+
+    public Logger getErrorLog() {
+        return this.errorLog;
+    }
+
+    public Logger getBackupLog() {
+        return this.backupLog;
+    }
 }

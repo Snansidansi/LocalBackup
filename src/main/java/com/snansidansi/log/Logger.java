@@ -13,7 +13,7 @@ import java.util.Comparator;
  * A class for creating simple logfiles with a {@code .txt} extension.
  */
 public class Logger {
-    private final int maxNumberOfLogs = 1;
+    private int maxNumberOfLogs = 100;
     private final Path outputDir;
     private File logFile;
     private final boolean debugMode;
@@ -138,7 +138,22 @@ public class Logger {
         return this.logFile.getPath();
     }
 
+    /**
+     * Enables or disables the logger.
+     *
+     * @param enabled New state of the logger as boolean.
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    /**
+     * Sets the maximum number of logs that can exists at the same time. If the maximum number of logs is reached, the
+     * oldest log will be deleted (Oldest .txt file in log dir filtert by the date in the filename).
+     *
+     * @param maximumNumberOfLogs The maximum number of logs as int.
+     */
+    public void setMaxNumberOfLogs(int maximumNumberOfLogs) {
+        this.maxNumberOfLogs = maximumNumberOfLogs;
     }
 }

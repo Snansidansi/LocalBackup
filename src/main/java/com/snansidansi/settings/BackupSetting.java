@@ -4,7 +4,8 @@ import com.snansidansi.settings.settingsmanager.SettingType;
 import com.snansidansi.settings.settingsmanager.Settings;
 
 public enum BackupSetting implements Settings {
-    NONE("none", "Nothing", "null", SettingType.BOOLEAN, false);
+    MAX_BACKUP_LOGS("max backup logs", "14", SettingType.INTEGER),
+    MAX_ERROR_LOGS("max error logs", "14", SettingType.INTEGER);
 
     private final String id;
     private final String standardValue;
