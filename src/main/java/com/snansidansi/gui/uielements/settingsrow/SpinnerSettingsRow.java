@@ -11,10 +11,11 @@ public class SpinnerSettingsRow extends SettingsRow {
 
     public SpinnerSettingsRow(BackupSetting setting,
                               String standardValue,
+                              String displayText,
                               int fontSize,
                               ReadOnlyDoubleProperty widthProperty) {
 
-        super(setting, standardValue, fontSize, widthProperty);
+        super(setting, standardValue, displayText, fontSize, widthProperty);
         super.getControlHBox().getChildren().add(this.spinner);
 
         this.spinner.setEditable(true);

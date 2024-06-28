@@ -15,6 +15,7 @@ public abstract class SettingsRow extends HBox {
 
     public SettingsRow(BackupSetting setting,
                        String initValue,
+                       String displayText,
                        int fontSize,
                        ReadOnlyDoubleProperty widthProperty) {
 
@@ -23,7 +24,7 @@ public abstract class SettingsRow extends HBox {
         this.initValue = initValue;
 
         Font fontSizeFont = new Font(fontSize);
-        Label nameLabel = new Label(this.setting.getDisplayText());
+        Label nameLabel = new Label(displayText);
         nameLabel.setFont(fontSizeFont);
 
         HBox nameHBox = new HBox();
