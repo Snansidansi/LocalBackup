@@ -89,6 +89,8 @@ public class SettingsController {
     }
 
     public void saveChanges() {
+        if (!settingsChanged()) return;
+
         for (SettingsRow settingsRow : this.availableSettingsRows) {
             SettingsManagerInstance.settingsManager.changeSetting(settingsRow.getSetting(), settingsRow.getValue());
             settingsRow.setInitValue(settingsRow.getValue());
