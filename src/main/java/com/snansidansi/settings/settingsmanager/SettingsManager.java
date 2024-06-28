@@ -30,6 +30,11 @@ public class SettingsManager<T extends Enum<T> & Settings> {
     public SettingsManager(String filePath, Class<T> settingEnum) throws InvalidPathException {
         this.settingsFilePath = Path.of(filePath);
         this.enumClass = settingEnum;
+
+        try {
+            Files.createDirectories(this.settingsFilePath.getParent());
+        } catch (IOException unused) {
+        }
     }
 
     /**
@@ -120,6 +125,7 @@ public class SettingsManager<T extends Enum<T> & Settings> {
         }
 
         if (saveToFile()) return true;
+
         this.settingsMap.clear();
         this.settingsMap.putAll(backupSettingsMap);
         saveToFile();
