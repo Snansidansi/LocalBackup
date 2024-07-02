@@ -62,6 +62,30 @@ public class CsvWriterTest {
         assertFileContent(filePath, 3, "a;aa", "b;bb", "c;cc");
     }
 
+    @Test
+    void inputContainsSeparator() throws IOException {
+        Path filePath = tempDir.resolve("inputContainsSeparator.csv");
+        writeToCsvFile(filePath, false, new String[]{"a;b", "c"});
+
+        assertFileContent(filePath, 1, "a#;b;c");
+    }
+
+    @Test
+    void inputContainsSeparatorMarker() throws IOException {
+        Path filePath = tempDir.resolve("inputContainsSeparatorMarker.csv");
+        writeToCsvFile(filePath, false, new String[]{"#a#", "###"});
+
+        assertFileContent(filePath, 1, "##a##;######");
+    }
+
+    @Test
+    void inputContainsSeparatorMarkerAndSeparator() throws IOException {
+        Path filePath = tempDir.resolve("inputContainsSeparatorMarkerAndSeparator.csv");
+        writeToCsvFile(filePath, false, new String[]{"#;a", ";;#"});
+
+        assertFileContent(filePath, 1, "###;a;#;#;##");
+    }
+
     private void assertFileContent(Path filePath, int expectedSize, String... expectedData) throws IOException {
         List<String> result = Files.readAllLines(filePath, Charset.defaultCharset());
         Assertions.assertEquals(expectedSize, result.size());

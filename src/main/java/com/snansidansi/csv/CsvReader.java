@@ -34,7 +34,27 @@ public class CsvReader implements AutoCloseable{
         if (line == null) {
             return null;
         }
-        return line.split(";");
+
+        List<String> outputList = new ArrayList<>();
+        StringBuilder reformattedData = new StringBuilder();
+
+        for (int i = 0; i < line.length(); i++) {
+            if (line.charAt(i) == '#') {
+                i++;
+                reformattedData.append(line.charAt(i));
+            } else if (line.charAt(i) == ';') {
+                outputList.add(reformattedData.toString());
+                reformattedData.setLength(0);
+            } else {
+                reformattedData.append(line.charAt(i));
+            }
+        }
+        outputList.add(reformattedData.toString());
+
+        String[] outputArray = new String[outputList.size()];
+        outputList.toArray(outputArray);
+
+        return outputArray;
     }
 
     /**

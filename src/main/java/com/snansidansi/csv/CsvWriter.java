@@ -37,9 +37,28 @@ public class CsvWriter implements AutoCloseable{
      * @throws IOException
      */
     public void writeLine(String... data) throws IOException {
-        if (data.length > 0) {
-            this.bufferedWriter.write(String.join(";", data));
+        if (data.length < 1) {
+            return;
         }
+
+        StringBuilder reformattedData = new StringBuilder();
+
+        for (int i = 0; i < data.length; i++) {
+            for (char symbol : data[i].toCharArray()) {
+                if (symbol == '#') {
+                    reformattedData.append("##");
+                } else if (symbol == ';') {
+                    reformattedData.append("#;");
+                } else {
+                    reformattedData.append(symbol);
+                }
+            }
+
+            data[i] = reformattedData.toString();
+            reformattedData.setLength(0);
+        }
+
+        this.bufferedWriter.write(String.join(";", data));
         this.bufferedWriter.newLine();
     }
 
