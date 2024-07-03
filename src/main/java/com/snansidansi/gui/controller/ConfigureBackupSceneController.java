@@ -11,6 +11,9 @@ import com.snansidansi.backup.util.SrcDestPair;
 import com.snansidansi.gui.util.SceneManager;
 import com.snansidansi.gui.util.TableEntry;
 import com.snansidansi.gui.windows.AboutWindow;
+import javafx.animation.Animation;
+import javafx.animation.Interpolator;
+import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -21,6 +24,7 @@ import javafx.scene.shape.Line;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
@@ -72,16 +76,27 @@ public class ConfigureBackupSceneController {
     private CheckBox showFullPathsCheckBox;
 
     @FXML
+    private Label backupRunningIndicatorLabel;
+
+    @FXML
+    private Label backupFinishedLabel;
+
+    @FXML
     public void initialize() {
         bindMiddleLineToWindowWidth();
-
-        Platform.runLater(this::setupTableColumnSizeProperties);
 
         this.deleteConfirmLabel.setVisible(false);
         this.invalidSrcPathLabel.setVisible(false);
         this.invalidDestPathLabel.setVisible(false);
+        this.backupRunningIndicatorLabel.setVisible(false);
+        this.backupFinishedLabel.setVisible(false);
 
         setupTable();
+        Platform.runLater(this::setupTableColumnSizeProperties);
+
+        RotateTransition loadingAnimation = createLoadingAnimation();
+        RunBackupThreadSingleton.setAnimation(loadingAnimation, this.backupRunningIndicatorLabel);
+        RunBackupThreadSingleton.setFinishedLabel(this.backupFinishedLabel);
     }
 
     private void bindMiddleLineToWindowWidth() {
@@ -182,6 +197,17 @@ public class ConfigureBackupSceneController {
         return indicesToRemove;
     }
 
+    private RotateTransition createLoadingAnimation() {
+        RotateTransition loadingAnimation = new RotateTransition();
+        loadingAnimation.setNode(this.backupRunningIndicatorLabel);
+        loadingAnimation.setCycleCount(Animation.INDEFINITE);
+        loadingAnimation.setToAngle(360);
+        loadingAnimation.setDuration(Duration.seconds(1.25));
+        loadingAnimation.setInterpolator(Interpolator.LINEAR);
+
+        return loadingAnimation;
+    }
+
     public void openSrcFileSelection() {
         FileChooser srcSelection = new FileChooser();
         srcSelection.setTitle("Select source file");
@@ -237,6 +263,9 @@ public class ConfigureBackupSceneController {
         if (RunBackupThreadSingleton.isAlive()) {
             return;
         }
+
+        this.backupFinishedLabel.setVisible(false);
+        this.backupRunningIndicatorLabel.setVisible(true);
         RunBackupThreadSingleton.start();
     }
 

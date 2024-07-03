@@ -235,88 +235,121 @@
         </VBox>
     </bottom>
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="20.0" BorderPane.alignment="CENTER">
-            <children>
-                <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-                        minWidth="-Infinity" mnemonicParsing="false" onAction="#runBackup" prefHeight="32.0"
-                        prefWidth="32.0" style="-fx-background-color: transparent; -fx-border-color: transparent;"
-                        text="Run backup">
-                    <graphic>
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@../icons/runBackup.png"/>
-                            </image>
-                        </ImageView>
-                    </graphic>
-                    <tooltip>
-                        <Tooltip text="Run the backup">
-                            <font>
-                                <Font size="14.0"/>
-                            </font>
-                        </Tooltip>
-                    </tooltip>
-                </Button>
-                <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-                        minWidth="-Infinity" mnemonicParsing="false" onAction="#switchToLogScene" prefHeight="32.0"
-                        prefWidth="32.0" style="-fx-background-color: transparent; -fx-border-color: transparent;"
-                        text="Logs">
-                    <graphic>
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@../icons/showLogs.png"/>
-                            </image>
-                        </ImageView>
-                    </graphic>
-                    <tooltip>
-                        <Tooltip text="Show Logs">
-                            <font>
-                                <Font size="14.0"/>
-                            </font>
-                        </Tooltip>
-                    </tooltip>
-                </Button>
-                <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-                        minWidth="-Infinity" mnemonicParsing="false" onAction="#switchToSettingsScene" prefHeight="32.0"
-                        prefWidth="32.0" style="-fx-background-color: transparent; -fx-border-color: transparent;"
-                        text="Settings">
-                    <graphic>
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@../icons/settings.png"/>
-                            </image>
-                        </ImageView>
-                    </graphic>
-                    <tooltip>
-                        <Tooltip text="Show settings">
-                            <font>
-                                <Font size="14.0"/>
-                            </font>
-                        </Tooltip>
-                    </tooltip>
-                </Button>
-                <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-                        minWidth="-Infinity" mnemonicParsing="false" onAction="#showAboutMessageBox" prefHeight="32.0"
-                        prefWidth="32.0" style="-fx-background-color: transparent; -fx-border-color: transparent;"
-                        text="Info">
-                    <graphic>
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@../icons/info_black.png"/>
-                            </image>
-                        </ImageView>
-                    </graphic>
-                    <tooltip>
-                        <Tooltip text="About the program">
-                            <font>
-                                <Font size="14.0"/>
-                            </font>
-                        </Tooltip>
-                    </tooltip>
-                </Button>
-            </children>
+        <BorderPane BorderPane.alignment="CENTER">
             <BorderPane.margin>
-                <Insets bottom="7.0" left="10.0" top="7.0"/>
+                <Insets bottom="7.0" left="10.0" right="10.0" top="7.0"/>
             </BorderPane.margin>
-        </HBox>
+            <left>
+                <HBox alignment="CENTER_LEFT" spacing="20.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity"
+                                minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#runBackup"
+                                prefHeight="32.0" prefWidth="32.0"
+                                style="-fx-background-color: transparent; -fx-border-color: transparent;"
+                                text="Run backup">
+                            <graphic>
+                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../icons/runBackup.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                            <tooltip>
+                                <Tooltip text="Run the backup">
+                                    <font>
+                                        <Font size="14.0"/>
+                                    </font>
+                                </Tooltip>
+                            </tooltip>
+                        </Button>
+                        <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity"
+                                minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
+                                onAction="#switchToLogScene" prefHeight="32.0" prefWidth="32.0"
+                                style="-fx-background-color: transparent; -fx-border-color: transparent;" text="Logs">
+                            <graphic>
+                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../icons/showLogs.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                            <tooltip>
+                                <Tooltip text="Show Logs">
+                                    <font>
+                                        <Font size="14.0"/>
+                                    </font>
+                                </Tooltip>
+                            </tooltip>
+                        </Button>
+                        <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity"
+                                minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
+                                onAction="#switchToSettingsScene" prefHeight="32.0" prefWidth="32.0"
+                                style="-fx-background-color: transparent; -fx-border-color: transparent;"
+                                text="Settings">
+                            <graphic>
+                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../icons/settings.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                            <tooltip>
+                                <Tooltip text="Show settings">
+                                    <font>
+                                        <Font size="14.0"/>
+                                    </font>
+                                </Tooltip>
+                            </tooltip>
+                        </Button>
+                        <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity"
+                                minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
+                                onAction="#showAboutMessageBox" prefHeight="32.0" prefWidth="32.0"
+                                style="-fx-background-color: transparent; -fx-border-color: transparent;" text="Info">
+                            <graphic>
+                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../icons/info_black.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                            <tooltip>
+                                <Tooltip text="About the program">
+                                    <font>
+                                        <Font size="14.0"/>
+                                    </font>
+                                </Tooltip>
+                            </tooltip>
+                        </Button>
+                    </children>
+                </HBox>
+            </left>
+            <right>
+                <HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER">
+                    <children>
+                        <Label fx:id="backupFinishedLabel" text="(Backup finished)" textFill="#6e6e6e">
+                            <font>
+                                <Font name="System Italic" size="12.0"/>
+                            </font>
+                        </Label>
+                        <Label fx:id="backupRunningIndicatorLabel" contentDisplay="GRAPHIC_ONLY" text="ImageContainer">
+                            <graphic>
+                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../icons/loading.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                            <tooltip>
+                                <Tooltip text="Backup is running in the background.">
+                                    <font>
+                                        <Font size="14.0"/>
+                                    </font>
+                                </Tooltip>
+                            </tooltip>
+                        </Label>
+                    </children>
+                </HBox>
+            </right>
+        </BorderPane>
     </top>
 </BorderPane>
