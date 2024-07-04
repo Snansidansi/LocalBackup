@@ -38,7 +38,6 @@ public abstract class SettingsRow extends HBox {
         this.controlHBox.minWidthProperty().bind(widthProperty.divide(2).subtract(9)); // -9 because of padding
 
         super.setPadding(new Insets(5));
-        super.setStyle("-fx-border-color: c3c3c3");
         super.getChildren().addAll(this.nameHBox, this.controlHBox);
     }
 
