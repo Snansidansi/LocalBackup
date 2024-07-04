@@ -167,4 +167,8 @@ public class Logger {
     public void setMaxNumberOfLogs(int maximumNumberOfLogs) {
         this.maxNumberOfLogs = maximumNumberOfLogs;
     }
+
+    public boolean logCreated() {
+        return !this.firstLogMessage;
+    }
 }

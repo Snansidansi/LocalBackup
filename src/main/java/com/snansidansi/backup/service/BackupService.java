@@ -60,7 +60,6 @@ public class BackupService {
 
         this.backupListPath = Paths.get(backupListPath).toString();
         this.allBackups = readBackups();
-
     }
 
     /**
@@ -117,6 +116,10 @@ public class BackupService {
 
         removeBackup(convertIntListToArray(missingBackupIndices));
 
+        if (this.errorLog.logCreated()) {
+            this.backupLog.log("----Waring----",
+                    "An error log was created during this backup: " + this.errorLog.getFilename());
+        }
         this.backupLog.finishLog();
         this.backupLog.setLogHeader("---Backup log file from local backup program: " + this.backupLog.getFilename() + "---");
 
