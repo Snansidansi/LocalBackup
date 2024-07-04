@@ -452,7 +452,9 @@ public class BackupService {
         List<String[]> allBackupsFromFile;
         try (CsvReader csvReader = new CsvReader(this.backupListPath)) {
             allBackupsFromFile = csvReader.readAllLines();
-        } catch (IOException unused) {
+        } catch (IOException e) {
+            this.errorLog.log("Error when reading the content of the backup file.",
+                    "An IOException occurred: " + e.getMessage());
             return new ArrayList<>();
         }
 
