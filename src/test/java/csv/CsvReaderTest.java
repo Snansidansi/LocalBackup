@@ -17,7 +17,8 @@ public class CsvReaderTest {
     @Test
     void openFile() {
         Assertions.assertDoesNotThrow(() -> {
-            try (CsvReader csvReader = new CsvReader(exampleDataCsvFile)) {}
+            try (CsvReader csvReader = new CsvReader(this.exampleDataCsvFile)) {
+            }
         });
     }
 
@@ -32,14 +33,14 @@ public class CsvReaderTest {
     @Test
     void readSingleLineFromCsvFile() {
         String[] expected = {"a", "aa"};
-        String[] result = readSingleLineFromCsv(Path.of(exampleDataCsvFile));
+        String[] result = readSingleLineFromCsv(Path.of(this.exampleDataCsvFile));
 
         Assertions.assertArrayEquals(expected, result);
     }
 
     @Test
     void readAllLinesFromCsvFile() {
-        try (CsvReader csvReader = new CsvReader(exampleDataCsvFile)) {
+        try (CsvReader csvReader = new CsvReader(this.exampleDataCsvFile)) {
             List<String[]> expected = new ArrayList<>();
             expected.add(new String[]{"a", "aa"});
             expected.add(new String[]{"b", "bb"});
