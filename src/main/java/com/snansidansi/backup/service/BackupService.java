@@ -51,17 +51,16 @@ public class BackupService {
      * @param backupListPath Path to the backup-list file as string.
      */
     public BackupService(String backupListPath) {
-        this.backupListPath = Paths.get(backupListPath).toString();
-        this.allBackups = readBackups();
-
         this.backupLog = new Logger("log/backup", false);
         this.errorLog = new Logger("log/error", false);
-
+        this.backupLog.setLogHeader("---Backup log file from local backup program: " + this.backupLog.getFilename() + "---");
+        this.errorLog.setLogHeader("---Error log file form local backup program: " + this.errorLog.getFilename() + "---");
         this.backupLog.setEnabled(false);
         this.errorLog.setEnabled(false);
 
-        this.backupLog.setLogHeader("---Backup log file from local backup program: " + this.backupLog.getFilename() + "---");
-        this.errorLog.setLogHeader("---Error log file form local backup program: " + this.errorLog.getFilename() + "---");
+        this.backupListPath = Paths.get(backupListPath).toString();
+        this.allBackups = readBackups();
+
     }
 
     /**
