@@ -497,15 +497,28 @@ public class BackupService {
         return false;
     }
 
+    /**
+     * Enables or disables logging.
+     *
+     * @param enabled Boolean if logging should be enabled.
+     */
     public void setLoggerEnabled(boolean enabled) {
         this.errorLog.setEnabled(enabled);
         this.backupLog.setEnabled(enabled);
     }
 
+    /**
+     * Gets the error logger.
+     * @return Error logger as {@link Logger}.
+     */
     public Logger getErrorLog() {
         return this.errorLog;
     }
 
+    /**
+     * Gets the backup logger.
+     * @return Backup logger as {@link Logger}.
+     */
     public Logger getBackupLog() {
         return this.backupLog;
     }
