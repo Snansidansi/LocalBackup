@@ -8,13 +8,13 @@ public class CheckBoxSettingsRow extends SettingsRow {
     private final CheckBox checkBox = new CheckBox();
 
     public CheckBoxSettingsRow(BackupSetting setting,
-                               String initValue,
                                String displayText,
                                int fontSize,
                                ReadOnlyDoubleProperty widthProperty) {
 
-        super(setting, initValue, displayText, fontSize, widthProperty);
+        super(setting, displayText, fontSize, widthProperty);
         super.getControlHBox().getChildren().add(this.checkBox);
+
         restoreStandardValue();
     }
 

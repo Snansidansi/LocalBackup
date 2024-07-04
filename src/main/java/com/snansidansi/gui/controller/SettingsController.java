@@ -43,21 +43,18 @@ public class SettingsController {
 
         this.availableSettingsRows.add(new SpinnerSettingsRow(
                 BackupSetting.MAX_ERROR_LOGS,
-                SettingsManagerInstance.settingsManager.getSetting(BackupSetting.MAX_ERROR_LOGS),
                 "Max number of error logs:",
                 FONTSIZE,
                 widthProperty));
 
         this.availableSettingsRows.add(new SpinnerSettingsRow(
                 BackupSetting.MAX_BACKUP_LOGS,
-                SettingsManagerInstance.settingsManager.getSetting(BackupSetting.MAX_BACKUP_LOGS),
                 "Max number of backup logs:",
                 FONTSIZE,
                 widthProperty));
 
         SpinnerSettingsRow numberOfRetriesRow = new SpinnerSettingsRow(
                 BackupSetting.NUMBER_OF_BACKUP_RETRIES,
-                SettingsManagerInstance.settingsManager.getSetting(BackupSetting.NUMBER_OF_BACKUP_RETRIES),
                 "Max number of backup retries:",
                 FONTSIZE,
                 widthProperty);
@@ -67,7 +64,6 @@ public class SettingsController {
 
         SpinnerSettingsRow delayBetweenRetriesRow = new SpinnerSettingsRow(
                 BackupSetting.DELAY_BETWEEN_BACKUP_RETRIES,
-                SettingsManagerInstance.settingsManager.getSetting(BackupSetting.DELAY_BETWEEN_BACKUP_RETRIES),
                 "Delay between backup retries (seconds):",
                 FONTSIZE,
                 widthProperty);

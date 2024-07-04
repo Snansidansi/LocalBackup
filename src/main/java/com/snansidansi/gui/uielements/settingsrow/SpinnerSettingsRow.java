@@ -7,15 +7,13 @@ import javafx.scene.control.SpinnerValueFactory;
 
 public class SpinnerSettingsRow extends SettingsRow {
     private final Spinner<Integer> spinner = new Spinner<>();
-    private String initValue;
 
     public SpinnerSettingsRow(BackupSetting setting,
-                              String initValue,
                               String displayText,
                               int fontSize,
                               ReadOnlyDoubleProperty widthProperty) {
 
-        super(setting, initValue, displayText, fontSize, widthProperty);
+        super(setting, displayText, fontSize, widthProperty);
         super.getControlHBox().getChildren().add(this.spinner);
 
         this.spinner.setEditable(true);
@@ -27,6 +25,8 @@ public class SpinnerSettingsRow extends SettingsRow {
                 this.spinner.getEditor().setText(oldValue);
             }
         }));
+
+        restoreStandardValue();
     }
 
     public void setBounds(int minValue, int maxValue, int standardValue) {

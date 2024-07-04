@@ -1,5 +1,6 @@
 package com.snansidansi.gui.uielements.settingsrow;
 
+import com.snansidansi.app.instances.SettingsManagerInstance;
 import com.snansidansi.settings.BackupSetting;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Insets;
@@ -18,14 +19,13 @@ public abstract class SettingsRow extends HBox {
     protected String initValue;
 
     public SettingsRow(BackupSetting setting,
-                       String initValue,
                        String displayText,
                        int fontSize,
                        ReadOnlyDoubleProperty widthProperty) {
 
         super();
         this.setting = setting;
-        this.initValue = initValue;
+        this.initValue = SettingsManagerInstance.settingsManager.getSetting(setting);
 
         Font fontSizeFont = new Font(fontSize);
         this.nameLabel = new Label(displayText);

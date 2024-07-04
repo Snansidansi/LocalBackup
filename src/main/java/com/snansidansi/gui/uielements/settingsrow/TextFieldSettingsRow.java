@@ -8,13 +8,13 @@ public class TextFieldSettingsRow extends SettingsRow {
     private final TextField textField = new TextField();
 
     public TextFieldSettingsRow(BackupSetting setting,
-                                String initValue,
                                 String displayText,
                                 int fontSize,
                                 ReadOnlyDoubleProperty widthProperty) {
 
-        super(setting, initValue, displayText, fontSize, widthProperty);
+        super(setting, displayText, fontSize, widthProperty);
         super.getControlHBox().getChildren().add(textField);
+
         restoreStandardValue();
     }
 
