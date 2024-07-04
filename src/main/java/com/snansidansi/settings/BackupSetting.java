@@ -5,7 +5,9 @@ import com.snansidansi.settings.settingsmanager.Settings;
 
 public enum BackupSetting implements Settings {
     MAX_BACKUP_LOGS("max backup logs", "14", SettingType.INTEGER),
-    MAX_ERROR_LOGS("max error logs", "14", SettingType.INTEGER);
+    MAX_ERROR_LOGS("max error logs", "14", SettingType.INTEGER),
+    NUMBER_OF_BACKUP_RETRIES("number of backup retries", "1", SettingType.INTEGER),
+    DELAY_BETWEEN_BACKUP_RETRIES("delay between backup retries", "10", SettingType.INTEGER);
 
     private final String id;
     private final String standardValue;

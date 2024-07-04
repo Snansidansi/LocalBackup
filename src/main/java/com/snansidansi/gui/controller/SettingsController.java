@@ -38,6 +38,7 @@ public class SettingsController {
     private void createSettingsRows() {
         var widthProperty = this.settingsScrollPane.widthProperty();
         final int FONTSIZE = 14;
+        final int TOOLTIP_FONTSIZE = 14;
         this.availableSettingsRows.clear();
 
         this.availableSettingsRows.add(new SpinnerSettingsRow(
@@ -53,6 +54,26 @@ public class SettingsController {
                 "Max number of backup logs:",
                 FONTSIZE,
                 widthProperty));
+
+        SpinnerSettingsRow numberOfRetriesRow = new SpinnerSettingsRow(
+                BackupSetting.NUMBER_OF_BACKUP_RETRIES,
+                SettingsManagerInstance.settingsManager.getSetting(BackupSetting.NUMBER_OF_BACKUP_RETRIES),
+                "Max number of backup retries:",
+                FONTSIZE,
+                widthProperty);
+        numberOfRetriesRow.addTooltip("How often should the program retry to backup a file or directory where the" +
+                " root directory is missing (e.g. a drive is not connected).", TOOLTIP_FONTSIZE);
+        this.availableSettingsRows.add(numberOfRetriesRow);
+
+        SpinnerSettingsRow delayBetweenRetriesRow = new SpinnerSettingsRow(
+                BackupSetting.DELAY_BETWEEN_BACKUP_RETRIES,
+                SettingsManagerInstance.settingsManager.getSetting(BackupSetting.DELAY_BETWEEN_BACKUP_RETRIES),
+                "Delay between backup retries (seconds):",
+                FONTSIZE,
+                widthProperty);
+        delayBetweenRetriesRow.addTooltip("How long should be waited between the backup retries if the root" +
+                " directory of a backup is missing (e.g. a drive is not connected)", TOOLTIP_FONTSIZE);
+        this.availableSettingsRows.add(delayBetweenRetriesRow);
     }
 
     private void displaySettingsRows() {
