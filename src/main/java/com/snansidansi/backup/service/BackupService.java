@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * A class for different features for creating backups of files and directories.
@@ -72,13 +71,14 @@ public class BackupService {
      * @param debugMode      Boolean value if the {@link Logger} should run in debug mode.
      */
     public BackupService(String backupListPath, boolean debugMode) {
-        this.backupListPath = Paths.get(backupListPath).toString();
-        this.allBackups = readBackups();
         this.backupLog = new Logger("log/backup", debugMode);
         this.errorLog = new Logger("log/error", debugMode);
 
         this.backupLog.setLogHeader("---Backup log file from local backup program: " + this.backupLog.getFilename() + "---");
         this.errorLog.setLogHeader("---Error log file form local backup program: " + this.errorLog.getFilename() + "---");
+
+        this.backupListPath = Paths.get(backupListPath).toString();
+        this.allBackups = readBackups();
     }
 
     /**
@@ -460,9 +460,18 @@ public class BackupService {
             return new ArrayList<>();
         }
 
-        return allBackupsFromFile.stream()
-                .map(e -> new SrcDestPair(e[0], e[1]))
-                .collect(Collectors.toCollection(ArrayList::new));
+        List<SrcDestPair> outputList = new ArrayList<>(allBackupsFromFile.size());
+        for (String[] strings : allBackupsFromFile) {
+            try {
+                outputList.add(new SrcDestPair(strings[0], strings[1]));
+            } catch (ArrayIndexOutOfBoundsException e) {
+                this.errorLog.log("Error when reading a backup from the backup list file.",
+                        "Array out of bounds exception occurred.",
+                        "Content of the invalid line: " + Arrays.toString(strings));
+            }
+        }
+
+        return outputList;
     }
 
     /**
