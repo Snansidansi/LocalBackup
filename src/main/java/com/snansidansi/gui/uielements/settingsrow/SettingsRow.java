@@ -5,11 +5,15 @@ import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 
 public abstract class SettingsRow extends HBox {
     private final HBox controlHBox = new HBox();
+    private final HBox nameHBox = new HBox();
+    private final Label nameLabel;
     private final BackupSetting setting;
     protected String initValue;
 
@@ -24,19 +28,18 @@ public abstract class SettingsRow extends HBox {
         this.initValue = initValue;
 
         Font fontSizeFont = new Font(fontSize);
-        Label nameLabel = new Label(displayText);
-        nameLabel.setFont(fontSizeFont);
+        this.nameLabel = new Label(displayText);
+        this.nameLabel.setFont(fontSizeFont);
 
-        HBox nameHBox = new HBox();
-        nameHBox.setAlignment(Pos.CENTER_LEFT);
-        nameHBox.getChildren().add(nameLabel);
+        this.nameHBox.setAlignment(Pos.CENTER_LEFT);
+        this.nameHBox.getChildren().add(this.nameLabel);
 
-        nameHBox.minWidthProperty().bind(widthProperty.divide(2).subtract(9)); // -9 because of padding
+        this.nameHBox.minWidthProperty().bind(widthProperty.divide(2).subtract(9)); // -9 because of padding
         this.controlHBox.minWidthProperty().bind(widthProperty.divide(2).subtract(9)); // -9 because of padding
 
         super.setPadding(new Insets(5));
         super.setStyle("-fx-border-color: c3c3c3");
-        super.getChildren().addAll(nameHBox, this.controlHBox);
+        super.getChildren().addAll(this.nameHBox, this.controlHBox);
     }
 
     public BackupSetting getSetting() {
@@ -55,5 +58,14 @@ public abstract class SettingsRow extends HBox {
 
     public String getInitValue() {
         return this.initValue;
+    }
+
+    public void addTooltip(String text, int fontSize) {
+        Tooltip tooltip = new Tooltip(text);
+        tooltip.setFont(new Font(fontSize));
+        tooltip.setShowDelay(Duration.ZERO);
+        tooltip.setHideDelay(Duration.ZERO);
+
+        Tooltip.install(this.nameHBox, tooltip);
     }
 }
