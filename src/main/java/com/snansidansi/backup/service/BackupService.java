@@ -41,6 +41,8 @@ public class BackupService {
     private List<SrcDestPair> allBackups;
     private final Logger backupLog;
     private final Logger errorLog;
+    private int retryTime = 5;
+    private int maxRetries = 1;
 
     private int copiedFilesDuringDirBackup = 0;
 
@@ -83,35 +85,109 @@ public class BackupService {
      * Runs a backup with from the backup-list file.
      */
     public void runBackup() {
+        int i = 0;
+        List<Integer> missingRootIndices = new ArrayList<>();
+        List<Integer> missingBackupIndices = new ArrayList<>();
+
         for (SrcDestPair pathPair : this.allBackups) {
             Path srcPath = Path.of(pathPair.srcPath());
-            if (Files.notExists(srcPath)) {
-                return;
+
+            if (Files.notExists(srcPath.getRoot())) {
+                missingRootIndices.add(i);
+                continue;
+            } else if (Files.notExists(srcPath)) {
+                missingBackupIndices.add(i);
+                continue;
             }
 
             Path destPath = Path.of(pathPair.destPath()).resolve(srcPath.getFileName());
+
             if (Files.isDirectory(srcPath)) {
-                this.copiedFilesDuringDirBackup = 0;
-                if (backupDir(srcPath, destPath)) {
-                    this.backupLog.log("Directory backup.",
-                            "Source: " + pathPair.srcPath(),
-                            "Destination: " + pathPair.destPath(),
-                            "Number of copied files: " + this.copiedFilesDuringDirBackup);
-                }
+                backupDirLogged(srcPath, destPath);
             } else if (Files.isRegularFile(srcPath)) {
-                if (backupFile(srcPath, destPath)) {
-                    this.backupLog.log("File backup.",
-                            "Source: " + pathPair.srcPath(),
-                            "Destination: " + pathPair.destPath());
-                }
+                backupFileLogged(srcPath, destPath);
             }
+
+            i++;
         }
+
+        try {
+            retryBackups(missingRootIndices, missingBackupIndices);
+        } catch (InterruptedException unused) {
+        }
+
+        removeBackup(convertIntListToArray(missingBackupIndices));
 
         this.backupLog.finishLog();
         this.backupLog.setLogHeader("---Backup log file from local backup program: " + this.backupLog.getFilename() + "---");
 
         this.errorLog.finishLog();
         this.errorLog.setLogHeader("---Error log file form local backup program: " + this.errorLog.getFilename() + "---");
+    }
+
+    private int[] convertIntListToArray(List<Integer> list) {
+        int[] intArray = new int[list.size()];
+
+        for (int i = 0; i < list.size(); i++) {
+            intArray[i] = list.get(i);
+        }
+
+        return intArray;
+    }
+
+    private void retryBackups(List<Integer> missingRootIndices, List<Integer> missingBackupIndices)
+            throws InterruptedException {
+
+        if (missingRootIndices.isEmpty()) {
+            return;
+        }
+
+        for (int i = 0; i < this.maxRetries; i++) {
+            Thread.sleep(this.retryTime * 1000L);
+            Iterator<Integer> iterator = missingRootIndices.iterator();
+
+            while (iterator.hasNext()) {
+                int index = iterator.next();
+                SrcDestPair pathPair = this.allBackups.get(index);
+                Path srcPath = Path.of(pathPair.srcPath());
+
+                if (Files.notExists(srcPath.getRoot())) {
+                    continue;
+                } else if (Files.notExists(srcPath)) {
+                    missingBackupIndices.add(i);
+                    iterator.remove();
+                    continue;
+                }
+
+                Path destPath = Path.of(pathPair.destPath());
+
+                if (Files.isDirectory(srcPath)) {
+                    backupDirLogged(srcPath, destPath);
+                } else if (Files.isRegularFile(srcPath)) {
+                    backupFileLogged(srcPath, destPath);
+                }
+
+                iterator.remove();
+            }
+        }
+    }
+
+    private void backupDirLogged(Path srcPath, Path destPath) {
+        this.copiedFilesDuringDirBackup = 0;
+        if (backupDir(srcPath, destPath)) {
+            this.backupLog.log("Directory backup.",
+                    "Source: " + srcPath.toString(),
+                    "Destination: " + destPath.toString(),
+                    "Number of copied files: " + this.copiedFilesDuringDirBackup);
+        }
+    }
+
+    private void backupFileLogged(Path srcPath, Path destPath) {
+        if (backupFile(srcPath, destPath)) {
+            this.backupLog.log("File backup.",
+                    "Source: " + srcPath.toString(),
+                    "Destination: " + destPath.toString());
+        }
     }
 
     /**
@@ -421,5 +497,24 @@ public class BackupService {
 
     public Logger getBackupLog() {
         return this.backupLog;
+    }
+
+    /**
+     * Sets the time in seconds how long after the call of {@link #runBackup()} should be waited before the backup of
+     * paths with a missing root is retried.
+     *
+     * @param seconds Time in seconds as int.
+     */
+    public void setRetryTime(int seconds) {
+        this.retryTime = seconds;
+    }
+
+    /**
+     * Sets the maximum number of retries for a backup with a missing root after the call of {@link #runBackup()}.
+     *
+     * @param maxRetries Maximum number of retires as int.
+     */
+    public void setMaxRetries(int maxRetries) {
+        this.maxRetries = maxRetries;
     }
 }

@@ -27,7 +27,7 @@ public class BackupServiceTest {
     private final String existingFilePath = Paths.get("src/test/resources/service/ExistingFile.txt").toAbsolutePath().toString();
     private final String existingDirPath = Paths.get("src/test/resources/service").toAbsolutePath().toString();
 
-    private final Path backupExSrc = Path.of("src/test/resources/service/backupExamples");
+    private final Path backupExSrc = Path.of("src/test/resources/service/backupExamples").toAbsolutePath();
 
     private final SrcDestPair[] exampleData = {
             new SrcDestPair(Paths.get("aa").toAbsolutePath().toString(),
@@ -249,6 +249,26 @@ public class BackupServiceTest {
         assertDirTree(backupExSrc.resolve("separateBackups"), destPath);
     }
 
+    @Test
+    void removeMissingBackupsFromBackupListWhenRunningBackup() {
+        Path destPath = tempDir.resolve("removeMissingBackupsFromBackupList");
+        SrcDestPair existingFilePair = new SrcDestPair(exampleBackupDataPath, destPath.toString());
+
+        String backupConfigPath = createBackupConfigFile("removeMissingBackups.csv",
+                existingFilePair,
+                new SrcDestPair(Path.of(existingDirPath).resolve("not-existing.txt").toString(), destPath.toString()),
+                existingFilePair);
+
+        BackupService backupService = new BackupService(backupConfigPath);
+        backupService.runBackup();
+        List<SrcDestPair> expectedBackupList = List.of(existingFilePair, existingFilePair);
+
+        Assertions.assertEquals(destPath.toFile().listFiles().length, 1);
+        Assertions.assertTrue(Files.exists(destPath.resolve(Path.of(exampleBackupDataPath).getFileName())));
+        Assertions.assertEquals(expectedBackupList, backupService.getAllBackups());
+    }
+
+    // Helper methods
     private String createBackupConfigFile(String fileName, SrcDestPair... pathPairs) {
         Path filePath = tempDir.resolve(fileName);
         try (CsvWriter csvWriter = new CsvWriter(filePath.toString())) {
