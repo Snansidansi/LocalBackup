@@ -1,10 +1,13 @@
 package com.snansidansi.gui.controller;
 
+import com.snansidansi.app.LocalBackupApp;
 import com.snansidansi.app.instances.SettingsManagerInstance;
+import com.snansidansi.gui.uielements.settingsrow.CheckBoxSettingsRow;
 import com.snansidansi.gui.uielements.settingsrow.SettingsRow;
 import com.snansidansi.gui.uielements.settingsrow.SpinnerSettingsRow;
 import com.snansidansi.gui.util.SceneManager;
 import com.snansidansi.settings.BackupSetting;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -70,6 +73,18 @@ public class SettingsController {
         delayBetweenRetriesRow.addTooltip("How long should be waited between the backup retries if the root" +
                 " directory of a backup is missing (e.g. a drive is not connected)", TOOLTIP_FONTSIZE);
         this.availableSettingsRows.add(delayBetweenRetriesRow);
+
+        if (LocalBackupApp.runsFromExeFile) {
+            addBackupExecutionToAutoStartRow(FONTSIZE, widthProperty);
+        }
+    }
+
+    private void addBackupExecutionToAutoStartRow(int FONTSIZE, ReadOnlyDoubleProperty widthProperty) {
+        this.availableSettingsRows.add(new CheckBoxSettingsRow(
+                BackupSetting.ADDED_TO_AUTOSTART,
+                "Add backup execution to autostart:",
+                FONTSIZE,
+                widthProperty));
     }
 
     private void displaySettingsRows() {
