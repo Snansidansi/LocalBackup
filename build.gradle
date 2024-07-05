@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.1.0'
+    id 'edu.sc.seis.launch4j' version '3.0.5'
 }
 
 group = 'com.snansidansi'
@@ -43,4 +44,10 @@ jar {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+launch4j {
+    outfile = 'LocalBackup.exe'
+    mainClassName = 'com.snansidansi.app.LocalBackupApp'
+    icon = "${projectDir}/src/main/resources/icons/appIcon.ico"
 }
