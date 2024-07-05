@@ -95,6 +95,7 @@ public class SettingsController {
         }
 
         SettingsManagerInstance.settingsManager.restoreDefaults();
+        SettingsManagerInstance.reloadSettings();
         createSettingsRows();
         displaySettingsRows();
     }
