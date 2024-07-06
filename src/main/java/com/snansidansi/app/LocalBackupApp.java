@@ -11,6 +11,7 @@ import java.nio.file.Path;
 public class LocalBackupApp {
     public static final Path applicationPath = new File(LocalBackupApp.class.getProtectionDomain().getCodeSource()
             .getLocation().getPath()).toPath();
+    public static final boolean osIsWindows = System.getProperty("os.name").toLowerCase().contains("win");
     public static final boolean runsFromExeFile = applicationPath.toString().contains(".exe");
 
     public static void main(String[] args) {
