@@ -48,9 +48,12 @@ public class Logger {
         LocalDateTime now = LocalDateTime.now();
         this.logFile = this.outputDir.resolve(now.format(dateTimeFormatter) + ".txt").toFile();
 
+        if (Files.exists(this.logFile.toPath())) {
+            this.logFile = this.outputDir.resolve(now.format(dateTimeFormatter) + "log2.txt").toFile();
+        }
+
         try {
             Files.createDirectories(this.outputDir);
-            Files.deleteIfExists(logFile.toPath());
             this.successfulSetup = true;
         } catch (IOException e) {
             if (this.debugMode) {
