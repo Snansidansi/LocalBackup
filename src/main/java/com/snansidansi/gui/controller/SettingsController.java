@@ -50,41 +50,17 @@ public class SettingsController {
         var widthProperty = this.settingsScrollPane.widthProperty();
         final int FONTSIZE = 14;
         final int TOOLTIP_FONTSIZE = 14;
+
         this.availableSettingsRows.clear();
 
-        this.availableSettingsRows.add(new SpinnerSettingsRow(
-                BackupSetting.MAX_ERROR_LOGS,
-                "Max number of error logs:",
-                FONTSIZE,
-                widthProperty));
-
-        this.availableSettingsRows.add(new SpinnerSettingsRow(
-                BackupSetting.MAX_BACKUP_LOGS,
-                "Max number of backup logs:",
-                FONTSIZE,
-                widthProperty));
-
-        SpinnerSettingsRow numberOfRetriesRow = new SpinnerSettingsRow(
-                BackupSetting.NUMBER_OF_BACKUP_RETRIES,
-                "Max number of backup retries:",
-                FONTSIZE,
-                widthProperty);
-        numberOfRetriesRow.addTooltip("How often should the program retry to backup a file or directory where the" +
-                " root directory is missing (e.g. a drive is not connected).", TOOLTIP_FONTSIZE);
-        this.availableSettingsRows.add(numberOfRetriesRow);
-
-        SpinnerSettingsRow delayBetweenRetriesRow = new SpinnerSettingsRow(
-                BackupSetting.DELAY_BETWEEN_BACKUP_RETRIES,
-                "Delay between backup retries (seconds):",
-                FONTSIZE,
-                widthProperty);
-        delayBetweenRetriesRow.addTooltip("How long should be waited between the backup retries if the root" +
-                " directory of a backup is missing (e.g. a drive is not connected)", TOOLTIP_FONTSIZE);
-        this.availableSettingsRows.add(delayBetweenRetriesRow);
+        addMaxNumberOfErrorLogsRow(FONTSIZE, widthProperty);
+        addMaxNumberOfBackupLogsRow(FONTSIZE, widthProperty);
+        addMaxNumberOfBackupRetriesRow(FONTSIZE, widthProperty, TOOLTIP_FONTSIZE);
+        addDelayBetweenBackupRetriesRow(FONTSIZE, widthProperty, TOOLTIP_FONTSIZE);
 
         if (LocalBackupApp.runsFromExeFile) {
-            SettingsRow enableAutostartRow = addBackupExecutionToAutoStartRow(FONTSIZE, widthProperty);
-            addAutostartPathRow(FONTSIZE, widthProperty, enableAutostartRow, TOOLTIP_FONTSIZE);
+            SettingsRow addBackupExecutionToAutostartRow = addBackupExecutionToAutoStartRow(FONTSIZE, widthProperty);
+            addAutostartPathRow(FONTSIZE, widthProperty, addBackupExecutionToAutostartRow, TOOLTIP_FONTSIZE);
         }
     }
 
@@ -148,6 +124,45 @@ public class SettingsController {
 
         this.availableSettingsRows.add(autostartRow);
         return autostartRow;
+    }
+
+    private void addDelayBetweenBackupRetriesRow(int FONTSIZE, ReadOnlyDoubleProperty widthProperty, int TOOLTIP_FONTSIZE) {
+        SpinnerSettingsRow delayBetweenRetriesRow = new SpinnerSettingsRow(
+                BackupSetting.DELAY_BETWEEN_BACKUP_RETRIES,
+                "Delay between backup retries (seconds):",
+                FONTSIZE,
+                widthProperty);
+        delayBetweenRetriesRow.addTooltip("How long should be waited between the backup retries if the root" +
+                " directory of a backup is missing (e.g. a drive is not connected)", TOOLTIP_FONTSIZE);
+        this.availableSettingsRows.add(delayBetweenRetriesRow);
+    }
+
+    private void addMaxNumberOfBackupRetriesRow(int FONTSIZE, ReadOnlyDoubleProperty widthProperty, int TOOLTIP_FONTSIZE) {
+        SpinnerSettingsRow numberOfRetriesRow = new SpinnerSettingsRow(
+                BackupSetting.NUMBER_OF_BACKUP_RETRIES,
+                "Max number of backup retries:",
+                FONTSIZE,
+                widthProperty);
+
+        numberOfRetriesRow.addTooltip("How often should the program retry to backup a file or directory where the" +
+                " root directory is missing (e.g. a drive is not connected).", TOOLTIP_FONTSIZE);
+        this.availableSettingsRows.add(numberOfRetriesRow);
+    }
+
+    private void addMaxNumberOfBackupLogsRow(int FONTSIZE, ReadOnlyDoubleProperty widthProperty) {
+        this.availableSettingsRows.add(new SpinnerSettingsRow(
+                BackupSetting.MAX_BACKUP_LOGS,
+                "Max number of backup logs:",
+                FONTSIZE,
+                widthProperty));
+    }
+
+    private void addMaxNumberOfErrorLogsRow(int FONTSIZE, ReadOnlyDoubleProperty widthProperty) {
+        this.availableSettingsRows.add(new SpinnerSettingsRow(
+                BackupSetting.MAX_ERROR_LOGS,
+                "Max number of error logs:",
+                FONTSIZE,
+                widthProperty));
     }
 
     private void displaySettingsRows() {
