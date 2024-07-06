@@ -1,4 +1,4 @@
-package com.snansidansi.gui.uielements;
+package com.snansidansi.gui.uielements.buttons;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;

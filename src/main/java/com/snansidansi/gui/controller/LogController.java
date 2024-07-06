@@ -1,6 +1,6 @@
 package com.snansidansi.gui.controller;
 
-import com.snansidansi.gui.uielements.LogFileButton;
+import com.snansidansi.gui.uielements.buttons.LogFileButton;
 import com.snansidansi.gui.util.SceneManager;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
