@@ -479,7 +479,7 @@ public class BackupService {
     }
 
     /**
-     * @return The backup-list (copy) as lists of {@link SrcDestPair}.
+     * @return The backup-list as list of {@link SrcDestPair}.
      */
     public List<SrcDestPair> getAllBackups() {
         return this.allBackups;
