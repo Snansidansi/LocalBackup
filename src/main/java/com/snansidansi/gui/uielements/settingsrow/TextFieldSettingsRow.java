@@ -39,4 +39,7 @@ public class TextFieldSettingsRow extends SettingsRow {
         restoreStandardValue();
     }
 
+    public TextField getTextField() {
+        return this.textField;
+    }
 }

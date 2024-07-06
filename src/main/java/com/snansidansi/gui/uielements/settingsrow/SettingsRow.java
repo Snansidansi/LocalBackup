@@ -45,7 +45,7 @@ public abstract class SettingsRow extends HBox {
         return this.setting;
     }
 
-    protected HBox getControlHBox() {
+    public HBox getControlHBox() {
         return this.controlHBox;
     }
 
