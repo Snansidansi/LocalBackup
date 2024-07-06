@@ -11,11 +11,10 @@ import com.snansidansi.gui.util.SceneManager;
 import com.snansidansi.settings.BackupSetting;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
@@ -28,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class SettingsController {
-    private final List<SettingsRow> availableSettingsRows = new ArrayList<>();
+    private final List<Node> displayedSettings = new ArrayList<>();
     private boolean invalidSettings = false;
 
     @FXML
@@ -42,23 +41,29 @@ public class SettingsController {
 
     @FXML
     public void initialize() {
-        createSettingsRows();
+        createSettingsContent();
         displaySettingsRows();
     }
 
-    private void createSettingsRows() {
+    private void createSettingsContent() {
         var widthProperty = this.settingsScrollPane.widthProperty();
         final int FONTSIZE = 14;
         final int TOOLTIP_FONTSIZE = 14;
+        final int HEADER_TOP_PADDING = 12;
+        final int HEADER_BOTTOM_PADDING = 0;
 
-        this.availableSettingsRows.clear();
+        this.displayedSettings.clear();
 
+        addSettingsHeader("Logging:", FONTSIZE, true, true, 0, HEADER_BOTTOM_PADDING);
         addMaxNumberOfErrorLogsRow(FONTSIZE, widthProperty);
         addMaxNumberOfBackupLogsRow(FONTSIZE, widthProperty);
+
+        addSettingsHeader("Retry failed backups:", FONTSIZE, true, true, HEADER_TOP_PADDING, HEADER_BOTTOM_PADDING);
         addMaxNumberOfBackupRetriesRow(FONTSIZE, widthProperty, TOOLTIP_FONTSIZE);
         addDelayBetweenBackupRetriesRow(FONTSIZE, widthProperty, TOOLTIP_FONTSIZE);
 
         if (LocalBackupApp.runsFromExeFile) {
+            addSettingsHeader("Automate backup:", FONTSIZE, true, true, HEADER_TOP_PADDING, HEADER_BOTTOM_PADDING);
             SettingsRow addBackupExecutionToAutostartRow = addBackupExecutionToAutoStartRow(FONTSIZE, widthProperty);
             addAutostartPathRow(FONTSIZE, widthProperty, addBackupExecutionToAutostartRow, TOOLTIP_FONTSIZE);
         }
@@ -112,7 +117,7 @@ public class SettingsController {
                 "To find the autostart dir press \"windows key + r \", write \"shell:startup\" and press enter.\n" +
                 "Then copy the path to the directory that the explorer opened.", tooltipFontSize);
 
-        this.availableSettingsRows.add(autostartPathRow);
+        this.displayedSettings.add(autostartPathRow);
     }
 
     private CheckBoxSettingsRow addBackupExecutionToAutoStartRow(int fontSize, ReadOnlyDoubleProperty widthProperty) {
@@ -122,7 +127,7 @@ public class SettingsController {
                 fontSize,
                 widthProperty);
 
-        this.availableSettingsRows.add(autostartRow);
+        this.displayedSettings.add(autostartRow);
         return autostartRow;
     }
 
@@ -134,7 +139,7 @@ public class SettingsController {
                 widthProperty);
         delayBetweenRetriesRow.addTooltip("How long should be waited between the backup retries if the root" +
                 " directory of a backup is missing (e.g. a drive is not connected)", TOOLTIP_FONTSIZE);
-        this.availableSettingsRows.add(delayBetweenRetriesRow);
+        this.displayedSettings.add(delayBetweenRetriesRow);
     }
 
     private void addMaxNumberOfBackupRetriesRow(int FONTSIZE, ReadOnlyDoubleProperty widthProperty, int TOOLTIP_FONTSIZE) {
@@ -146,11 +151,11 @@ public class SettingsController {
 
         numberOfRetriesRow.addTooltip("How often should the program retry to backup a file or directory where the" +
                 " root directory is missing (e.g. a drive is not connected).", TOOLTIP_FONTSIZE);
-        this.availableSettingsRows.add(numberOfRetriesRow);
+        this.displayedSettings.add(numberOfRetriesRow);
     }
 
     private void addMaxNumberOfBackupLogsRow(int FONTSIZE, ReadOnlyDoubleProperty widthProperty) {
-        this.availableSettingsRows.add(new SpinnerSettingsRow(
+        this.displayedSettings.add(new SpinnerSettingsRow(
                 BackupSetting.MAX_BACKUP_LOGS,
                 "Max number of backup logs:",
                 FONTSIZE,
@@ -158,7 +163,7 @@ public class SettingsController {
     }
 
     private void addMaxNumberOfErrorLogsRow(int FONTSIZE, ReadOnlyDoubleProperty widthProperty) {
-        this.availableSettingsRows.add(new SpinnerSettingsRow(
+        this.displayedSettings.add(new SpinnerSettingsRow(
                 BackupSetting.MAX_ERROR_LOGS,
                 "Max number of error logs:",
                 FONTSIZE,
@@ -167,7 +172,7 @@ public class SettingsController {
 
     private void displaySettingsRows() {
         this.settingsVBox.getChildren().clear();
-        this.settingsVBox.getChildren().addAll(this.availableSettingsRows);
+        this.settingsVBox.getChildren().addAll(this.displayedSettings);
     }
 
     public void backToConfigureBackupScene() {
@@ -189,13 +194,15 @@ public class SettingsController {
 
         SettingsManagerInstance.settingsManager.restoreDefaults();
         SettingsManagerInstance.reloadSettings();
-        createSettingsRows();
+        createSettingsContent();
         displaySettingsRows();
     }
 
     public void discardChanges() {
-        for (SettingsRow settingsRow : this.availableSettingsRows) {
-            settingsRow.restoreStandardValue();
+        for (Node settingsContent : this.displayedSettings) {
+            if (settingsContent instanceof SettingsRow settingsRow) {
+                settingsRow.restoreStandardValue();
+            }
         }
     }
 
@@ -209,23 +216,27 @@ public class SettingsController {
             return;
         }
 
-        for (SettingsRow settingsRow : this.availableSettingsRows) {
-            SettingsManagerInstance.settingsManager.changeSetting(settingsRow.getSetting(), settingsRow.getValue());
-            settingsRow.setInitValue(settingsRow.getValue());
+        for (Node settingsContent : this.displayedSettings) {
+            if (settingsContent instanceof SettingsRow settingsRow) {
+                SettingsManagerInstance.settingsManager.changeSetting(settingsRow.getSetting(), settingsRow.getValue());
+                settingsRow.setInitValue(settingsRow.getValue());
+            }
         }
 
         if (!SettingsManagerInstance.settingsManager.applyChanges()) {
             return;
         }
         SettingsManagerInstance.reloadSettings();
-        createSettingsRows();
+        createSettingsContent();
         displaySettingsRows();
     }
 
     private boolean settingsChanged() {
-        for (SettingsRow settingsRow : this.availableSettingsRows) {
-            if (!settingsRow.getValue().equals(settingsRow.getInitValue())) {
-                return true;
+        for (Node settingsContent : this.displayedSettings) {
+            if (settingsContent instanceof SettingsRow settingsRow) {
+                if (!settingsRow.getValue().equals(settingsRow.getInitValue())) {
+                    return true;
+                }
             }
         }
         return false;
@@ -245,5 +256,19 @@ public class SettingsController {
         errorAlert.setTitle(title);
         errorAlert.setHeaderText(contentText);
         errorAlert.showAndWait();
+    }
+
+    private void addSettingsHeader(String text, int textSize, boolean underline, boolean bold,
+                                   int topPadding, int bottomPadding) {
+
+        Label label = new Label(text);
+        label.setFont(new Font(textSize));
+
+        String fxBold = bold ? "bold" : "normal";
+        String style = String.format("-fx-underline: %b; -fx-font-weight: %s; -fx-padding: %d 0 %d 0",
+                underline, fxBold, topPadding, bottomPadding);
+        label.setStyle(style);
+
+        this.displayedSettings.add(label);
     }
 }
