@@ -53,10 +53,14 @@ public class SettingsManagerInstance {
         boolean addToAutostart = Boolean.parseBoolean(settingsManager.getSetting(BackupSetting.ADDED_TO_AUTOSTART));
         if (addToAutostart) {
             shortcutManager.setLaunchParameters("run");
-            shortcutManager.create();
+            if (!shortcutManager.create()) {
+                settingsManager.changeSetting(BackupSetting.ADDED_TO_AUTOSTART, String.valueOf(!addToAutostart));
+            }
             return;
         }
-        shortcutManager.delete();
+        if (!shortcutManager.delete()) {
+            settingsManager.changeSetting(BackupSetting.ADDED_TO_AUTOSTART, String.valueOf(!addToAutostart));
+        }
     }
 
     private SettingsManagerInstance() {
