@@ -451,6 +451,10 @@ public class BackupService {
     }
 
     private List<SrcDestPair> readBackups() {
+        if (Files.notExists(Path.of(this.backupListPath))) {
+            return new ArrayList<>();
+        }
+
         List<String[]> allBackupsFromFile;
         try (CsvReader csvReader = new CsvReader(this.backupListPath)) {
             allBackupsFromFile = csvReader.readAllLines();
