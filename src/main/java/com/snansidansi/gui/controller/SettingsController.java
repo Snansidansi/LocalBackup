@@ -14,7 +14,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
@@ -262,11 +261,12 @@ public class SettingsController {
                                    int topPadding, int bottomPadding) {
 
         Label label = new Label(text);
-        label.setFont(new Font(textSize));
-
         String fxBold = bold ? "bold" : "normal";
-        String style = String.format("-fx-underline: %b; -fx-font-weight: %s; -fx-padding: %d 0 %d 0",
-                underline, fxBold, topPadding, bottomPadding);
+        String style = String.format("-fx-underline: %b; " +
+                        "-fx-font-weight: %s; " +
+                        "-fx-padding: %d 0 %d 0; " +
+                        "-fx-font-size: %d",
+                underline, fxBold, topPadding, bottomPadding, textSize);
         label.setStyle(style);
 
         this.displayedSettings.add(label);
