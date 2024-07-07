@@ -114,8 +114,30 @@ public class BackupService {
         } catch (InterruptedException unused) {
         }
 
+        deleteDestinationFiles(missingBackupIndices);
         removeBackup(convertIntListToArray(missingBackupIndices));
         prepareForNextLog();
+    }
+
+    private void deleteDestinationFiles(List<Integer> backupIndices) {
+        for (int index : backupIndices) {
+            Path srcPath = Path.of(this.allBackups.get(index).srcPath());
+            Path destPath = Path.of(this.allBackups.get(index).destPath()).resolve(srcPath.getFileName());
+
+            try {
+                Files.deleteIfExists(destPath);
+            } catch (IOException e) {
+                this.errorLog.log("Error during the deletion of a backup file with a missing source file:",
+                        "Missing source file: " + srcPath,
+                        "Backup file: " + destPath,
+                        "Error message: " + e.getMessage());
+                return;
+            }
+
+            this.backupLog.log("Deleted backup file of a missing source file:",
+                    "Missing source file: " + srcPath,
+                    "Backup file: " + destPath);
+        }
     }
 
     private void prepareForNextLog() {
