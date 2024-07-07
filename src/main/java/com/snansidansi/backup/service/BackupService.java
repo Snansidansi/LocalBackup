@@ -115,7 +115,10 @@ public class BackupService {
         }
 
         removeBackup(convertIntListToArray(missingBackupIndices));
+        prepareForNextLog();
+    }
 
+    private void prepareForNextLog() {
         if (this.errorLog.logCreated()) {
             this.backupLog.log("----Waring----",
                     "An error log was created during this backup: " + this.errorLog.getFilename());
