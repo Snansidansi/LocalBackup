@@ -69,4 +69,8 @@ public class WindowsShortcutManager {
     public boolean exist() {
         return Files.exists(destinationPath);
     }
+
+    public Path getFullDestinationPath() {
+        return this.destinationPath;
+    }
 }
