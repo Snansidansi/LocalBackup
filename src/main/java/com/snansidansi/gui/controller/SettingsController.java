@@ -66,6 +66,23 @@ public class SettingsController {
             SettingsRow addBackupExecutionToAutostartRow = addBackupExecutionToAutoStartRow(FONTSIZE, widthProperty);
             addAutostartPathRow(FONTSIZE, widthProperty, addBackupExecutionToAutostartRow, TOOLTIP_FONTSIZE);
         }
+
+        addSettingsHeader("Backup:", FONTSIZE, true, true, HEADER_TOP_PADDING, HEADER_BOTTOM_PADDING);
+        addDeleteMissingFilesRow(FONTSIZE, widthProperty, TOOLTIP_FONTSIZE);
+    }
+
+    private void addDeleteMissingFilesRow(int fontSize, ReadOnlyDoubleProperty widthProperty, int tooltipFontSize) {
+        CheckBoxSettingsRow deleteMissingFilesRow = new CheckBoxSettingsRow(
+                BackupSetting.DELETE_MISSING_FILES,
+                "Delte missing files from backup:",
+                fontSize,
+                widthProperty);
+
+        deleteMissingFilesRow.addTooltip("This setting determines if a file at the backup location should be " +
+                "deleted if the original file is deleted.\n" +
+                "This counts for individual files, directories and files in directories.", tooltipFontSize);
+
+        this.displayedSettings.add(deleteMissingFilesRow);
     }
 
     private void addAutostartPathRow(int fontSize, ReadOnlyDoubleProperty widthProperty, SettingsRow enableAutostartRow,

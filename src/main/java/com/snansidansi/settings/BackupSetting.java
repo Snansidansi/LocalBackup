@@ -12,7 +12,8 @@ public enum BackupSetting implements Settings {
     DELAY_BETWEEN_BACKUP_RETRIES("delay between backup retries", "10", SettingType.INTEGER),
     AUTOSTART_DIR_PATH("autostart dir path", Path.of(System.getenv("APPDATA"))
             .resolve("Microsoft/Windows/Start Menu/Programs/Startup").toString(), SettingType.STRING),
-    ADDED_TO_AUTOSTART("added to autostart", "false", SettingType.BOOLEAN);
+    ADDED_TO_AUTOSTART("added to autostart", "false", SettingType.BOOLEAN),
+    DELETE_MISSING_FILES("delete missing files", "true", SettingType.BOOLEAN);
 
     private final String id;
     private final String standardValue;
