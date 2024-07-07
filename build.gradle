@@ -36,6 +36,18 @@ test {
     useJUnitPlatform()
 }
 
+tasks.register('fastTest', Test) {
+    useJUnitPlatform {
+        excludeTags 'slow'
+    }
+}
+
+tasks.register('slowTest', Test) {
+    useJUnitPlatform {
+        includeTags 'slow'
+    }
+}
+
 jar {
     manifest {
         attributes 'Main-Class': 'com.snansidansi.app.LocalBackupApp'
