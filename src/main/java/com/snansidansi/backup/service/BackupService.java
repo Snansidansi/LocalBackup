@@ -267,6 +267,7 @@ public class BackupService {
         for (String fileName : existingBackupFiles) {
             try {
                Files.deleteIfExists(destPath.resolve(fileName));
+               this.deletedFilesDuringDirBackup++;
             } catch (IOException unused) {
             }
         }
