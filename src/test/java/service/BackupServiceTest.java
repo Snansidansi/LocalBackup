@@ -268,6 +268,42 @@ public class BackupServiceTest {
         Assertions.assertEquals(expectedBackupList, backupService.getAllBackups());
     }
 
+    @Test
+    void deleteBackupFilesOfDeletedBackupSourcefiles() throws IOException {
+        Path destPath = tempDir.resolve("deleteBackupFilesOfDeletedBackupSourcefiles");
+        String fileName = "notExistingFile.txt";
+        String backupConfigPath = createBackupConfigFile("deleteBackupFilesOfDeletedSourcefiles.csv",
+                new SrcDestPair(Path.of(this.existingDirPath).resolve(fileName).toString(),
+                        destPath.toString()));
+
+        Files.createDirectory(destPath);
+        Files.createFile(destPath.resolve(fileName));
+
+        Assertions.assertTrue(Files.exists(destPath.resolve(fileName)));
+        BackupService backupService = new BackupService(backupConfigPath);
+        backupService.runBackup();
+
+        Assertions.assertTrue(Files.notExists(destPath.resolve(fileName)));
+    }
+
+    @Test
+    void deleteBackupDirectoryOfDeletedSourceDirectory() throws IOException {
+        Path destPath = tempDir.resolve("deleteBackupDirOfDeletedSrcDir");
+        String dirName = "shouldBeDeleted";
+        String backupConfigPath = createBackupConfigFile("deleteBackupDirOfDeletedSrcDir.csv",
+                new SrcDestPair(Path.of(this.existingDirPath).resolve(dirName).toString(),
+                        destPath.toString()));
+
+        Files.createDirectory(destPath);
+        Files.createDirectory(destPath.resolve(dirName));
+
+        Assertions.assertTrue(Files.exists(destPath.resolve(dirName)));
+        BackupService backupService = new BackupService(backupConfigPath);
+        backupService.runBackup();
+
+        Assertions.assertTrue(Files.notExists(destPath.resolve(dirName)));
+    }
+
     // Helper methods
     private String createBackupConfigFile(String fileName, SrcDestPair... pathPairs) {
         Path filePath = tempDir.resolve(fileName);
