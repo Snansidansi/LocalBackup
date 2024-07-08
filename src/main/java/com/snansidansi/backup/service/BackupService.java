@@ -41,6 +41,7 @@ public class BackupService {
     private final Logger errorLog;
     private int retryTime = 5;
     private int maxRetries = 1;
+    private boolean deleteBackupsWithMissingSource = true;
 
     private int copiedFilesDuringDirBackup = 0;
     private int deletedFilesDuringDirBackup = 0;
@@ -114,8 +115,10 @@ public class BackupService {
         } catch (InterruptedException unused) {
         }
 
-        deleteDestinationFiles(missingBackupIndices);
-        removeBackup(convertIntListToArray(missingBackupIndices));
+        if (this.deleteBackupsWithMissingSource) {
+            deleteDestinationFiles(missingBackupIndices);
+            removeBackup(convertIntListToArray(missingBackupIndices));
+        }
         prepareForNextLog();
     }
 
@@ -241,7 +244,7 @@ public class BackupService {
                 return false;
             }
         }
-        else {
+        else if (this.deleteBackupsWithMissingSource) {
             File[] backupFiles = destPath.toFile().listFiles();
             if (backupFiles != null) {
                 existingBackupFiles = Stream.of(backupFiles).map(File::getName).collect(Collectors.toSet());
@@ -596,5 +599,9 @@ public class BackupService {
      */
     public void setMaxRetries(int maxRetries) {
         this.maxRetries = maxRetries;
+    }
+
+    public void setDeleteBackupsWithMissingSource(boolean enable) {
+        this.deleteBackupsWithMissingSource = enable;
     }
 }

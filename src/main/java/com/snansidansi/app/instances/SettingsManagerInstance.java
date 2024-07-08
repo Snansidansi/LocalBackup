@@ -33,6 +33,10 @@ public class SettingsManagerInstance {
                 Integer.parseInt(settingsManager.getSetting(BackupSetting.DELAY_BETWEEN_BACKUP_RETRIES)));
 
         reloadAutostartSetting();
+
+        backupService.setDeleteBackupsWithMissingSource(
+                Boolean.parseBoolean(settingsManager.getSetting(BackupSetting.DELETE_BACKUP_FILES_WITH_MISSING_SRC))
+        );
     }
 
     private static void reloadAutostartSetting() {

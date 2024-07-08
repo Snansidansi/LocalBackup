@@ -13,7 +13,7 @@ public enum BackupSetting implements Settings {
     AUTOSTART_DIR_PATH("autostart dir path", Path.of(System.getenv("APPDATA"))
             .resolve("Microsoft/Windows/Start Menu/Programs/Startup").toString(), SettingType.STRING),
     ADDED_TO_AUTOSTART("added to autostart", "false", SettingType.BOOLEAN),
-    DELETE_MISSING_FILES("delete missing files", "true", SettingType.BOOLEAN);
+    DELETE_BACKUP_FILES_WITH_MISSING_SRC("delete missing files", "true", SettingType.BOOLEAN);
 
     private final String id;
     private final String standardValue;

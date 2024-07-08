@@ -73,8 +73,8 @@ public class SettingsController {
 
     private void addDeleteMissingFilesRow(int fontSize, ReadOnlyDoubleProperty widthProperty, int tooltipFontSize) {
         CheckBoxSettingsRow deleteMissingFilesRow = new CheckBoxSettingsRow(
-                BackupSetting.DELETE_MISSING_FILES,
-                "Delte missing files from backup:",
+                BackupSetting.DELETE_BACKUP_FILES_WITH_MISSING_SRC,
+                "Delete backup files with missing source files:",
                 fontSize,
                 widthProperty);
 
