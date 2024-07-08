@@ -15,10 +15,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A class for different features for creating backups of files and directories.
@@ -44,6 +43,7 @@ public class BackupService {
     private int maxRetries = 1;
 
     private int copiedFilesDuringDirBackup = 0;
+    private int deletedFilesDuringDirBackup = 0;
 
     /**
      * Creates a new {@code BackupService} object with a {@link Logger} in debug mode.
@@ -201,11 +201,13 @@ public class BackupService {
 
     private void backupDirLogged(Path srcPath, Path destPath) {
         this.copiedFilesDuringDirBackup = 0;
+        this.deletedFilesDuringDirBackup = 0;
         if (backupDir(srcPath, destPath)) {
             this.backupLog.log("Directory backup.",
                     "Source: " + srcPath.toString(),
                     "Destination: " + destPath.toString(),
-                    "Number of copied files: " + this.copiedFilesDuringDirBackup);
+                    "Number of copied files: " + this.copiedFilesDuringDirBackup,
+                    "Number of deleted files: " + this.deletedFilesDuringDirBackup);
         }
     }
 
@@ -220,7 +222,8 @@ public class BackupService {
     /**
      * Copies a directory with all subfiles and subdirectories. Creates the destination directory and all missing parent
      * directories if they do not exist. A subfile only is copied when the corresponding file at the destination does
-     * not exist or has been modified since the last backup.
+     * not exist or has been modified since the last backup. Also, if the backup directory contains a file or directory
+     * that no longer exists in the source directory, it will be deleted from the backup dir.
      *
      * @param srcPath  Source path as {@code path}.
      * @param destPath Destination path as {@code path}.
@@ -229,12 +232,19 @@ public class BackupService {
      */
     public boolean backupDir(Path srcPath, Path destPath) {
         boolean changedAnything = false;
+        Set<String> existingBackupFiles = null;
 
         if (!Files.exists(destPath)) {
             if (destPath.toFile().mkdirs()) {
                 changedAnything = true;
             } else {
                 return false;
+            }
+        }
+        else {
+            File[] backupFiles = destPath.toFile().listFiles();
+            if (backupFiles != null) {
+                existingBackupFiles = Stream.of(backupFiles).map(File::getName).collect(Collectors.toSet());
             }
         }
 
@@ -244,6 +254,20 @@ public class BackupService {
             } else if (subFile.isFile() && backupFile(subFile.toPath(), destPath.resolve(subFile.getName()))) {
                 changedAnything = true;
                 this.copiedFilesDuringDirBackup++;
+            }
+
+            if (existingBackupFiles != null) {
+                existingBackupFiles.remove(subFile.getName());
+            }
+        }
+
+        if (existingBackupFiles == null) {
+            return changedAnything;
+        }
+        for (String fileName : existingBackupFiles) {
+            try {
+               Files.deleteIfExists(destPath.resolve(fileName));
+            } catch (IOException unused) {
             }
         }
 
