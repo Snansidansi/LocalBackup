@@ -1,6 +1,7 @@
 package com.snansidansi.app.singletons;
 
 import com.snansidansi.app.instances.BackupServiceInstance;
+import com.snansidansi.gui.controller.ConfigureBackupSceneController;
 import javafx.animation.Animation;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -10,12 +11,15 @@ public class RunBackupThreadSingleton {
     private static Animation animation = null;
     private static Node animatedNode = null;
     private static Label finishedLabel = null;
+    private static ConfigureBackupSceneController configureBackupSceneController = null;
 
     private RunBackupThreadSingleton() {
     }
 
     private static class runBackupThread extends Thread {
         public void run() {
+            int originalBackupListSize = BackupServiceInstance.backupService.getAllBackups().size();
+
             if (animation != null && animatedNode != null) {
                 animatedNode.setVisible(true);
                 animation.playFromStart();
@@ -30,6 +34,10 @@ public class RunBackupThreadSingleton {
 
             if (finishedLabel != null) {
                 finishedLabel.setVisible(true);
+            }
+
+            if (originalBackupListSize != BackupServiceInstance.backupService.getAllBackups().size()) {
+                configureBackupSceneController.refillTable(true);
             }
         }
     }
@@ -53,5 +61,9 @@ public class RunBackupThreadSingleton {
 
     public static void setFinishedLabel(Label label) {
         finishedLabel = label;
+    }
+
+    public static void setConfigureBackupSceneController(ConfigureBackupSceneController controller) {
+        configureBackupSceneController = controller;
     }
 }

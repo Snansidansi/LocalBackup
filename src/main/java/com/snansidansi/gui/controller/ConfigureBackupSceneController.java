@@ -97,6 +97,7 @@ public class ConfigureBackupSceneController {
         RotateTransition loadingAnimation = createLoadingAnimation();
         RunBackupThreadSingleton.setAnimation(loadingAnimation, this.backupRunningIndicatorLabel);
         RunBackupThreadSingleton.setFinishedLabel(this.backupFinishedLabel);
+        RunBackupThreadSingleton.setConfigureBackupSceneController(this);
     }
 
     private void bindMiddleLineToWindowWidth() {
@@ -147,7 +148,7 @@ public class ConfigureBackupSceneController {
         refillTable(true);
     }
 
-    private void refillTable(boolean changedValues) {
+    public void refillTable(boolean changedValues) {
         this.numberOfTableElements = 0;
         List<Integer> checkedElements = null;
 
