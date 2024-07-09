@@ -84,12 +84,11 @@ public class BackupService {
      * Runs a backup with from the backup-list file.
      */
     public void runBackup() {
-        int i = 0;
         List<Integer> missingRootIndices = new ArrayList<>();
         List<Integer> missingBackupIndices = new ArrayList<>();
 
-        for (SrcDestPair pathPair : this.allBackups) {
-            Path srcPath = Path.of(pathPair.srcPath());
+        for (int i = 0; i < this.allBackups.size(); i++) {
+            Path srcPath = Path.of(this.allBackups.get(i).srcPath());
 
             if (Files.notExists(srcPath.getRoot())) {
                 missingRootIndices.add(i);
@@ -99,15 +98,13 @@ public class BackupService {
                 continue;
             }
 
-            Path destPath = Path.of(pathPair.destPath()).resolve(srcPath.getFileName());
+            Path destPath = Path.of(this.allBackups.get(i).destPath()).resolve(srcPath.getFileName());
 
             if (Files.isDirectory(srcPath)) {
                 backupDirLogged(srcPath, destPath);
             } else if (Files.isRegularFile(srcPath)) {
                 backupFileLogged(srcPath, destPath);
             }
-
-            i++;
         }
 
         try {
@@ -127,14 +124,19 @@ public class BackupService {
             Path srcPath = Path.of(this.allBackups.get(index).srcPath());
             Path destPath = Path.of(this.allBackups.get(index).destPath()).resolve(srcPath.getFileName());
 
-            try {
-                Files.deleteIfExists(destPath);
-            } catch (IOException e) {
-                this.errorLog.log("Error during the deletion of a backup file with a missing source file:",
-                        "Missing source file: " + srcPath,
-                        "Backup file: " + destPath,
-                        "Error message: " + e.getMessage());
-                return;
+            if (Files.isDirectory(destPath)) {
+                deleteDir(destPath);
+            }
+            else {
+                try {
+                    Files.delete(destPath);
+                } catch (IOException e) {
+                    this.errorLog.log("Error during the deletion of a backup file with a missing source file:",
+                            "Missing source file: " + srcPath,
+                            "Backup file: " + destPath,
+                            "Error message: " + e.getMessage());
+                    return;
+                }
             }
 
             this.backupLog.log("Deleted backup file of a missing source file:",
@@ -145,7 +147,7 @@ public class BackupService {
 
     private void prepareForNextLog() {
         if (this.errorLog.logCreated()) {
-            this.backupLog.log("----Waring----",
+            this.backupLog.log("----Warning----",
                     "An error log was created during this backup: " + this.errorLog.getFilename());
         }
         this.backupLog.finishLog();
@@ -268,8 +270,14 @@ public class BackupService {
             return changedAnything;
         }
         for (String fileName : existingBackupFiles) {
+            Path filePath = destPath.resolve(fileName);
+            if(Files.isDirectory(filePath)) {
+                deleteDir(filePath);
+                continue;
+            }
+
             try {
-               Files.deleteIfExists(destPath.resolve(fileName));
+               Files.deleteIfExists(filePath);
                this.deletedFilesDuringDirBackup++;
             } catch (IOException unused) {
             }

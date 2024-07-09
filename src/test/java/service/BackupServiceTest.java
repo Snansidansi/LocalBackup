@@ -252,18 +252,22 @@ public class BackupServiceTest {
     @Test
     void removeMissingBackupsFromBackupListWhenRunningBackup() {
         Path destPath = tempDir.resolve("removeMissingBackupsFromBackupList");
-        SrcDestPair existingFilePair = new SrcDestPair(exampleBackupDataPath, destPath.toString());
+        SrcDestPair firstExistingFilePair = new SrcDestPair(exampleBackupDataPath, destPath.toString());
+        SrcDestPair missingSourceFilePair = new SrcDestPair(
+                Path.of(existingDirPath).resolve("not-existing.txt").toString(),
+                destPath.resolve("not-existing.txt").toString());
+        SrcDestPair secondExistingFilePair = new SrcDestPair(existingFilePath, destPath.toString());
 
         String backupConfigPath = createBackupConfigFile("removeMissingBackups.csv",
-                existingFilePair,
-                new SrcDestPair(Path.of(existingDirPath).resolve("not-existing.txt").toString(), destPath.toString()),
-                existingFilePair);
+                firstExistingFilePair,
+                missingSourceFilePair,
+                secondExistingFilePair);
 
         BackupService backupService = new BackupService(backupConfigPath);
         backupService.runBackup();
-        List<SrcDestPair> expectedBackupList = List.of(existingFilePair, existingFilePair);
+        List<SrcDestPair> expectedBackupList = List.of(firstExistingFilePair, secondExistingFilePair);
 
-        Assertions.assertEquals(destPath.toFile().listFiles().length, 1);
+        Assertions.assertEquals(2, destPath.toFile().listFiles().length);
         Assertions.assertTrue(Files.exists(destPath.resolve(Path.of(exampleBackupDataPath).getFileName())));
         Assertions.assertEquals(expectedBackupList, backupService.getAllBackups());
     }
@@ -323,10 +327,10 @@ public class BackupServiceTest {
     }
 
     @Test
-    void deleteBackupSubDirOfDeletedSourceSubDir() throws IOException {
-        Path destPath = tempDir.resolve("deleteBackupSubDirOfDeletedSourceSubDir");
+    void deleteNotEmptyBackupSubDirOfDeletedSourceSubDir() throws IOException {
+        Path destPath = tempDir.resolve("deleteNotEmptyBackupSubDirOfDeletedSourceSubDir");
         Path extraDirPath = destPath.resolve("dirWithFiles/extraDir");
-        String backupConfigPath = createBackupConfigFile("deleteBackupSubDirOfDeletedSourceDir.csv",
+        String backupConfigPath = createBackupConfigFile("deleteNotEmptyBackupSubDirOfDeletedSourceDir.csv",
                 new SrcDestPair(this.backupExSrc.resolve("dirWithFiles").toString(),
                         destPath.toString()));
 
@@ -334,6 +338,7 @@ public class BackupServiceTest {
         backupService.runBackup();
 
         Files.createDirectory(extraDirPath);
+        Files.createFile((extraDirPath.resolve("extraFile.txt")));
         Assertions.assertTrue(Files.exists(extraDirPath));
 
         backupService.runBackup();
@@ -364,6 +369,51 @@ public class BackupServiceTest {
         BackupService backupService = new BackupService("");
         Assertions.assertFalse(backupService.deleteDir(filePath));
         Assertions.assertTrue(Files.exists(filePath));
+    }
+
+    @Test
+    void deleteMultipleBackupFilesWithMissingSourceFiles() throws IOException {
+        Path destPath = tempDir.resolve("deleteMultipleBackupFilesWithMissingSourceFiles").resolve("dest");
+        Path srcDirPath = destPath.getParent().resolve("src");
+        String configFilePath = createBackupConfigFile("deleteMultipleBackupFilesWithMissingSourceFiles.csv",
+                new SrcDestPair(srcDirPath.resolve("1.txt").toString(),
+                        destPath.toString()),
+                new SrcDestPair(srcDirPath.resolve("2.txt").toString(),
+                        destPath.toString()),
+                new SrcDestPair(srcDirPath.resolve("dir").toString(),
+                        destPath.toString()));
+
+        Files.createDirectory(destPath.getParent());
+        Files.createDirectory(destPath);
+        Files.createDirectory(srcDirPath);
+        Files.createFile(destPath.resolve("1.txt"));
+        Files.createFile(destPath.resolve("2.txt"));
+        Files.createDirectory(destPath.resolve("dir"));
+
+        BackupService backupService = new BackupService(configFilePath);
+        backupService.runBackup();
+        Assertions.assertEquals(0, destPath.toFile().listFiles().length);
+    }
+
+    @Test
+    void deleteNotEmptyDirWithMissingSourceDir() throws IOException {
+        Path destPath = tempDir.resolve("deleteNotEmptyDirWithMissingSourceDir").resolve("dest");
+        Path srcDirPath = destPath.getParent().resolve("src");
+        Path backupDirPath = destPath.resolve("dir");
+        String configFilePath = createBackupConfigFile("deleteNotEmptyDirWithMissingSourceDir.csv",
+                new SrcDestPair(srcDirPath.resolve(backupDirPath.getFileName()).toString(),
+                        destPath.toString()));
+
+        Files.createDirectory(destPath.getParent());
+        Files.createDirectory(destPath);
+        Files.createDirectory(srcDirPath);
+        Files.createDirectory(backupDirPath);
+        Files.createDirectory(backupDirPath.resolve("subDir"));
+        Files.createFile(backupDirPath.resolve("1.txt"));
+
+        BackupService backupService = new BackupService(configFilePath);
+        backupService.runBackup();
+        Assertions.assertEquals(0, destPath.toFile().listFiles().length);
     }
 
     // Helper methods
