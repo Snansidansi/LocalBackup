@@ -604,4 +604,28 @@ public class BackupService {
     public void setDeleteBackupsWithMissingSource(boolean enable) {
         this.deleteBackupsWithMissingSource = enable;
     }
+
+    public boolean deleteDir(Path path) {
+        File[] subFiles = path.toFile().listFiles();
+        if (subFiles == null) {
+            return false;
+        }
+
+        boolean successful = true;
+        for (File file : subFiles) {
+            if (file.isDirectory() && !deleteDir(file.toPath())) {
+                successful = false;
+            }
+            else if (!file.delete()) {
+                successful = false;
+            }
+        }
+
+        subFiles = path.toFile().listFiles();
+        if (subFiles != null && subFiles.length == 0) {
+            return path.toFile().delete();
+        }
+
+        return successful;
+    }
 }

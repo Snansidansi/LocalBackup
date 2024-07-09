@@ -340,6 +340,32 @@ public class BackupServiceTest {
         Assertions.assertTrue(Files.notExists(extraDirPath));
     }
 
+    @Test
+    void deleteDirTest() {
+        Path destPath = tempDir.resolve("deleteDirTest");
+        Path srcPath = this.backupExSrc.resolve("separateBackups");
+
+        BackupService backupService = new BackupService("");
+        backupService.backupDir(srcPath, destPath);
+
+        assertDirTree(srcPath, destPath);
+        Assertions.assertTrue(backupService.deleteDir(destPath));
+        Assertions.assertTrue(Files.notExists(destPath));
+    }
+
+    @Test
+    void passFilePathToDeleteDir() throws IOException {
+        Path destPath = tempDir.resolve("passFilePathToDeleteDir");
+        Path filePath = destPath.resolve("testFile.txt");
+
+        Files.createDirectory(destPath);
+        Files.createFile(filePath);
+
+        BackupService backupService = new BackupService("");
+        Assertions.assertFalse(backupService.deleteDir(filePath));
+        Assertions.assertTrue(Files.exists(filePath));
+    }
+
     // Helper methods
     private String createBackupConfigFile(String fileName, SrcDestPair... pathPairs) {
         Path filePath = tempDir.resolve(fileName);
