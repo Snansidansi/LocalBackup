@@ -137,7 +137,7 @@ public class ConfigureBackupSceneController {
         this.tableView.setPlaceholder(new Label("No backups found"));
 
         this.sourceTableCol.setCellValueFactory(
-                new PropertyValueFactory<>("srcPath"));
+                new PropertyValueFactory<>("srcHBox"));
 
         this.destinationTableCol.setCellValueFactory(
                 new PropertyValueFactory<>("destPath"));
