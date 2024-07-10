@@ -18,18 +18,10 @@ public class TableEntry {
     private final HBox checkBoxHBox;
     private final CheckBox checkBox = new CheckBox();
     private final int index;
-    private static final ImageView fileImageView = new ImageView(new Image(
-            TableEntry.class.getResource("/icons/document.png").toString()));
-    private static final ImageView dirImageView = new ImageView(new Image(
-            TableEntry.class.getResource("/icons/openedFolder.png").toString()));
-
-    static {
-        final int IMAGE_SIZE = 20;
-        fileImageView.setFitWidth(IMAGE_SIZE);
-        fileImageView.setFitHeight(IMAGE_SIZE);
-        dirImageView.setFitWidth(IMAGE_SIZE);
-        dirImageView.setFitHeight(IMAGE_SIZE);
-    }
+    private static final Image fileImage = new Image(
+            TableEntry.class.getResource("/icons/document.png").toString());
+    private static final Image dirImage= new Image(
+            TableEntry.class.getResource("/icons/openedFolder.png").toString());
 
     public TableEntry(String srcPath, String destPath, int index, boolean checked) {
         this.destPath = destPath;
@@ -39,11 +31,15 @@ public class TableEntry {
         this.checkBoxHBox.setAlignment(Pos.CENTER);
         this.checkBox.setSelected(checked);
 
+        final int IMAGE_SIZE = 20;
+        ImageView srcImageView = Files.isDirectory(Path.of(srcPath)) ? new ImageView(dirImage) : new ImageView(fileImage);
+        srcImageView.setFitWidth(IMAGE_SIZE);
+        srcImageView.setFitHeight(IMAGE_SIZE);
+
         this.srcHbox.setPadding(new Insets(0, 0, 0, 3));
         this.srcHbox.setSpacing(3);
         this.srcHbox.setAlignment(Pos.CENTER_LEFT);
-        this.srcHbox.getChildren().addAll(Files.isDirectory(Path.of(srcPath)) ? dirImageView : fileImageView,
-                new Label(srcPath));
+        this.srcHbox.getChildren().addAll(srcImageView, new Label(srcPath));
     }
 
     public HBox getSrcHBox() {
