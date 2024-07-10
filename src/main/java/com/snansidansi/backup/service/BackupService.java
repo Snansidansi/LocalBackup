@@ -134,7 +134,7 @@ public class BackupService {
                     this.errorLog.log("Error during the deletion of a backup file with a missing source file:",
                             "Missing source file: " + srcPath,
                             "Backup file: " + destPath,
-                            "Error message: " + e.getMessage());
+                            "Error message: " + e);
                     return;
                 }
             }
@@ -305,7 +305,7 @@ public class BackupService {
             this.errorLog.log("Error during file backup.",
                     "Source: " + srcPath,
                     "Destination: " + destPath,
-                    "Error message. " + e.getMessage());
+                    "Error message. " + e);
         }
         return false;
     }
@@ -329,7 +329,7 @@ public class BackupService {
             }
         } catch (IOException e) {
             this.errorLog.log("Error when adding a new backup to the backup list.",
-                    "Error message. " + e.getMessage());
+                    "Error message. " + e);
             return false;
         }
         this.allBackups = readBackups();
@@ -356,7 +356,7 @@ public class BackupService {
             this.errorLog.log("Error when adding backup to the backup list.",
                     "New backup source: " + pathPair.srcPath(),
                     "New backup destination: " + pathPair.destPath(),
-                    "Error message: " + e.getMessage());
+                    "Error message: " + e);
             return false;
         }
 
@@ -369,7 +369,7 @@ public class BackupService {
         } catch (IOException e) {
             this.errorLog.log("Error when adding a backup to the backup list.",
                     "Could not create all missing directories in path: " + Path.of(this.backupListPath).getParent(),
-                    "Error message: " + e.getMessage());
+                    "Error message: " + e);
             return false;
         }
         return true;
@@ -473,7 +473,7 @@ public class BackupService {
         } catch (IOException e) {
             this.errorLog.log("Error when removing a backup from the backup list.",
                     "Error when creating a temporary copy of the old backup list.",
-                    "Error message: " + e.getMessage());
+                    "Error message: " + e);
             return false;
         }
 
@@ -496,7 +496,7 @@ public class BackupService {
             } catch (IOException e) {
                 this.errorLog.log("Error when removing a backup from the backup list.",
                         "Error during cleanup after failed remove operation.",
-                        "Error message: " + e.getMessage());
+                        "Error message: " + e);
             }
         } else {
             try {
@@ -504,7 +504,7 @@ public class BackupService {
             } catch (IOException e) {
                 this.errorLog.log("Error when removing a backup from the backup list.",
                         "Error during cleanup of the temporary copy of the backup list after successful remove operation",
-                        "Error message: " + e.getMessage());
+                        "Error message: " + e);
             }
         }
 
@@ -521,7 +521,7 @@ public class BackupService {
             allBackupsFromFile = csvReader.readAllLines();
         } catch (IOException e) {
             this.errorLog.log("Error when reading the content of the backup file.",
-                    "An IOException occurred: " + e.getMessage());
+                    "An IOException occurred: " + e);
             return new ArrayList<>();
         }
 
