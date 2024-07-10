@@ -28,6 +28,7 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -158,6 +159,7 @@ public class ConfigureBackupSceneController {
         this.tableView.getItems().clear();
 
         for (SrcDestPair pathPair : BackupServiceInstance.backupService.getAllBackups()) {
+            boolean srcIsDir = Files.isDirectory(Path.of(pathPair.srcPath()));
             pathPair = adjustSrcDestPairToPathMode(pathPair);
             boolean checked = false;
 
@@ -167,7 +169,7 @@ public class ConfigureBackupSceneController {
             }
 
             this.tableView.getItems().add(
-                    new TableEntry(pathPair.srcPath(), pathPair.destPath(), this.numberOfTableElements, checked));
+                    new TableEntry(pathPair.srcPath(), pathPair.destPath(), this.numberOfTableElements, checked, srcIsDir));
             this.numberOfTableElements++;
         }
     }
@@ -326,8 +328,10 @@ public class ConfigureBackupSceneController {
             return;
         }
 
+        boolean srcIsDir = Files.isDirectory(Path.of(pathPair.srcPath()));
         pathPair = adjustSrcDestPairToPathMode(pathPair);
-        this.tableView.getItems().add(new TableEntry(pathPair.srcPath(), pathPair.destPath(), this.numberOfTableElements, false));
+        this.tableView.getItems().add(
+                new TableEntry(pathPair.srcPath(), pathPair.destPath(), this.numberOfTableElements, false, srcIsDir));
         numberOfTableElements++;
 
         this.invalidSrcPathLabel.setVisible(false);

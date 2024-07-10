@@ -23,7 +23,7 @@ public class TableEntry {
     private static final Image dirImage= new Image(
             TableEntry.class.getResource("/icons/openedFolder.png").toString());
 
-    public TableEntry(String srcPath, String destPath, int index, boolean checked) {
+    public TableEntry(String srcPath, String destPath, int index, boolean checked, boolean srcIsDir) {
         this.destPath = destPath;
         this.index = index;
 
@@ -32,7 +32,7 @@ public class TableEntry {
         this.checkBox.setSelected(checked);
 
         final int IMAGE_SIZE = 20;
-        ImageView srcImageView = Files.isDirectory(Path.of(srcPath)) ? new ImageView(dirImage) : new ImageView(fileImage);
+        ImageView srcImageView = srcIsDir ? new ImageView(dirImage) : new ImageView(fileImage);
         srcImageView.setFitWidth(IMAGE_SIZE);
         srcImageView.setFitHeight(IMAGE_SIZE);
 
