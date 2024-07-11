@@ -67,4 +67,8 @@ public abstract class SettingsRow extends HBox {
 
         Tooltip.install(this.nameHBox, tooltip);
     }
+
+    public Label getNameLabel() {
+        return  this.nameLabel;
+    }
 }

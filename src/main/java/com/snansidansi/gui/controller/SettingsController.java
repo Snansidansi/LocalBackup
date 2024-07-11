@@ -9,7 +9,9 @@ import com.snansidansi.gui.uielements.settingsrow.SpinnerSettingsRow;
 import com.snansidansi.gui.uielements.settingsrow.TextFieldSettingsRow;
 import com.snansidansi.gui.util.SceneManager;
 import com.snansidansi.settings.BackupSetting;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -28,6 +30,7 @@ import java.util.Optional;
 public class SettingsController {
     private final List<Node> displayedSettings = new ArrayList<>();
     private boolean invalidSettings = false;
+    private SimpleDoubleProperty settingsRowNameHBoxWidth = new SimpleDoubleProperty(0);
 
     @FXML
     VBox mainContainer;
@@ -82,11 +85,13 @@ public class SettingsController {
                 "deleted if the original file is deleted.\n" +
                 "This counts for individual files, directories and files in directories.", tooltipFontSize);
 
+        updateSettingsNameLabelWidth(deleteMissingFilesRow);
         this.displayedSettings.add(deleteMissingFilesRow);
     }
 
     private void addAutostartPathRow(int fontSize, ReadOnlyDoubleProperty widthProperty, SettingsRow enableAutostartRow,
                                      int tooltipFontSize) {
+
         TextFieldSettingsRow autostartPathRow = new TextFieldSettingsRow(
                 BackupSetting.AUTOSTART_DIR_PATH,
                 "Path of the autostart directory:",
@@ -133,6 +138,7 @@ public class SettingsController {
                 "To find the autostart dir press \"windows key + r \", write \"shell:startup\" and press enter.\n" +
                 "Then copy the path to the directory that the explorer opened.", tooltipFontSize);
 
+        updateSettingsNameLabelWidth(autostartPathRow);
         this.displayedSettings.add(autostartPathRow);
     }
 
@@ -143,6 +149,7 @@ public class SettingsController {
                 fontSize,
                 widthProperty);
 
+        updateSettingsNameLabelWidth(autostartRow);
         this.displayedSettings.add(autostartRow);
         return autostartRow;
     }
@@ -153,8 +160,11 @@ public class SettingsController {
                 "Delay between backup retries (seconds):",
                 FONTSIZE,
                 widthProperty);
+
         delayBetweenRetriesRow.addTooltip("How long should be waited between the backup retries if the root" +
                 " directory of a backup is missing (e.g. a drive is not connected)", TOOLTIP_FONTSIZE);
+
+        updateSettingsNameLabelWidth(delayBetweenRetriesRow);
         this.displayedSettings.add(delayBetweenRetriesRow);
     }
 
@@ -167,23 +177,41 @@ public class SettingsController {
 
         numberOfRetriesRow.addTooltip("How often should the program retry to backup a file or directory where the" +
                 " root directory is missing (e.g. a drive is not connected).", TOOLTIP_FONTSIZE);
+
+        updateSettingsNameLabelWidth(numberOfRetriesRow);
         this.displayedSettings.add(numberOfRetriesRow);
     }
 
     private void addMaxNumberOfBackupLogsRow(int FONTSIZE, ReadOnlyDoubleProperty widthProperty) {
-        this.displayedSettings.add(new SpinnerSettingsRow(
+        SpinnerSettingsRow maxBackupLogsRow = new SpinnerSettingsRow(
                 BackupSetting.MAX_BACKUP_LOGS,
                 "Max number of backup logs:",
                 FONTSIZE,
-                widthProperty));
+                widthProperty);
+
+        updateSettingsNameLabelWidth(maxBackupLogsRow);
+        this.displayedSettings.add(maxBackupLogsRow);
     }
 
     private void addMaxNumberOfErrorLogsRow(int FONTSIZE, ReadOnlyDoubleProperty widthProperty) {
-        this.displayedSettings.add(new SpinnerSettingsRow(
+        SpinnerSettingsRow maxErrorLogsRow = new SpinnerSettingsRow(
                 BackupSetting.MAX_ERROR_LOGS,
                 "Max number of error logs:",
                 FONTSIZE,
-                widthProperty));
+                widthProperty);
+
+        updateSettingsNameLabelWidth(maxErrorLogsRow);
+        this.displayedSettings.add(maxErrorLogsRow);
+    }
+
+    private void updateSettingsNameLabelWidth(SettingsRow settingsRow) {
+        Platform.runLater(() -> {
+            double labelWidth = settingsRow.getNameLabel().getWidth();
+            if (labelWidth > this.settingsRowNameHBoxWidth.get()) {
+                this.settingsRowNameHBoxWidth.set(labelWidth + 10);
+            }
+            settingsRow.getNameLabel().minWidthProperty().bind(this.settingsRowNameHBoxWidth);
+        });
     }
 
     private void displaySettingsRows() {
