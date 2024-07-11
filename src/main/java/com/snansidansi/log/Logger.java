@@ -127,7 +127,9 @@ public class Logger {
         int numberOfLogFiles = logFiles.length;
         if (numberOfLogFiles > this.maxNumberOfLogs) {
             for (int i = 0; i < numberOfLogFiles - this.maxNumberOfLogs; i++) {
-                logFiles[i].delete();
+                if (!logFiles[i].delete()) {
+                    log("(Failed to delete old log files.)");
+                }
             }
         }
 

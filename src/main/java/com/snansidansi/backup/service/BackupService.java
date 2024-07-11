@@ -253,7 +253,12 @@ public class BackupService {
             }
         }
 
-        for (File subFile : srcPath.toFile().listFiles()) {
+        File[] subFiles = srcPath.toFile().listFiles();
+        if (subFiles == null) {
+            return false;
+        }
+
+        for (File subFile : subFiles) {
             if (subFile.isDirectory() && backupDir(subFile.toPath(), destPath.resolve(subFile.getName()))) {
                 changedAnything = true;
             } else if (subFile.isFile() && backupFile(subFile.toPath(), destPath.resolve(subFile.getName()))) {

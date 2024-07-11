@@ -98,6 +98,9 @@ public class LogController {
         Path logDirPath = Path.of("log").resolve(logDir);
         FilenameFilter txtFilter = (dir, name) -> name.endsWith(".txt");
         File[] files = logDirPath.toFile().listFiles(txtFilter);
+        if (files == null) {
+            return;
+        }
 
         var container = this.logFileListVBox.getChildren();
         container.clear();

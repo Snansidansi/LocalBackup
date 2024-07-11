@@ -264,7 +264,7 @@ public class SettingsController {
         confrimAlert.setHeaderText(contentText);
 
         Optional<ButtonType> result = confrimAlert.showAndWait();
-        return result.get() == ButtonType.OK;
+        return result.filter(buttonType -> buttonType == ButtonType.OK).isPresent();
     }
 
     private void showErrorAlert(String title, String contentText) {
