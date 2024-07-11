@@ -32,6 +32,8 @@ public class SettingsController {
     private boolean invalidSettings = false;
     private SimpleDoubleProperty settingsRowNameHBoxWidth = new SimpleDoubleProperty(0);
 
+    private final int SMALL_SPINNER_WIDTH = 80;
+
     @FXML
     VBox mainContainer;
 
@@ -160,6 +162,7 @@ public class SettingsController {
                 "Delay between backup retries (seconds):",
                 FONTSIZE,
                 widthProperty);
+        delayBetweenRetriesRow.setSpinnerWidth(this.SMALL_SPINNER_WIDTH);
 
         delayBetweenRetriesRow.addTooltip("How long should be waited between the backup retries if the root" +
                 " directory of a backup is missing (e.g. a drive is not connected)", TOOLTIP_FONTSIZE);
@@ -174,6 +177,7 @@ public class SettingsController {
                 "Max number of backup retries:",
                 FONTSIZE,
                 widthProperty);
+        numberOfRetriesRow.setSpinnerWidth(this.SMALL_SPINNER_WIDTH);
 
         numberOfRetriesRow.addTooltip("How often should the program retry to backup a file or directory where the" +
                 " root directory is missing (e.g. a drive is not connected).", TOOLTIP_FONTSIZE);
@@ -188,6 +192,7 @@ public class SettingsController {
                 "Max number of backup logs:",
                 FONTSIZE,
                 widthProperty);
+        maxBackupLogsRow.setSpinnerWidth(this.SMALL_SPINNER_WIDTH);
 
         updateSettingsNameLabelWidth(maxBackupLogsRow);
         this.displayedSettings.add(maxBackupLogsRow);
@@ -199,6 +204,7 @@ public class SettingsController {
                 "Max number of error logs:",
                 FONTSIZE,
                 widthProperty);
+        maxErrorLogsRow.setSpinnerWidth(this.SMALL_SPINNER_WIDTH);
 
         updateSettingsNameLabelWidth(maxErrorLogsRow);
         this.displayedSettings.add(maxErrorLogsRow);
