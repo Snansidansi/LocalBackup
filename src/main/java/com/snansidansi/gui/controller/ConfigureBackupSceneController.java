@@ -116,12 +116,14 @@ public class ConfigureBackupSceneController {
                 this.tableView.widthProperty()
                         .subtract(this.removeTableCol.getWidth())
                         .subtract(this.sourceTableCol.widthProperty())
+                        .subtract(3) // For padding
         );
 
         this.sourceTableCol.maxWidthProperty().bind(
                 this.tableView.widthProperty()
                         .subtract(this.removeTableCol.getWidth())
                         .subtract(this.destinationTableCol.minWidthProperty())
+                        .subtract(3) // For padding
         );
 
         this.destinationTableCol.widthProperty().addListener((observableValue, oldWidth, newWidth) -> {
