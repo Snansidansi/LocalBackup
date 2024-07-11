@@ -130,7 +130,7 @@ public class BackupService {
             else {
                 try {
                     Files.delete(destPath);
-                } catch (IOException e) {
+                } catch (IOException | SecurityException e) {
                     this.errorLog.log("Error during the deletion of a backup file with a missing source file:",
                             "Missing source file: " + srcPath,
                             "Backup file: " + destPath,
@@ -234,6 +234,7 @@ public class BackupService {
      * @param destPath Destination path as {@code path}.
      * @return Returns true if any backups in the dir or the sub-dirs were successfully done.
      * Returns false if no backups were done.
+     * @throws SecurityException Gets thrown if the securityManager denies the access to the source or destination dir.
      */
     public boolean backupDir(Path srcPath, Path destPath) {
         boolean changedAnything = false;
@@ -284,7 +285,7 @@ public class BackupService {
             try {
                Files.deleteIfExists(filePath);
                this.deletedFilesDuringDirBackup++;
-            } catch (IOException unused) {
+            } catch (IOException | SecurityException unused) {
             }
         }
 
@@ -306,7 +307,7 @@ public class BackupService {
                 Files.copy(srcPath, destPath, StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
                 return true;
             }
-        } catch (IOException e) {
+        } catch (IOException | SecurityException e) {
             this.errorLog.log("Error during file backup.",
                     "Source: " + srcPath,
                     "Destination: " + destPath,
@@ -624,21 +625,24 @@ public class BackupService {
             return false;
         }
 
-        boolean successful = true;
-        for (File file : subFiles) {
-            if (file.isDirectory() && !deleteDir(file.toPath())) {
-                successful = false;
+        try {
+            boolean successful = true;
+            for (File file : subFiles) {
+                if (file.isDirectory() && !deleteDir(file.toPath())) {
+                    successful = false;
+                } else if (!file.delete()) {
+                    successful = false;
+                }
             }
-            else if (!file.delete()) {
-                successful = false;
+
+            subFiles = path.toFile().listFiles();
+            if (subFiles != null && subFiles.length == 0) {
+                return path.toFile().delete();
             }
-        }
 
-        subFiles = path.toFile().listFiles();
-        if (subFiles != null && subFiles.length == 0) {
-            return path.toFile().delete();
+            return successful;
+        } catch (SecurityException e) {
+            return false;
         }
-
-        return successful;
     }
 }
