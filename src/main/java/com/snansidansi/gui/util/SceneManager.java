@@ -8,6 +8,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class SceneManager {
+    private static double lastWidth = -1;
+    private static double lastHeight = -1;
 
     private SceneManager() {
     }
@@ -41,6 +43,11 @@ public class SceneManager {
         stage.setMaxHeight(maxHeight == -1 ? Double.MAX_VALUE : maxHeight);
     }
 
+    public static void changeStageSize(Stage stage, double width, double height) {
+        stage.setWidth(width);
+        stage.setHeight(height);
+    }
+
     private static Parent changeScene(Stage stage, String resource) throws IOException {
         Parent root = new FXMLLoader((SceneManager.class.getResource(resource))).load();
         Scene currentScene = stage.getScene();
@@ -50,5 +57,24 @@ public class SceneManager {
             currentScene.setRoot(root);
         }
         return root;
+    }
+
+    private static void safeCurrentStageSize(Stage stage) {
+        lastWidth = stage.getWidth();
+        lastHeight = stage.getHeight();
+    }
+
+    /**
+     * Sets the width and height of a given Stage to the safed values if they are greater than 0. Also sets the stored
+     * sizes to -1.
+     * @param stage The current stage.
+     */
+    private static void loadSafedStageSize (Stage stage) {
+        if (lastWidth < 1 && lastHeight < 1) {
+            return;
+        }
+        changeStageSize(stage, lastWidth, lastHeight);
+        lastWidth = -1;
+        lastHeight = -1;
     }
 }
