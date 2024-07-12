@@ -214,6 +214,10 @@ public class SettingsController {
     private void displaySettingsRows() {
         this.settingsVBox.getChildren().clear();
         this.settingsVBox.getChildren().addAll(this.displayedSettings);
+        Platform.runLater(() -> {
+            SceneManager.changeStageSize((Stage) this.mainContainer.getScene().getWindow(),
+                    this.settingsVBox.getWidth() + 200, this.settingsScrollPane.getHeight());
+        });
     }
 
     public void backToConfigureBackupScene() {
