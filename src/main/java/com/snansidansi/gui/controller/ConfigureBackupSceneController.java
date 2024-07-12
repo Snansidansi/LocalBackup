@@ -18,6 +18,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Line;
@@ -125,6 +126,12 @@ public class ConfigureBackupSceneController {
 
         this.removeTableCol.setCellValueFactory(
                 new PropertyValueFactory<>("checkBoxHBox"));
+
+        this.tableView.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 2) {
+                this.tableView.refresh();
+            }
+        });
 
         refillTable(true);
     }
