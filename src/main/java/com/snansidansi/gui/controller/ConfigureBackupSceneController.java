@@ -38,7 +38,6 @@ public class ConfigureBackupSceneController {
     private int numberOfTableElements = 0;
     private String lastSelectedSrcDirPath = "";
     private String lastSelectedDestDirPath = "";
-    private double lastSourceColWidth = 0.0;
 
     @FXML
     private BorderPane mainContainer;
@@ -50,13 +49,16 @@ public class ConfigureBackupSceneController {
     private TableView<TableEntry> tableView;
 
     @FXML
-    private TableColumn<TableEntry, String> sourceTableCol;
+    private TableColumn<TableEntry, HBox> sourceTableCol;
 
     @FXML
     private TableColumn<TableEntry, String> destinationTableCol;
 
     @FXML
     private TableColumn<TableEntry, HBox> removeTableCol;
+
+    @FXML
+    private TableColumn<TableEntry, HBox> tagTableCol;
 
     @FXML
     private Label deleteConfirmLabel;
@@ -106,34 +108,10 @@ public class ConfigureBackupSceneController {
     }
 
     private void setupTableColumnSizeProperties() {
-        this.destinationTableCol.prefWidthProperty().bind(
-                this.tableView.widthProperty()
-                        .subtract(this.removeTableCol.getWidth())
-                        .subtract(this.sourceTableCol.widthProperty())
-        );
-
-        this.destinationTableCol.maxWidthProperty().bind(
-                this.tableView.widthProperty()
-                        .subtract(this.removeTableCol.getWidth())
-                        .subtract(this.sourceTableCol.widthProperty())
-                        .subtract(3) // For padding
-        );
-
-        this.sourceTableCol.maxWidthProperty().bind(
-                this.tableView.widthProperty()
-                        .subtract(this.removeTableCol.getWidth())
-                        .subtract(this.destinationTableCol.minWidthProperty())
-                        .subtract(3) // For padding
-        );
-
-        this.destinationTableCol.widthProperty().addListener((observableValue, oldWidth, newWidth) -> {
-            if (this.sourceTableCol.getWidth() != this.lastSourceColWidth) {
-                this.lastSourceColWidth = this.sourceTableCol.getWidth();
-                this.destinationTableCol.setResizable(true);
-                return;
-            }
-            this.destinationTableCol.setResizable(false);
-        });
+        this.sourceTableCol.setReorderable(false);
+        this.destinationTableCol.setReorderable(false);
+        this.tagTableCol.setReorderable(false);
+        this.removeTableCol.setReorderable(false);
     }
 
     private void setupTable() {
