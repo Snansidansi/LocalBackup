@@ -8,9 +8,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 
 public class TableEntry {
     private final HBox srcHbox = new HBox();
@@ -21,7 +18,7 @@ public class TableEntry {
     private static final Image fileImage = new Image(
             TableEntry.class.getResource("/icons/document.png").toString());
     private static final Image dirImage= new Image(
-            TableEntry.class.getResource("/icons/openedFolder.png").toString());
+            TableEntry.class.getResource("/icons/folder.png").toString());
 
     public TableEntry(String srcPath, String destPath, int index, boolean checked, boolean srcIsDir) {
         this.destPath = destPath;

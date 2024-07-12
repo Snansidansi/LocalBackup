@@ -97,7 +97,7 @@ public class SettingsController {
 
         TextField rowTextField = autostartPathRow.getTextField();
 
-        ImageButton selectDirButton = new ImageButton("openedFolder.png");
+        ImageButton selectDirButton = new ImageButton("add_folder.png");
         selectDirButton.setImageSize(17, 17);
         selectDirButton.setOnMouseClicked(event -> {
             DirectoryChooser directoryChooser = new DirectoryChooser();
