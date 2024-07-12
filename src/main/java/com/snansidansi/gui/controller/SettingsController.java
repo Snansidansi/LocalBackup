@@ -10,7 +10,6 @@ import com.snansidansi.gui.uielements.settingsrow.TextFieldSettingsRow;
 import com.snansidansi.gui.util.SceneManager;
 import com.snansidansi.settings.BackupSetting;
 import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -30,9 +29,11 @@ import java.util.Optional;
 public class SettingsController {
     private final List<Node> displayedSettings = new ArrayList<>();
     private boolean invalidSettings = false;
-    private SimpleDoubleProperty settingsRowNameHBoxWidth = new SimpleDoubleProperty(0);
+    private final SimpleDoubleProperty settingsRowNameHBoxWidth = new SimpleDoubleProperty(0);
 
     private final int SMALL_SPINNER_WIDTH = 80;
+    private final int SETTINGS_NAME_FONTSIZE = 14;
+    private final int TOOLTIP_FONTSIZE = 14;
 
     @FXML
     VBox mainContainer;
@@ -50,55 +51,48 @@ public class SettingsController {
     }
 
     private void createSettingsContent() {
-        var widthProperty = this.settingsScrollPane.widthProperty();
-        final int FONTSIZE = 14;
-        final int TOOLTIP_FONTSIZE = 14;
         final int HEADER_TOP_PADDING = 12;
         final int HEADER_BOTTOM_PADDING = 0;
 
         this.displayedSettings.clear();
 
-        addSettingsHeader("Logging:", FONTSIZE, true, true, 0, HEADER_BOTTOM_PADDING);
-        addMaxNumberOfErrorLogsRow(FONTSIZE, widthProperty);
-        addMaxNumberOfBackupLogsRow(FONTSIZE, widthProperty);
+        addSettingsHeader("Logging:", SETTINGS_NAME_FONTSIZE, true, true, 0, HEADER_BOTTOM_PADDING);
+        addMaxNumberOfErrorLogsRow();
+        addMaxNumberOfBackupLogsRow();
 
-        addSettingsHeader("Retry failed backups:", FONTSIZE, true, true, HEADER_TOP_PADDING, HEADER_BOTTOM_PADDING);
-        addMaxNumberOfBackupRetriesRow(FONTSIZE, widthProperty, TOOLTIP_FONTSIZE);
-        addDelayBetweenBackupRetriesRow(FONTSIZE, widthProperty, TOOLTIP_FONTSIZE);
+        addSettingsHeader("Retry failed backups:", SETTINGS_NAME_FONTSIZE, true, true, HEADER_TOP_PADDING, HEADER_BOTTOM_PADDING);
+        addMaxNumberOfBackupRetriesRow();
+        addDelayBetweenBackupRetriesRow();
 
         if (LocalBackupApp.runsFromExeFile) {
-            addSettingsHeader("Automate backup:", FONTSIZE, true, true, HEADER_TOP_PADDING, HEADER_BOTTOM_PADDING);
-            SettingsRow addBackupExecutionToAutostartRow = addBackupExecutionToAutoStartRow(FONTSIZE, widthProperty);
-            addAutostartPathRow(FONTSIZE, widthProperty, addBackupExecutionToAutostartRow, TOOLTIP_FONTSIZE);
+            addSettingsHeader("Automate backup:", SETTINGS_NAME_FONTSIZE, true, true, HEADER_TOP_PADDING, HEADER_BOTTOM_PADDING);
+            SettingsRow addBackupExecutionToAutostartRow = addBackupExecutionToAutoStartRow();
+            addAutostartPathRow(addBackupExecutionToAutostartRow);
         }
 
-        addSettingsHeader("Backup:", FONTSIZE, true, true, HEADER_TOP_PADDING, HEADER_BOTTOM_PADDING);
-        addDeleteMissingFilesRow(FONTSIZE, widthProperty, TOOLTIP_FONTSIZE);
+        addSettingsHeader("Backup:", SETTINGS_NAME_FONTSIZE, true, true, HEADER_TOP_PADDING, HEADER_BOTTOM_PADDING);
+        addDeleteMissingFilesRow();
     }
 
-    private void addDeleteMissingFilesRow(int fontSize, ReadOnlyDoubleProperty widthProperty, int tooltipFontSize) {
+    private void addDeleteMissingFilesRow() {
         CheckBoxSettingsRow deleteMissingFilesRow = new CheckBoxSettingsRow(
                 BackupSetting.DELETE_BACKUP_FILES_WITH_MISSING_SRC,
                 "Delete backup files with missing source files:",
-                fontSize,
-                widthProperty);
+                this.SETTINGS_NAME_FONTSIZE);
 
         deleteMissingFilesRow.addTooltip("This setting determines if a file at the backup location should be " +
                 "deleted if the original file is deleted.\n" +
-                "This counts for individual files, directories and files in directories.", tooltipFontSize);
+                "This counts for individual files, directories and files in directories.", this.TOOLTIP_FONTSIZE);
 
         updateSettingsNameLabelWidth(deleteMissingFilesRow);
         this.displayedSettings.add(deleteMissingFilesRow);
     }
 
-    private void addAutostartPathRow(int fontSize, ReadOnlyDoubleProperty widthProperty, SettingsRow enableAutostartRow,
-                                     int tooltipFontSize) {
-
+    private void addAutostartPathRow(SettingsRow enableAutostartRow) {
         TextFieldSettingsRow autostartPathRow = new TextFieldSettingsRow(
                 BackupSetting.AUTOSTART_DIR_PATH,
                 "Path of the autostart directory:",
-                fontSize,
-                widthProperty);
+                this.SETTINGS_NAME_FONTSIZE);
         autostartPathRow.setTextFieldWidth(250);
 
         TextField rowTextField = autostartPathRow.getTextField();
@@ -134,34 +128,34 @@ public class SettingsController {
         autostartPathRow.getControlHBox().setSpacing(8);
         autostartPathRow.getControlHBox().getChildren().add(selectDirButton);
 
-        autostartPathRow.addTooltip("Only change this setting if the default version does not work!\n\n" +
-                "Here is how you can change this setting is necessary:\n" +
-                "Paste or select the path to the windows autostart directory in the text field.\n" +
-                "To find the autostart dir press \"windows key + r \", write \"shell:startup\" and press enter.\n" +
-                "Then copy the path to the directory that the explorer opened.", tooltipFontSize);
+        autostartPathRow.addTooltip("""
+                Only change this setting if the default version does not work!
+
+                Here is how you can change this setting is necessary:
+                Paste or select the path to the windows autostart directory in the text field.
+                To find the autostart dir press "windows key + r ", write "shell:startup" and press enter.
+                Then copy the path to the directory that the explorer opened.""", this.TOOLTIP_FONTSIZE);
 
         updateSettingsNameLabelWidth(autostartPathRow);
         this.displayedSettings.add(autostartPathRow);
     }
 
-    private CheckBoxSettingsRow addBackupExecutionToAutoStartRow(int fontSize, ReadOnlyDoubleProperty widthProperty) {
+    private CheckBoxSettingsRow addBackupExecutionToAutoStartRow() {
         CheckBoxSettingsRow autostartRow = new CheckBoxSettingsRow(
                 BackupSetting.ADDED_TO_AUTOSTART,
                 "Add backup execution to autostart:",
-                fontSize,
-                widthProperty);
+                this.SETTINGS_NAME_FONTSIZE);
 
         updateSettingsNameLabelWidth(autostartRow);
         this.displayedSettings.add(autostartRow);
         return autostartRow;
     }
 
-    private void addDelayBetweenBackupRetriesRow(int FONTSIZE, ReadOnlyDoubleProperty widthProperty, int TOOLTIP_FONTSIZE) {
+    private void addDelayBetweenBackupRetriesRow() {
         SpinnerSettingsRow delayBetweenRetriesRow = new SpinnerSettingsRow(
                 BackupSetting.DELAY_BETWEEN_BACKUP_RETRIES,
                 "Delay between backup retries (seconds):",
-                FONTSIZE,
-                widthProperty);
+                this.SETTINGS_NAME_FONTSIZE);
         delayBetweenRetriesRow.setSpinnerWidth(this.SMALL_SPINNER_WIDTH);
 
         delayBetweenRetriesRow.addTooltip("How long should be waited between the backup retries if the root" +
@@ -171,12 +165,11 @@ public class SettingsController {
         this.displayedSettings.add(delayBetweenRetriesRow);
     }
 
-    private void addMaxNumberOfBackupRetriesRow(int FONTSIZE, ReadOnlyDoubleProperty widthProperty, int TOOLTIP_FONTSIZE) {
+    private void addMaxNumberOfBackupRetriesRow() {
         SpinnerSettingsRow numberOfRetriesRow = new SpinnerSettingsRow(
                 BackupSetting.NUMBER_OF_BACKUP_RETRIES,
                 "Max number of backup retries:",
-                FONTSIZE,
-                widthProperty);
+                this.SETTINGS_NAME_FONTSIZE);
         numberOfRetriesRow.setSpinnerWidth(this.SMALL_SPINNER_WIDTH);
 
         numberOfRetriesRow.addTooltip("How often should the program retry to backup a file or directory where the" +
@@ -186,24 +179,22 @@ public class SettingsController {
         this.displayedSettings.add(numberOfRetriesRow);
     }
 
-    private void addMaxNumberOfBackupLogsRow(int FONTSIZE, ReadOnlyDoubleProperty widthProperty) {
+    private void addMaxNumberOfBackupLogsRow() {
         SpinnerSettingsRow maxBackupLogsRow = new SpinnerSettingsRow(
                 BackupSetting.MAX_BACKUP_LOGS,
                 "Max number of backup logs:",
-                FONTSIZE,
-                widthProperty);
+                this.SETTINGS_NAME_FONTSIZE);
         maxBackupLogsRow.setSpinnerWidth(this.SMALL_SPINNER_WIDTH);
 
         updateSettingsNameLabelWidth(maxBackupLogsRow);
         this.displayedSettings.add(maxBackupLogsRow);
     }
 
-    private void addMaxNumberOfErrorLogsRow(int FONTSIZE, ReadOnlyDoubleProperty widthProperty) {
+    private void addMaxNumberOfErrorLogsRow() {
         SpinnerSettingsRow maxErrorLogsRow = new SpinnerSettingsRow(
                 BackupSetting.MAX_ERROR_LOGS,
                 "Max number of error logs:",
-                FONTSIZE,
-                widthProperty);
+                this.SETTINGS_NAME_FONTSIZE);
         maxErrorLogsRow.setSpinnerWidth(this.SMALL_SPINNER_WIDTH);
 
         updateSettingsNameLabelWidth(maxErrorLogsRow);

@@ -1,7 +1,6 @@
 package com.snansidansi.gui.uielements.settingsrow;
 
 import com.snansidansi.settings.BackupSetting;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.control.TextField;
 
 public class TextFieldSettingsRow extends SettingsRow {
@@ -9,10 +8,9 @@ public class TextFieldSettingsRow extends SettingsRow {
 
     public TextFieldSettingsRow(BackupSetting setting,
                                 String displayText,
-                                int fontSize,
-                                ReadOnlyDoubleProperty widthProperty) {
+                                int fontSize) {
 
-        super(setting, displayText, fontSize, widthProperty);
+        super(setting, displayText, fontSize);
         super.getControlHBox().getChildren().add(textField);
 
         restoreStandardValue();

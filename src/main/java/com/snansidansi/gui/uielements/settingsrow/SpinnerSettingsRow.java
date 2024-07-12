@@ -1,7 +1,6 @@
 package com.snansidansi.gui.uielements.settingsrow;
 
 import com.snansidansi.settings.BackupSetting;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 
@@ -10,10 +9,9 @@ public class SpinnerSettingsRow extends SettingsRow {
 
     public SpinnerSettingsRow(BackupSetting setting,
                               String displayText,
-                              int fontSize,
-                              ReadOnlyDoubleProperty widthProperty) {
+                              int fontSize) {
 
-        super(setting, displayText, fontSize, widthProperty);
+        super(setting, displayText, fontSize);
         super.getControlHBox().getChildren().add(this.spinner);
 
         this.spinner.setEditable(true);

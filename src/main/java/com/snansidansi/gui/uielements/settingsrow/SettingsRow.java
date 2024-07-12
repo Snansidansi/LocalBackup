@@ -2,7 +2,6 @@ package com.snansidansi.gui.uielements.settingsrow;
 
 import com.snansidansi.app.instances.SettingsManagerInstance;
 import com.snansidansi.settings.BackupSetting;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -20,8 +19,7 @@ public abstract class SettingsRow extends HBox {
 
     public SettingsRow(BackupSetting setting,
                        String displayText,
-                       int fontSize,
-                       ReadOnlyDoubleProperty widthProperty) {
+                       int fontSize) {
 
         super();
         this.setting = setting;
@@ -33,9 +31,6 @@ public abstract class SettingsRow extends HBox {
 
         this.nameHBox.setAlignment(Pos.CENTER_LEFT);
         this.nameHBox.getChildren().add(this.nameLabel);
-
-        this.nameHBox.minWidthProperty().bind(widthProperty.divide(2).subtract(9)); // -9 because of padding
-        this.controlHBox.minWidthProperty().bind(widthProperty.divide(2).subtract(9)); // -9 because of padding
 
         super.setPadding(new Insets(5));
         super.getChildren().addAll(this.nameHBox, this.controlHBox);
