@@ -13,16 +13,32 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A class to manage tags for backups.
+ */
 public class TagManager {
     private final Path tagsFilePath;
     private Map<String, List<Integer>> tagsMap = new HashMap<>();
     private final Path tagsBackupPath;
 
     public TagManager(Path tagsFilePath) {
+    /**
+     * Creates a new {@code TagManager} instance.
+     *
+     * @param tagsFilePath Filepath to the tag data ({@code .csv}) as path. The file does not have to exist already.
+     * @throws IOException Throws an IOException if the directories to the {@code tagsFilePath} could not be created if
+     *                     they are missing.
+     */
         this.tagsFilePath = tagsFilePath;
         this.tagsBackupPath = this.tagsFilePath.getParent().resolve("tag_backup.csv");
     }
 
+    /**
+     * Reads the tags and tag content form the tag file. Invalid content gets ignored/skipped.
+     *
+     * @return Boolean value if evey content for a tag was a valid {@code Integer} value.
+     * @throws IOException Gets thrown if an {@code IOException} occurs during the file reading process.
+     */
     public boolean getTagsFromFile() throws IOException {
         if (Files.notExists(this.tagsFilePath)) {
             return true;
@@ -57,6 +73,12 @@ public class TagManager {
         return success;
     }
 
+    /**
+     * Adds a tag to the {@code TagManager} and saves it to the tag file. If the tag addition fails, it will not be
+     * added to the {@code TagManager} and the tag file.
+     * @param tagName Name of the tag as string.
+     * @return Boolean value if the tag was added successfully.
+     */
     public boolean addTag(String tagName) {
         if (this.tagsMap.containsKey(tagName)) {
             return false;
@@ -99,6 +121,12 @@ public class TagManager {
         }
     }
 
+    /**
+     * Deletes a tag from the {@code TagManager} and the tag file. If the tag deletion fails, it will not be deleted
+     * from the {@code TagManager} and the tag file.
+     * @param tagName The name of the tag that should be deleted as string.
+     * @return Boolean value if the tag was deleted successfully.
+     */
     public boolean deleteTag(String tagName) {
         if (!this.tagsMap.containsKey(tagName)) {
             return false;
@@ -113,6 +141,13 @@ public class TagManager {
         return true;
     }
 
+    /**
+     * Changes the name of a tag in the {@code TagManager} and in the tag file. If the name changing fails, the name of
+     * the tag will not be changed in the {@code TagManager} and the tag file.
+     * @param oldTagName The name of the tag which name should be changed as string.
+     * @param newTagName The new name of the {@code oldTagName} tag as string.
+     * @return Boolean value if the name of the tag was changed successfully.
+     */
     public boolean changeTagName(String oldTagName, String newTagName) {
         if (!this.tagsMap.containsKey(oldTagName)) {
             return false;
@@ -126,6 +161,13 @@ public class TagManager {
         return true;
     }
 
+    /**
+     * Changes the content of a tag in the {@code TagManager} and the tag file. If the content changing fails, the
+     * content of the tag in the {@code TagManager} and the tag file will not be changed.
+     * @param tagName The name of the tag which content should be changed as string.
+     * @param newContent The new content of the {@code tagName} tag as {@code List<Integer>}.
+     * @return Boolean value if the content of the tag was changed successfully.
+     */
     public boolean changeTagContent(String tagName, List<Integer> newContent) {
         if (!this.tagsMap.containsKey(tagName)) {
             return false;
@@ -163,6 +205,11 @@ public class TagManager {
         return true;
     }
 
+    /**
+     * Gets the content of a given tag from the {@code TagManager}.
+     * @param tagName The name of the tag which content should be returned.
+     * @return The content of the {@code tagName} tag as {@code List<Integer>}.
+     */
     public List<Integer> getTagContent(String tagName) {
         if (!this.tagsMap.containsKey(tagName)) {
             return new ArrayList<>();
@@ -170,6 +217,10 @@ public class TagManager {
         return new ArrayList<>(this.tagsMap.get(tagName));
     }
 
+    /**
+     * Gets all tags from the {@code TagManager}.
+     * @return All tags as {@code String[]}.
+     */
     public String[] getTags() {
         String[] tags = new String[this.tagsMap.size()];
         int i = 0;
