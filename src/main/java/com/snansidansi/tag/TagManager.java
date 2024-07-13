@@ -62,7 +62,7 @@ public class TagManager {
 
             for (String[] line : fileContent) {
                 String tagName = line[0];
-                String hexColor = line[1];
+                String tagColor = line[1];
                 List<Integer> indicesWithTag = new ArrayList<>(line.length - 1);
 
                 for (int i = 2; i < line.length; i++) {
@@ -73,7 +73,7 @@ public class TagManager {
                     }
                 }
 
-                this.tagsMap.put(tagName, new Pair<>(hexColor, indicesWithTag));
+                this.tagsMap.put(tagName, new Pair<>(tagColor, indicesWithTag));
             }
         } catch (FileNotFoundException unused) {
         }
@@ -121,22 +121,21 @@ public class TagManager {
         if (!this.tagsMap.containsKey(tagName)) {
             return;
         }
-        String hexColor = this.tagsMap.get(tagName).getKey();
-        this.tagsMap.put(tagName, new Pair<>(hexColor, newContent));
+        String color = this.tagsMap.get(tagName).getKey();
+        this.tagsMap.put(tagName, new Pair<>(color, newContent));
     }
 
     /**
      * Changes the color of a tag in the {@code TagManager}.
-     *
-     * @param tagName       The name of the tag which color should be changed as string.
-     * @param hexColorValue The new color of the {@code tagName} as hex-color string.
+     * @param tagName The name of the tag which color should be changed as string.
+     * @param colorValue The new color of the {@code tagName} as string.
      */
-    public void changeColor(String tagName, String hexColorValue) {
+    public void changeColor(String tagName, String colorValue) {
         if (!this.tagsMap.containsKey(tagName)) {
             return;
         }
         List<Integer> content = this.tagsMap.get(tagName).getValue();
-        this.tagsMap.put(tagName, new Pair<>(hexColorValue, content));
+        this.tagsMap.put(tagName, new Pair<>(colorValue, content));
     }
 
     /**
