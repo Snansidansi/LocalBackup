@@ -24,9 +24,10 @@ public class TagManagerTest {
         final Path tagFilePath = tempDir.resolve("addTagTest.csv");
         TagManager tagManager = new TagManager(tagFilePath);
         String firstTagName = "Added tag";
-        Assertions.assertTrue(tagManager.addTag(firstTagName));
-        Assertions.assertTrue(tagManager.addTag(this.secondTagName));
-        asserFileContent(tagFilePath, 2, firstTagName, this.secondTagName);
+        tagManager.addTag(firstTagName);
+        tagManager.addTag(this.secondTagName);
+        Assertions.assertTrue(tagManager.saveChangesToFile());
+        asserFileContent(tagFilePath, 2, this.secondTagName, firstTagName);
     }
 
     @Test
@@ -36,7 +37,8 @@ public class TagManagerTest {
         String firstTagName = "Deleted tag";
         tagManager.addTag(firstTagName);
         tagManager.addTag(this.secondTagName);
-        Assertions.assertTrue(tagManager.deleteTag(firstTagName));
+        tagManager.deleteTag(firstTagName);
+        Assertions.assertTrue(tagManager.saveChangesToFile());
         asserFileContent(tagFilePath, 1, this.secondTagName);
     }
 
@@ -48,7 +50,8 @@ public class TagManagerTest {
         String newTagName = "New tag name";
         tagManager.addTag(oldTagName);
         tagManager.addTag(this.secondTagName);
-        Assertions.assertTrue(tagManager.changeTagName(oldTagName, newTagName));
+        tagManager.changeTagName(oldTagName, newTagName);
+        Assertions.assertTrue(tagManager.saveChangesToFile());
         asserFileContent(tagFilePath, 2, this.secondTagName, newTagName);
     }
 
@@ -96,7 +99,8 @@ public class TagManagerTest {
         tagManager.addTag(tagName);
         tagManager.addTag(this.secondTagName);
         List<Integer> tagContent = List.of(1, 2, 3);
-        Assertions.assertTrue(tagManager.changeTagContent(tagName, tagContent));
+        tagManager.changeTagContent(tagName, tagContent);
+        Assertions.assertTrue(tagManager.saveChangesToFile());
         Assertions.assertEquals(tagContent, tagManager.getTagContent(tagName));
         Assertions.assertEquals(List.of(), tagManager.getTagContent(secondTagName));
     }
