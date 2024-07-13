@@ -2,6 +2,7 @@ package com.snansidansi.tag;
 
 import com.snansidansi.csv.CsvReader;
 import com.snansidansi.csv.CsvWriter;
+import javafx.util.Pair;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -19,7 +20,7 @@ import java.util.Map;
  */
 public class TagManager {
     private final Path tagsFilePath;
-    private Map<String, List<Integer>> tagsMap = new HashMap<>();
+    private Map<String, Pair<String, List<Integer>>> tagsMap = new HashMap<>();
     private final Path tagFileModPath;
 
     /**
@@ -61,9 +62,10 @@ public class TagManager {
 
             for (String[] line : fileContent) {
                 String tagName = line[0];
+                String hexColor = line[1];
                 List<Integer> indicesWithTag = new ArrayList<>(line.length - 1);
 
-                for (int i = 1; i < line.length; i++) {
+                for (int i = 2; i < line.length; i++) {
                     try {
                         indicesWithTag.add(Integer.parseInt(line[i]));
                     } catch (NumberFormatException unused) {
@@ -71,7 +73,7 @@ public class TagManager {
                     }
                 }
 
-                this.tagsMap.put(tagName, indicesWithTag);
+                this.tagsMap.put(tagName, new Pair<>(hexColor, indicesWithTag));
             }
         } catch (FileNotFoundException unused) {
         }
@@ -87,7 +89,7 @@ public class TagManager {
         if (this.tagsMap.containsKey(tagName)) {
             return;
         }
-        this.tagsMap.put(tagName, new ArrayList<>());
+        this.tagsMap.put(tagName, new Pair<>("", new ArrayList<>()));
     }
 
     /**
@@ -119,7 +121,22 @@ public class TagManager {
         if (!this.tagsMap.containsKey(tagName)) {
             return;
         }
-        this.tagsMap.put(tagName, newContent);
+        String hexColor = this.tagsMap.get(tagName).getKey();
+        this.tagsMap.put(tagName, new Pair<>(hexColor, newContent));
+    }
+
+    /**
+     * Changes the color of a tag in the {@code TagManager}.
+     *
+     * @param tagName       The name of the tag which color should be changed as string.
+     * @param hexColorValue The new color of the {@code tagName} as hex-color string.
+     */
+    public void changeColor(String tagName, String hexColorValue) {
+        if (!this.tagsMap.containsKey(tagName)) {
+            return;
+        }
+        List<Integer> content = this.tagsMap.get(tagName).getValue();
+        this.tagsMap.put(tagName, new Pair<>(hexColorValue, content));
     }
 
     /**
@@ -144,12 +161,13 @@ public class TagManager {
         }
 
         try (CsvWriter csvWriter = new CsvWriter(this.tagFileModPath.toString())) {
-            for (Map.Entry<String, List<Integer>> entry : this.tagsMap.entrySet()) {
-                String[] inputLine = new String[entry.getValue().size() + 1];
+            for (Map.Entry<String, Pair<String, List<Integer>>> entry : this.tagsMap.entrySet()) {
+                String[] inputLine = new String[entry.getValue().getValue().size() + 2];
                 inputLine[0] = entry.getKey();
+                inputLine[1] = entry.getValue().getKey();
 
-                for (int i = 0; i < entry.getValue().size(); i++) {
-                    inputLine[i + 1] = String.valueOf(entry.getValue().get(i));
+                for (int i = 0; i < entry.getValue().getValue().size(); i++) {
+                    inputLine[i + 2] = String.valueOf(entry.getValue().getValue().get(i));
                 }
 
                 csvWriter.writeLine(inputLine);
@@ -180,7 +198,7 @@ public class TagManager {
         if (!this.tagsMap.containsKey(tagName)) {
             return new ArrayList<>();
         }
-        return new ArrayList<>(this.tagsMap.get(tagName));
+        return new ArrayList<>(this.tagsMap.get(tagName).getValue());
     }
 
     /**
@@ -190,10 +208,17 @@ public class TagManager {
     public String[] getTags() {
         String[] tags = new String[this.tagsMap.size()];
         int i = 0;
-        for (Map.Entry<String, List<Integer>> entry : this.tagsMap.entrySet()) {
+        for (Map.Entry<String, Pair<String, List<Integer>>> entry : this.tagsMap.entrySet()) {
             tags[i] = entry.getKey();
             i++;
         }
         return tags;
+    }
+
+    public String getTagColor(String tagName) {
+        if (!this.tagsMap.containsKey(tagName)) {
+            return "";
+        }
+        return this.tagsMap.get(tagName).getKey();
     }
 }

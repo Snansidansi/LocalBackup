@@ -27,7 +27,7 @@ public class TagManagerTest {
         tagManager.addTag(firstTagName);
         tagManager.addTag(this.secondTagName);
         Assertions.assertTrue(tagManager.saveChangesToFile());
-        asserFileContent(tagFilePath, 2, this.secondTagName, firstTagName);
+        asserFileContent(tagFilePath, 2, this.secondTagName + ";", firstTagName + ";");
     }
 
     @Test
@@ -39,7 +39,7 @@ public class TagManagerTest {
         tagManager.addTag(this.secondTagName);
         tagManager.deleteTag(firstTagName);
         Assertions.assertTrue(tagManager.saveChangesToFile());
-        asserFileContent(tagFilePath, 1, this.secondTagName);
+        asserFileContent(tagFilePath, 1, this.secondTagName + ";");
     }
 
     @Test
@@ -52,7 +52,7 @@ public class TagManagerTest {
         tagManager.addTag(this.secondTagName);
         tagManager.changeTagName(oldTagName, newTagName);
         Assertions.assertTrue(tagManager.saveChangesToFile());
-        asserFileContent(tagFilePath, 2, this.secondTagName, newTagName);
+        asserFileContent(tagFilePath, 2, this.secondTagName + ";", newTagName + ";");
     }
 
     @Test
@@ -103,6 +103,30 @@ public class TagManagerTest {
         Assertions.assertTrue(tagManager.saveChangesToFile());
         Assertions.assertEquals(tagContent, tagManager.getTagContent(tagName));
         Assertions.assertEquals(List.of(), tagManager.getTagContent(secondTagName));
+    }
+
+    @Test
+    void getTagColorTest() throws IOException {
+        TagManager tagManager = new TagManager(this.tagsWithValidConfigPath);
+        tagManager.getTagsFromFile();
+        Assertions.assertEquals("colorA", tagManager.getTagColor("Tag1"));
+        Assertions.assertEquals("colorB", tagManager.getTagColor("Tag2"));
+    }
+
+    @Test
+    void changeTagColorTest() throws IOException {
+        final Path tagFilePath = tempDir.resolve("changeTagColorTest.csv");
+        TagManager writeTagManager = new TagManager(tagFilePath);
+        String tagName = "Tag with color";
+        String tagColor = "hexColor";
+        writeTagManager.addTag(tagName);
+        writeTagManager.addTag(secondTagName);
+        writeTagManager.changeColor(tagName, tagColor);
+        writeTagManager.saveChangesToFile();
+
+        TagManager loadTagManager = new TagManager(tagFilePath);
+        loadTagManager.getTagsFromFile();
+        Assertions.assertEquals(tagColor, loadTagManager.getTagColor(tagName));
     }
 
     private void asserFileContent(Path filePath, int expectedNumberOfLines, String... expectedLines) throws IOException {
