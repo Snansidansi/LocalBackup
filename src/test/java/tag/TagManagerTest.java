@@ -89,7 +89,7 @@ public class TagManagerTest {
     }
 
     @Test
-    void changeTagContentTest() {
+    void changeTagContentTest() throws IOException {
         final Path tagFilePath = tempDir.resolve("changeTagContentTest.csv");
         TagManager tagManager = new TagManager(tagFilePath);
         String tagName = "change tag content";

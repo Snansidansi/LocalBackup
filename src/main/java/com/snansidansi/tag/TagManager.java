@@ -21,7 +21,6 @@ public class TagManager {
     private Map<String, List<Integer>> tagsMap = new HashMap<>();
     private final Path tagsBackupPath;
 
-    public TagManager(Path tagsFilePath) {
     /**
      * Creates a new {@code TagManager} instance.
      *
@@ -29,8 +28,12 @@ public class TagManager {
      * @throws IOException Throws an IOException if the directories to the {@code tagsFilePath} could not be created if
      *                     they are missing.
      */
+    public TagManager(Path tagsFilePath) throws IOException {
         this.tagsFilePath = tagsFilePath;
         this.tagsBackupPath = this.tagsFilePath.getParent().resolve("tag_backup.csv");
+        if (Files.notExists(this.tagsFilePath.getParent())) {
+            Files.createDirectories(this.tagsFilePath.getParent());
+        }
     }
 
     /**
