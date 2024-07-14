@@ -1,6 +1,7 @@
 package com.snansidansi.gui.controller;
 
 import com.snansidansi.app.instances.BackupServiceInstance;
+import com.snansidansi.app.instances.TagManagerInstance;
 import com.snansidansi.app.singletons.RunBackupThreadSingleton;
 import com.snansidansi.backup.exceptions.DestinationNoDirException;
 import com.snansidansi.backup.exceptions.DestinationPathIsInSourcePathException;
@@ -10,21 +11,28 @@ import com.snansidansi.backup.service.BackupService;
 import com.snansidansi.backup.util.SrcDestPair;
 import com.snansidansi.gui.util.SceneManager;
 import com.snansidansi.gui.util.TableEntry;
+import com.snansidansi.gui.util.Utility;
 import com.snansidansi.gui.windows.AboutWindow;
+import com.snansidansi.tag.Tag;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.util.Duration;
 
 import java.io.File;
@@ -39,6 +47,7 @@ public class ConfigureBackupSceneController {
     private int numberOfTableElements = 0;
     private String lastSelectedSrcDirPath = "";
     private String lastSelectedDestDirPath = "";
+    private ObservableList<Tag> tagsInComboboxObservableList = FXCollections.observableArrayList();
 
     @FXML
     private BorderPane mainContainer;
@@ -86,6 +95,27 @@ public class ConfigureBackupSceneController {
     private Label backupFinishedLabel;
 
     @FXML
+    private TextField addTagTextField;
+
+    @FXML
+    private ColorPicker addTagColorPicker;
+
+    @FXML
+    private VBox tagsVBox;
+
+    @FXML
+    private VBox tagsVBoxWrapperVBox;
+
+    @FXML
+    private ComboBox<Tag> editTagComboBox;
+
+    @FXML
+    private TextField editTagTextField;
+
+    @FXML
+    private ColorPicker editTagColorPicker;
+
+    @FXML
     public void initialize() {
         bindMiddleLineToWindowWidth();
 
@@ -102,6 +132,72 @@ public class ConfigureBackupSceneController {
         RunBackupThreadSingleton.setAnimation(loadingAnimation, this.backupRunningIndicatorLabel);
         RunBackupThreadSingleton.setFinishedLabel(this.backupFinishedLabel);
         RunBackupThreadSingleton.setConfigureBackupSceneController(this);
+
+        if (TagManagerInstance.tagManager == null) {
+            disableTagControls();
+        } else {
+            setupTagControls();
+            loadExistingTags();
+        }
+    }
+
+    private void loadExistingTags() {
+        try {
+            TagManagerInstance.tagManager.getTagsFromFile();
+        } catch (IOException unused) {
+            return;
+        }
+
+        this.tagsInComboboxObservableList.addAll(TagManagerInstance.tagManager.getAllTags());
+    }
+
+    private void setupTagControls() {
+        this.editTagComboBox.setOnAction(event -> {
+            Tag tag = this.editTagComboBox.getValue();
+            if (tag == null) {
+                return;
+            }
+            this.editTagTextField.setText(tag.name);
+        });
+        this.editTagComboBox.setCellFactory(getTagComboboxCallback());
+        this.editTagComboBox.setButtonCell(getTagComboboxListCell());
+        this.editTagComboBox.setItems(this.tagsInComboboxObservableList);
+    }
+
+    private Callback<ListView<Tag>, ListCell<Tag>> getTagComboboxCallback() {
+        return new Callback<>() {
+            @Override
+            public ListCell<Tag> call(ListView<Tag> stringComboBox) {
+                return getTagComboboxListCell();
+            }
+        };
+    }
+
+    private ListCell<Tag> getTagComboboxListCell() {
+        return new ListCell<>() {
+            @Override
+            protected void updateItem(Tag item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText("");
+                    setStyle("");
+                } else {
+                    setText(item.name);
+                    setStyle("-fx-text-fill: " + item.color + ";");
+                }
+            }
+        };
+    }
+
+    private void disableTagControls() {
+        this.tagsVBox.setDisable(true);
+        Tooltip disabledTagsTooltip = new Tooltip("Tags are disabled because of an Error while loading" +
+                "the tags.\n Error: " + TagManagerInstance.loadingException);
+        disabledTagsTooltip.setShowDelay(Duration.ZERO);
+        disabledTagsTooltip.setHideDelay(Duration.ZERO);
+        disabledTagsTooltip.setFont(new Font(14));
+        Tooltip.install(this.tagsVBoxWrapperVBox, disabledTagsTooltip);
     }
 
     private void bindMiddleLineToWindowWidth() {
@@ -386,5 +482,70 @@ public class ConfigureBackupSceneController {
             SceneManager.setSettingsScene((Stage) this.mainContainer.getScene().getWindow());
         } catch (IOException unused) {
         }
+    }
+
+    public void addTag() {
+        String tagName = this.addTagTextField.getText();
+        if (tagName.isBlank()) {
+            return;
+        }
+        String hexTagColor = Utility.convertJavaFXColorToHexColor(this.addTagColorPicker.getValue());
+
+        if (!TagManagerInstance.tagManager.addTagName(tagName)) {
+            return;
+        }
+
+        TagManagerInstance.tagManager.changeColor(tagName, hexTagColor);
+        if (!TagManagerInstance.tagManager.saveChangesToFile()) {
+            TagManagerInstance.tagManager.deleteTag(tagName);
+            return;
+        }
+        this.tagsInComboboxObservableList.add(new Tag(tagName, hexTagColor, new ArrayList<>()));
+        this.addTagTextField.setText("");
+    }
+
+    public void deleteTag() {
+        Tag selectedTag = this.editTagComboBox.getValue();
+        if (selectedTag == null) {
+            return;
+        }
+
+        Tag oldTag = TagManagerInstance.tagManager.getTag(selectedTag.name);
+        TagManagerInstance.tagManager.deleteTag(selectedTag.name);
+        if (!TagManagerInstance.tagManager.saveChangesToFile()) {
+            TagManagerInstance.tagManager.addTag(oldTag);
+            return;
+        }
+        this.tagsInComboboxObservableList.remove(oldTag);
+        this.editTagTextField.setText("");
+    }
+
+    public void editTag() {
+        Tag selectedTag = this.editTagComboBox.getValue();
+        if (selectedTag == null) {
+            return;
+        }
+
+        String newTagName = this.editTagTextField.getText();
+        if (newTagName.isBlank()) {
+            return;
+        }
+
+        String newHexColor = Utility.convertJavaFXColorToHexColor(this.editTagColorPicker.getValue());
+        if (newTagName.equals(selectedTag.name) && newHexColor.equals(selectedTag.color)) {
+            return;
+        }
+
+        TagManagerInstance.tagManager.changeTagName(selectedTag.name, newTagName);
+        TagManagerInstance.tagManager.changeColor(newTagName, newHexColor);
+        if (!TagManagerInstance.tagManager.saveChangesToFile()) {
+            TagManagerInstance.tagManager.changeColor(newTagName, selectedTag.color);
+            TagManagerInstance.tagManager.changeTagName(newTagName, selectedTag.name);
+            return;
+        }
+        this.tagsInComboboxObservableList.remove(selectedTag);
+        this.tagsInComboboxObservableList.add(TagManagerInstance.tagManager.getTag(newTagName));
+        this.editTagTextField.setText("");
+        this.editTagComboBox.setValue(null);
     }
 }
