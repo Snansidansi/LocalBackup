@@ -7,7 +7,6 @@ import javafx.scene.control.Label;
 public class AboutSceneController {
     @FXML
     private Label githubLinkLabel;
-
     @FXML
     private Label icons8LinkLabel;
 

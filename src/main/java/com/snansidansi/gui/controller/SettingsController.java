@@ -37,10 +37,8 @@ public class SettingsController {
 
     @FXML
     VBox mainContainer;
-
     @FXML
     ScrollPane settingsScrollPane;
-
     @FXML
     VBox settingsVBox;
 

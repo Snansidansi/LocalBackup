@@ -51,67 +51,46 @@ public class ConfigureBackupSceneController {
 
     @FXML
     private BorderPane mainContainer;
-
     @FXML
     private Line middleLine;
-
     @FXML
     private TableView<TableEntry> tableView;
-
     @FXML
     private TableColumn<TableEntry, HBox> sourceTableCol;
-
     @FXML
     private TableColumn<TableEntry, String> destinationTableCol;
-
     @FXML
     private TableColumn<TableEntry, HBox> removeTableCol;
-
     @FXML
     private TableColumn<TableEntry, HBox> tagTableCol;
-
     @FXML
     private Label deleteConfirmLabel;
-
     @FXML
     private TextField srcPathTextField;
-
     @FXML
     private TextField destPathTextField;
-
     @FXML
     private Label invalidSrcPathLabel;
-
     @FXML
     private Label invalidDestPathLabel;
-
     @FXML
     private CheckBox showFullPathsCheckBox;
-
     @FXML
     private Label backupRunningIndicatorLabel;
-
     @FXML
     private Label backupFinishedLabel;
-
     @FXML
     private TextField addTagTextField;
-
     @FXML
     private ColorPicker addTagColorPicker;
-
     @FXML
     private VBox tagsVBox;
-
     @FXML
     private VBox tagsVBoxWrapperVBox;
-
     @FXML
     private ComboBox<Tag> editTagComboBox;
-
     @FXML
     private TextField editTagTextField;
-
     @FXML
     private ColorPicker editTagColorPicker;
 

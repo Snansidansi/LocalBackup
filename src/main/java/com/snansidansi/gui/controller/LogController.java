@@ -28,25 +28,18 @@ public class LogController {
 
     @FXML
     BorderPane mainBorderPane;
-
     @FXML
     ToggleButton backupLogTButton;
-
     @FXML
     ToggleButton errorLogTButton;
-
     @FXML
     Spinner<Integer> textSizeSpinner;
-
     @FXML
     VBox logFileListVBox;
-
     @FXML
     TextFlow logFileContentTextFlow;
-
     @FXML
     Label noLogFilesLabel;
-
     @FXML
     Label confirmDeleteLabel;
 
