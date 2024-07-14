@@ -20,4 +20,11 @@ public class Utility {
         Random rand = new Random();
         return Color.rgb(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
     }
+
+    public static String convertJavaFXColorToHexColor(Color color) {
+        return String.format("#%02x%02x%02x",
+                Math.round(color.getRed() * 255),
+                Math.round(color.getGreen() * 255),
+                Math.round(color.getBlue() * 255));
+    }
 }
