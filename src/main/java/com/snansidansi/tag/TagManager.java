@@ -89,7 +89,7 @@ public class TagManager {
      * @return Boolean value if the tag was added.
      */
     public boolean addTagName(String tagName) {
-        if (this.tagsMap.containsKey(tagName)) {
+        if (this.tagsMap.containsKey(tagName) || tagName == null) {
             return false;
         }
         this.tagsMap.put(tagName, new Pair<>("", new ArrayList<>()));
@@ -125,7 +125,7 @@ public class TagManager {
      * @return Boolean value if the content of the tag was changed successfully.
      */
     public boolean changeTagContent(String tagName, List<Integer> newContent) {
-        if (!this.tagsMap.containsKey(tagName)) {
+        if (!this.tagsMap.containsKey(tagName) || newContent == null) {
             return false;
         }
         String color = this.tagsMap.get(tagName).getKey();
@@ -140,7 +140,7 @@ public class TagManager {
      * @return Boolean value if the color of the tag was changed successfully.
      */
     public boolean changeColor(String tagName, String colorValue) {
-        if (!this.tagsMap.containsKey(tagName)) {
+        if (!this.tagsMap.containsKey(tagName) || colorValue == null) {
             return false;
         }
         List<Integer> content = this.tagsMap.get(tagName).getValue();
@@ -155,7 +155,7 @@ public class TagManager {
      * @return Boolean value if the tag was added successfully.
      */
     public boolean addTag(Tag tag) {
-        if (this.tagsMap.containsKey(tag.name)) {
+        if (tag == null || this.tagsMap.containsKey(tag.name)) {
             return false;
         }
         this.tagsMap.put(tag.name, new Pair<>(tag.color, tag.content));
