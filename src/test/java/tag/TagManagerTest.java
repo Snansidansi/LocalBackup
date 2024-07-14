@@ -1,5 +1,6 @@
 package tag;
 
+import com.snansidansi.tag.Tag;
 import com.snansidansi.tag.TagManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,12 +21,12 @@ public class TagManagerTest {
     private static Path tempDir;
 
     @Test
-    void addTagTest() throws IOException {
-        final Path tagFilePath = tempDir.resolve("addTagTest.csv");
+    void addTagNameTest() throws IOException {
+        final Path tagFilePath = tempDir.resolve("addTagNameTest.csv");
         TagManager tagManager = new TagManager(tagFilePath);
         String firstTagName = "Added tag";
-        tagManager.addTag(firstTagName);
-        tagManager.addTag(this.secondTagName);
+        tagManager.addTagName(firstTagName);
+        tagManager.addTagName(this.secondTagName);
         Assertions.assertTrue(tagManager.saveChangesToFile());
         asserFileContent(tagFilePath, 2, this.secondTagName + ";", firstTagName + ";");
     }
@@ -35,8 +36,8 @@ public class TagManagerTest {
         final Path tagFilePath = tempDir.resolve("deleteTagTest.csv");
         TagManager tagManager = new TagManager(tagFilePath);
         String firstTagName = "Deleted tag";
-        tagManager.addTag(firstTagName);
-        tagManager.addTag(this.secondTagName);
+        tagManager.addTagName(firstTagName);
+        tagManager.addTagName(this.secondTagName);
         tagManager.deleteTag(firstTagName);
         Assertions.assertTrue(tagManager.saveChangesToFile());
         asserFileContent(tagFilePath, 1, this.secondTagName + ";");
@@ -48,15 +49,15 @@ public class TagManagerTest {
         TagManager tagManager = new TagManager(tagFilePath);
         String oldTagName = "Old tag name";
         String newTagName = "New tag name";
-        tagManager.addTag(oldTagName);
-        tagManager.addTag(this.secondTagName);
+        tagManager.addTagName(oldTagName);
+        tagManager.addTagName(this.secondTagName);
         tagManager.changeTagName(oldTagName, newTagName);
         Assertions.assertTrue(tagManager.saveChangesToFile());
         asserFileContent(tagFilePath, 2, this.secondTagName + ";", newTagName + ";");
     }
 
     @Test
-    void getTagsWithValidContentFromFileTest() throws IOException {
+    void getAllTagNamesWithValidContentFromFileTest() throws IOException {
         TagManager tagManager = new TagManager(this.tagsWithValidConfigPath);
         Assertions.assertTrue(tagManager.getTagsFromFile());
     }
@@ -72,21 +73,21 @@ public class TagManagerTest {
     }
 
     @Test
-    void getTagsTest() throws IOException {
+    void getAllTagNamesTest() throws IOException {
         TagManager tagManager = new TagManager(this.tagsWithValidConfigPath);
         tagManager.getTagsFromFile();
         String[] expectedTags = {"Tag1", "Tag2"};
-        Assertions.assertArrayEquals(expectedTags, tagManager.getTags());
+        Assertions.assertArrayEquals(expectedTags, tagManager.getAllTagNames());
     }
 
     @Test
-    void getTagsWithSomeInvalidContentFromFileTest() throws IOException {
+    void getAllTagNamesWithSomeInvalidContentFromFileTest() throws IOException {
         Path tagFilePath = this.resourcePath.resolve("tagsWithSomeInvalidContent.csv");
         TagManager tagManager = new TagManager(tagFilePath);
         Assertions.assertFalse(tagManager.getTagsFromFile());
         String[] expectedTags = {"Tag1", "Tag2"};
         List<Integer> expectedSecondTagContent = List.of(1, 2);
-        Assertions.assertArrayEquals(expectedTags, tagManager.getTags());
+        Assertions.assertArrayEquals(expectedTags, tagManager.getAllTagNames());
         Assertions.assertEquals(List.of(), tagManager.getTagContent("Tag1"));
         Assertions.assertEquals(expectedSecondTagContent, tagManager.getTagContent("Tag2"));
     }
@@ -96,8 +97,8 @@ public class TagManagerTest {
         final Path tagFilePath = tempDir.resolve("changeTagContentTest.csv");
         TagManager tagManager = new TagManager(tagFilePath);
         String tagName = "change tag content";
-        tagManager.addTag(tagName);
-        tagManager.addTag(this.secondTagName);
+        tagManager.addTagName(tagName);
+        tagManager.addTagName(this.secondTagName);
         List<Integer> tagContent = List.of(1, 2, 3);
         tagManager.changeTagContent(tagName, tagContent);
         Assertions.assertTrue(tagManager.saveChangesToFile());
@@ -119,14 +120,33 @@ public class TagManagerTest {
         TagManager writeTagManager = new TagManager(tagFilePath);
         String tagName = "Tag with color";
         String tagColor = "hexColor";
-        writeTagManager.addTag(tagName);
-        writeTagManager.addTag(secondTagName);
+        writeTagManager.addTagName(tagName);
+        writeTagManager.addTagName(secondTagName);
         writeTagManager.changeColor(tagName, tagColor);
         writeTagManager.saveChangesToFile();
 
         TagManager loadTagManager = new TagManager(tagFilePath);
         loadTagManager.getTagsFromFile();
         Assertions.assertEquals(tagColor, loadTagManager.getTagColor(tagName));
+    }
+
+    @Test
+    void getTagTest() throws IOException {
+        TagManager tagManager = new TagManager(this.tagsWithValidConfigPath);
+        tagManager.getTagsFromFile();
+        String tagName = "Tag1";
+        Tag expected = new Tag(tagName, "colorA", List.of(1, 2));
+        Assertions.assertEquals(expected, tagManager.getTag(tagName));
+    }
+
+    @Test
+    void addTagTest() throws IOException {
+        final Path tagFilePath = tempDir.resolve("addTagTest.csv");
+        TagManager tagManager = new TagManager(tagFilePath);
+        String tagName = "tag";
+        Tag tag = new Tag(tagName, "color", List.of(1, 2, 3));
+        Assertions.assertTrue(tagManager.addTag(tag));
+        Assertions.assertEquals(tag, tagManager.getTag(tagName));
     }
 
     private void asserFileContent(Path filePath, int expectedNumberOfLines, String... expectedLines) throws IOException {
