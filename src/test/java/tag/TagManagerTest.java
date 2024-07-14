@@ -139,6 +139,18 @@ public class TagManagerTest {
         Assertions.assertEquals(expected, tagManager.getTag(tagName));
     }
 
+
+    @Test
+    void getAllTagsTest() throws IOException {
+        TagManager tagManager = new TagManager(this.tagsWithValidConfigPath);
+        tagManager.getTagsFromFile();
+        Tag[] expected = {
+                new Tag("Tag1", "colorA", List.of(1, 2)),
+                new Tag("Tag2", "colorB", List.of(3, 4))
+        };
+        Assertions.assertArrayEquals(expected, tagManager.getAllTags());
+    }
+
     @Test
     void addTagTest() throws IOException {
         final Path tagFilePath = tempDir.resolve("addTagTest.csv");

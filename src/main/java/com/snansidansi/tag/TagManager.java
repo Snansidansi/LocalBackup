@@ -265,4 +265,19 @@ public class TagManager {
         Pair<String, List<Integer>> tagBody = this.tagsMap.get(tagName);
         return new Tag(tagName, tagBody.getKey(), tagBody.getValue());
     }
+
+    /**
+     * Gets all tags with content from the {@code TagManager}.
+     *
+     * @return All tags with content as {@link Tag}{@code []}.
+     */
+    public Tag[] getAllTags() {
+        Tag[] allTags = new Tag[this.tagsMap.size()];
+        int i = 0;
+        for (Map.Entry<String, Pair<String, List<Integer>>> entry : this.tagsMap.entrySet()) {
+            allTags[i] = new Tag(entry.getKey(), entry.getValue().getKey(), entry.getValue().getValue());
+            i++;
+        }
+        return allTags;
+    }
 }
