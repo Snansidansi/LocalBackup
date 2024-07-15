@@ -40,22 +40,26 @@
                     <left>
                         <HBox spacing="10.0" BorderPane.alignment="CENTER">
                             <children>
-                                <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteBackup" prefHeight="40.0" prefWidth="40.0">
-                                    <graphic>
-                                        <ImageView fitHeight="36.0" fitWidth="36.0">
-                                            <image>
-                                                <Image url="@../icons/trashCan.png" />
-                                            </image>
-                                        </ImageView>
-                                    </graphic>
-                                    <tooltip>
-                                        <Tooltip text="Delete the selected backups">
-                                            <font>
-                                                <Font size="14.0" />
-                                            </font>
-                                        </Tooltip>
-                                    </tooltip>
-                                </Button>
+                        <HBox fx:id="deleteBackupButtonWrapperHBox">
+                           <children>
+                                      <Button fx:id="deleteBackupButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteBackup" prefHeight="40.0" prefWidth="40.0">
+                                          <graphic>
+                                              <ImageView fitHeight="36.0" fitWidth="36.0">
+                                                  <image>
+                                                      <Image url="@../icons/trashCan.png" />
+                                                  </image>
+                                              </ImageView>
+                                          </graphic>
+                                          <tooltip>
+                                              <Tooltip text="Delete the selected backups">
+                                                  <font>
+                                                      <Font size="14.0" />
+                                                  </font>
+                                              </Tooltip>
+                                          </tooltip>
+                                      </Button>
+                           </children>
+                        </HBox>
                                 <Label fx:id="deleteConfirmLabel" prefHeight="48.0" prefWidth="306.0" text="Are you sure to remove all the selected backups? Press again to confirm." textFill="RED" wrapText="true">
                                     <font>
                                         <Font size="14.0" />
@@ -457,8 +461,8 @@
                                <Insets left="10.0" />
                            </VBox.margin>
                            <children>
-                               <ComboBox prefWidth="150.0" />
-                               <Button mnemonicParsing="false" text="Apply tag" />
+                               <ComboBox fx:id="applyTagComboBox" prefWidth="150.0" promptText="Select tag" />
+                               <Button fx:id="applyTagButton" mnemonicParsing="false" onAction="#applyTag" text="Apply tag" />
                            </children>
                        </HBox>
                    </children>

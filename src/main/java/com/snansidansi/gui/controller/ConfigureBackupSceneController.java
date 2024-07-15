@@ -48,6 +48,7 @@ public class ConfigureBackupSceneController {
     private String lastSelectedSrcDirPath = "";
     private String lastSelectedDestDirPath = "";
     private ObservableList<Tag> tagsInComboboxObservableList = FXCollections.observableArrayList();
+    private boolean applyTagMode = false;
 
     @FXML
     private BorderPane mainContainer;
@@ -93,6 +94,14 @@ public class ConfigureBackupSceneController {
     private TextField editTagTextField;
     @FXML
     private ColorPicker editTagColorPicker;
+    @FXML
+    private ComboBox<Tag> applyTagComboBox;
+    @FXML
+    private Button applyTagButton;
+    @FXML
+    private Button deleteBackupButton;
+    @FXML
+    private HBox deleteBackupButtonWrapperHBox;
 
     @FXML
     public void initialize() {
@@ -105,7 +114,7 @@ public class ConfigureBackupSceneController {
         this.backupFinishedLabel.setVisible(false);
 
         setupTable();
-        Platform.runLater(this::setupTableColumnSizeProperties);
+        Platform.runLater(this::setupTableColumnProperties);
 
         RotateTransition loadingAnimation = createLoadingAnimation();
         RunBackupThreadSingleton.setAnimation(loadingAnimation, this.backupRunningIndicatorLabel);
@@ -116,18 +125,7 @@ public class ConfigureBackupSceneController {
             disableTagControls();
         } else {
             setupTagControls();
-            loadExistingTags();
         }
-    }
-
-    private void loadExistingTags() {
-        try {
-            TagManagerInstance.tagManager.getTagsFromFile();
-        } catch (IOException unused) {
-            return;
-        }
-
-        this.tagsInComboboxObservableList.addAll(TagManagerInstance.tagManager.getAllTags());
     }
 
     private void setupTagControls() {
@@ -141,15 +139,14 @@ public class ConfigureBackupSceneController {
         this.editTagComboBox.setCellFactory(getTagComboboxCallback());
         this.editTagComboBox.setButtonCell(getTagComboboxListCell());
         this.editTagComboBox.setItems(this.tagsInComboboxObservableList);
+
+        this.applyTagComboBox.setCellFactory(getTagComboboxCallback());
+        this.applyTagComboBox.setButtonCell(getTagComboboxListCell());
+        this.applyTagComboBox.setItems(this.tagsInComboboxObservableList);
     }
 
     private Callback<ListView<Tag>, ListCell<Tag>> getTagComboboxCallback() {
-        return new Callback<>() {
-            @Override
-            public ListCell<Tag> call(ListView<Tag> stringComboBox) {
-                return getTagComboboxListCell();
-            }
-        };
+        return stringComboBox -> getTagComboboxListCell();
     }
 
     private ListCell<Tag> getTagComboboxListCell() {
@@ -183,7 +180,7 @@ public class ConfigureBackupSceneController {
         this.middleLine.endXProperty().bind(this.mainContainer.widthProperty());
     }
 
-    private void setupTableColumnSizeProperties() {
+    private void setupTableColumnProperties() {
         this.sourceTableCol.setReorderable(false);
         this.destinationTableCol.setReorderable(false);
         this.tagTableCol.setReorderable(false);
@@ -201,6 +198,9 @@ public class ConfigureBackupSceneController {
 
         this.removeTableCol.setCellValueFactory(
                 new PropertyValueFactory<>("checkBoxHBox"));
+
+        this.tagTableCol.setCellValueFactory(
+                new PropertyValueFactory<>("tagHBox"));
 
         this.tableView.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 2) {
@@ -233,6 +233,12 @@ public class ConfigureBackupSceneController {
             this.tableView.getItems().add(
                     new TableEntry(pathPair.srcPath(), pathPair.destPath(), this.numberOfTableElements, checked, srcIsDir));
             this.numberOfTableElements++;
+        }
+
+        for (Tag tag : TagManagerInstance.tagManager.getAllTags()) {
+            for (int index : tag.content) {
+                this.tableView.getItems().get(index).setTag(tag.name, tag.color);
+            }
         }
     }
 
@@ -526,5 +532,61 @@ public class ConfigureBackupSceneController {
         this.tagsInComboboxObservableList.add(TagManagerInstance.tagManager.getTag(newTagName));
         this.editTagTextField.setText("");
         this.editTagComboBox.setValue(null);
+    }
+
+    public void applyTag() {
+        Tag selectedTag = this.applyTagComboBox.getValue();
+        if (selectedTag == null) {
+            return;
+        }
+
+        if (!applyTagMode) {
+            this.applyTagButton.setText("Finish");
+            this.applyTagMode = true;
+            this.deleteBackupButton.setDisable(true);
+            this.removeTableCol.setText("Apply tag");
+            this.applyTagComboBox.setDisable(true);
+
+            Tooltip deletedDeleteButtonTooltip = new Tooltip("Cannot delete backups while deleting tags.");
+            deletedDeleteButtonTooltip.setFont(new Font(12));
+            deletedDeleteButtonTooltip.setShowDelay(Duration.ZERO);
+            deletedDeleteButtonTooltip.setHideDelay(Duration.ZERO);
+            Tooltip.install(this.deleteBackupButtonWrapperHBox, deletedDeleteButtonTooltip);
+
+            for (TableEntry entry : this.tableView.getItems()) {
+                entry.getCheckBox().setSelected(false);
+            }
+            for (int index : TagManagerInstance.tagManager.getTagContent(selectedTag.name)) {
+                this.tableView.getItems().get(index).getCheckBox().setSelected(true);
+            }
+
+            return;
+        }
+
+        List<Integer> oldContent = TagManagerInstance.tagManager.getTagContent(selectedTag.name);
+        List<Integer> backupIndicesWithTag = new ArrayList<>();
+        for (TableEntry entry : this.tableView.getItems()) {
+            if (!entry.getCheckBox().isSelected()) {
+                continue;
+            }
+
+            entry.setTag(selectedTag.name, selectedTag.color);
+            backupIndicesWithTag.add(entry.getIndex());
+            entry.getCheckBox().setSelected(false);
+        }
+        TagManagerInstance.tagManager.changeTagContent(selectedTag.name, backupIndicesWithTag);
+
+        if (!TagManagerInstance.tagManager.saveChangesToFile()) {
+            TagManagerInstance.tagManager.changeTagContent(selectedTag.name, oldContent);
+        }
+
+        this.deleteBackupButton.setDisable(false);
+        Tooltip.uninstall(this.deleteBackupButtonWrapperHBox, null);
+
+        this.applyTagButton.setText("Apply tag");
+        this.applyTagMode = false;
+        this.removeTableCol.setText("Remove");
+        this.applyTagComboBox.setDisable(false);
+
     }
 }

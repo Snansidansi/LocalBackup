@@ -15,6 +15,7 @@ public class TagManagerInstance {
         try {
             tempTagManager = new TagManager(Path.of("data/tagData.csv"));
             tempLoadingException = null;
+            tempTagManager.getTagsFromFile();
         } catch (IOException e) {
             tempTagManager = null;
             tempLoadingException = e;
