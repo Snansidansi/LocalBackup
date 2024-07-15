@@ -359,7 +359,7 @@
                <Insets />
            </BorderPane.margin>
            <children>
-               <VBox fx:id="tagsVBox" prefHeight="246.0" prefWidth="261.0" style="-fx-border-style: solid none solid none;">
+               <VBox fx:id="tagsVBox" prefHeight="246.0" prefWidth="261.0" style="-fx-border-style: solid none solid none;" VBox.vgrow="ALWAYS">
                    <children>
                        <Label text="Add tags:" underline="true">
                            <font>
