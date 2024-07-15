@@ -134,6 +134,8 @@ public class ConfigureBackupSceneController {
             return;
         }
 
+        this.tagsInComboboxObservableList.addAll(TagManagerInstance.tagManager.getAllTags());
+
         this.editTagComboBox.setOnAction(event -> {
             Tag tag = this.editTagComboBox.getValue();
             if (tag == null) {
