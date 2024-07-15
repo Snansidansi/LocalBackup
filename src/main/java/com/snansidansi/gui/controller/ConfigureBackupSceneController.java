@@ -105,6 +105,7 @@ public class ConfigureBackupSceneController {
 
     @FXML
     public void initialize() {
+        setupTagControls();
         bindMiddleLineToWindowWidth();
 
         this.deleteConfirmLabel.setVisible(false);
@@ -120,15 +121,14 @@ public class ConfigureBackupSceneController {
         RunBackupThreadSingleton.setAnimation(loadingAnimation, this.backupRunningIndicatorLabel);
         RunBackupThreadSingleton.setFinishedLabel(this.backupFinishedLabel);
         RunBackupThreadSingleton.setConfigureBackupSceneController(this);
-
-        if (TagManagerInstance.tagManager == null) {
-            disableTagControls();
-        } else {
-            setupTagControls();
-        }
     }
 
     private void setupTagControls() {
+        if (TagManagerInstance.tagManager == null) {
+            disableTagControls();
+            return;
+        }
+
         this.editTagComboBox.setOnAction(event -> {
             Tag tag = this.editTagComboBox.getValue();
             if (tag == null) {
@@ -208,6 +208,9 @@ public class ConfigureBackupSceneController {
             }
         });
 
+        if (TagManagerInstance.tagManager == null) {
+            this.tagTableCol.setVisible(false);
+        }
         refillTable(true);
     }
 
@@ -235,6 +238,9 @@ public class ConfigureBackupSceneController {
             this.numberOfTableElements++;
         }
 
+        if (TagManagerInstance.tagManager == null) {
+            return;
+        }
         for (Tag tag : TagManagerInstance.tagManager.getAllTags()) {
             for (int index : tag.content) {
                 this.tableView.getItems().get(index).setTag(tag.name, tag.color);
