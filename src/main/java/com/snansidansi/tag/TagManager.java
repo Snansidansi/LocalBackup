@@ -216,13 +216,13 @@ public class TagManager {
      * Gets the content of a given tag from the {@code TagManager}.
      * @param tagName The name of the tag which content should be returned.
      * @return The content of the {@code tagName} tag as {@code List<Integer>}. If the given {@code tagName} does not
-     * exist then method returns an empty {@code ArrayList<Integer>}.
+     * exist then method returns null.
      */
     public List<Integer> getTagContent(String tagName) {
         if (!this.tagsMap.containsKey(tagName)) {
-            return new ArrayList<>();
+            return null;
         }
-        return new ArrayList<>(this.tagsMap.get(tagName).getValue());
+        return this.tagsMap.get(tagName).getValue();
     }
 
     /**
