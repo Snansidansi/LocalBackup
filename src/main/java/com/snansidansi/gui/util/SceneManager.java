@@ -35,7 +35,6 @@ public class SceneManager {
     public static void setSettingsScene(Stage stage) throws IOException {
         changeScene(stage, "/scenes/settings.fxml");
         safeCurrentStageSize(stage);
-        changeStageSizeBounds(stage, 330, 200, -1, -1);
     }
 
     public static void changeStageSizeBounds(Stage stage, double minWidth, double minHeight, double maxWidth, double maxHeight) {

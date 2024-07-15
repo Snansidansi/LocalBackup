@@ -29,7 +29,8 @@ import java.util.Optional;
 public class SettingsController {
     private final List<Node> displayedSettings = new ArrayList<>();
     private boolean invalidSettings = false;
-    private final SimpleDoubleProperty settingsRowNameHBoxWidth = new SimpleDoubleProperty(0);
+    private static final SimpleDoubleProperty settingsRowNameHBoxWidth = new SimpleDoubleProperty(0);
+    private static double stageWidth = 0;
 
     private final int SMALL_SPINNER_WIDTH = 80;
     private final int SETTINGS_NAME_FONTSIZE = 14;
@@ -46,6 +47,16 @@ public class SettingsController {
     public void initialize() {
         createSettingsContent();
         displaySettingsRows();
+
+        Platform.runLater(() -> {
+            if (stageWidth == 0) {
+                stageWidth = this.settingsVBox.getWidth() + 200;
+            }
+
+            Stage stage = (Stage) this.mainContainer.getScene().getWindow();
+            SceneManager.changeStageSize(stage, stageWidth, 520);
+            SceneManager.changeStageSizeBounds(stage, stageWidth, 0, stageWidth, -1);
+        });
     }
 
     private void createSettingsContent() {
@@ -83,7 +94,6 @@ public class SettingsController {
                 "Show tag name:",
                 this.SETTINGS_NAME_FONTSIZE);
 
-        updateSettingsNameLabelWidth(showTagNameRow);
         this.displayedSettings.add(showTagNameRow);
     }
 
@@ -93,7 +103,6 @@ public class SettingsController {
                 "Show tag image:",
                 this.SETTINGS_NAME_FONTSIZE);
 
-        updateSettingsNameLabelWidth(showTagImageRow);
         this.displayedSettings.add(showTagImageRow);
     }
 
@@ -103,7 +112,6 @@ public class SettingsController {
                 "Enable tags:",
                 this.SETTINGS_NAME_FONTSIZE);
 
-        updateSettingsNameLabelWidth(enableTagsRow);
         this.displayedSettings.add(enableTagsRow);
     }
 
@@ -117,7 +125,6 @@ public class SettingsController {
                 "deleted if the original file is deleted.\n" +
                 "This counts for individual files, directories and files in directories.", this.TOOLTIP_FONTSIZE);
 
-        updateSettingsNameLabelWidth(deleteMissingFilesRow);
         this.displayedSettings.add(deleteMissingFilesRow);
     }
 
@@ -169,8 +176,6 @@ public class SettingsController {
                 To find the autostart dir press "windows key + r ", write "shell:startup" and press enter.
                 Then copy the path to the directory that the explorer opened.""", this.TOOLTIP_FONTSIZE);
 
-        updateSettingsNameLabelWidth(autostartPathRow);
-        this.displayedSettings.add(autostartPathRow);
     }
 
     private CheckBoxSettingsRow addBackupExecutionToAutoStartRow() {
@@ -179,7 +184,6 @@ public class SettingsController {
                 "Add backup execution to autostart:",
                 this.SETTINGS_NAME_FONTSIZE);
 
-        updateSettingsNameLabelWidth(autostartRow);
         this.displayedSettings.add(autostartRow);
         return autostartRow;
     }
@@ -194,7 +198,6 @@ public class SettingsController {
         delayBetweenRetriesRow.addTooltip("How long should be waited between the backup retries if the root" +
                 " directory of a backup is missing (e.g. a drive is not connected)", TOOLTIP_FONTSIZE);
 
-        updateSettingsNameLabelWidth(delayBetweenRetriesRow);
         this.displayedSettings.add(delayBetweenRetriesRow);
     }
 
@@ -208,7 +211,6 @@ public class SettingsController {
         numberOfRetriesRow.addTooltip("How often should the program retry to backup a file or directory where the" +
                 " root directory is missing (e.g. a drive is not connected).", TOOLTIP_FONTSIZE);
 
-        updateSettingsNameLabelWidth(numberOfRetriesRow);
         this.displayedSettings.add(numberOfRetriesRow);
     }
 
@@ -219,7 +221,6 @@ public class SettingsController {
                 this.SETTINGS_NAME_FONTSIZE);
         maxBackupLogsRow.setSpinnerWidth(this.SMALL_SPINNER_WIDTH);
 
-        updateSettingsNameLabelWidth(maxBackupLogsRow);
         this.displayedSettings.add(maxBackupLogsRow);
     }
 
@@ -230,27 +231,28 @@ public class SettingsController {
                 this.SETTINGS_NAME_FONTSIZE);
         maxErrorLogsRow.setSpinnerWidth(this.SMALL_SPINNER_WIDTH);
 
-        updateSettingsNameLabelWidth(maxErrorLogsRow);
         this.displayedSettings.add(maxErrorLogsRow);
     }
 
     private void updateSettingsNameLabelWidth(SettingsRow settingsRow) {
-        Platform.runLater(() -> {
-            double labelWidth = settingsRow.getNameLabel().getWidth();
-            if (labelWidth > this.settingsRowNameHBoxWidth.get()) {
-                this.settingsRowNameHBoxWidth.set(labelWidth + 10);
-            }
-            settingsRow.getNameLabel().minWidthProperty().bind(this.settingsRowNameHBoxWidth);
-        });
+        double labelWidth = settingsRow.getNameLabel().getWidth();
+        if (labelWidth > settingsRowNameHBoxWidth.get()) {
+            settingsRowNameHBoxWidth.set(labelWidth + 10);
+        }
+        settingsRow.getNameLabel().minWidthProperty().bind(settingsRowNameHBoxWidth);
     }
 
     private void displaySettingsRows() {
         this.settingsVBox.getChildren().clear();
         this.settingsVBox.getChildren().addAll(this.displayedSettings);
-        Platform.runLater(() -> {
-            SceneManager.changeStageSize((Stage) this.mainContainer.getScene().getWindow(),
-                    this.settingsVBox.getWidth() + 200, this.settingsScrollPane.getHeight());
-        });
+
+        for (Node node : this.displayedSettings) {
+            if (node instanceof SettingsRow row) {
+                Platform.runLater(() -> {
+                    updateSettingsNameLabelWidth(row);
+                });
+            }
+        }
     }
 
     public void backToConfigureBackupScene() {
@@ -272,8 +274,12 @@ public class SettingsController {
 
         SettingsManagerInstance.settingsManager.restoreDefaults();
         SettingsManagerInstance.reloadSettings();
-        createSettingsContent();
-        displaySettingsRows();
+        for (Node node : this.displayedSettings) {
+            if (node instanceof SettingsRow row) {
+                row.setInitValue(SettingsManagerInstance.settingsManager.getSetting(row.getSetting()));
+                row.restoreStandardValue();
+            }
+        }
     }
 
     public void discardChanges() {
@@ -305,8 +311,6 @@ public class SettingsController {
             return;
         }
         SettingsManagerInstance.reloadSettings();
-        createSettingsContent();
-        displaySettingsRows();
     }
 
     private boolean settingsChanged() {
