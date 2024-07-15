@@ -86,7 +86,8 @@ public class BackupServiceTest {
         String filePath = createBackupConfigFile("deleteBackup.csv", exampleData);
         BackupService backupService = new BackupService(filePath);
         backupService.removeBackup(1, 2);
-        assertFileContent(filePath, 1, exampleData[0].srcPath() + ";" + exampleData[0].destPath());
+        assertFileContent(filePath, 1, exampleData[0].srcPath() + ";" +
+                exampleData[0].destPath() + ";5");
     }
 
     @ParameterizedTest

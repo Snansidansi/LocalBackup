@@ -36,12 +36,14 @@ import java.util.stream.Stream;
  */
 public class BackupService {
     private final String backupListPath;
-    private List<SrcDestPair> allBackups;
+    private List<SrcDestPair> allBackups = new ArrayList<>();
     private final Logger backupLog;
     private final Logger errorLog;
     private int retryTime = 5;
     private int maxRetries = 1;
     private boolean deleteBackupsWithMissingSource = true;
+    private final List<Integer> identifierList = new ArrayList<>();
+    private int nextIdentifier = 0;
 
     private int copiedFilesDuringDirBackup = 0;
     private int deletedFilesDuringDirBackup = 0;
@@ -60,7 +62,7 @@ public class BackupService {
         this.errorLog.setEnabled(false);
 
         this.backupListPath = Paths.get(backupListPath).toString();
-        this.allBackups = readBackups();
+        readBackups();
     }
 
     /**
@@ -77,7 +79,7 @@ public class BackupService {
         this.errorLog.setLogHeader("---Error log file form local backup program: " + this.errorLog.getFilename() + "---");
 
         this.backupListPath = Paths.get(backupListPath).toString();
-        this.allBackups = readBackups();
+        readBackups();
     }
 
     /**
@@ -331,14 +333,16 @@ public class BackupService {
         try (CsvWriter csvWriter = new CsvWriter(this.backupListPath, append)) {
             for (SrcDestPair data : newBackups) {
                 csvWriter.writeLine(Path.of(data.srcPath()).toAbsolutePath().toString(),
-                        Path.of(data.destPath()).toAbsolutePath().toString());
+                        Path.of(data.destPath()).toAbsolutePath().toString(),
+                        String.valueOf(getNextIdentifier()));
             }
         } catch (IOException e) {
             this.errorLog.log("Error when adding a new backup to the backup list.",
                     "Error message. " + e);
             return false;
         }
-        this.allBackups = readBackups();
+
+        readBackups();
         return true;
     }
 
@@ -467,7 +471,7 @@ public class BackupService {
             return false;
         }
 
-        // Copy of old backup-list if new backup-list can't be created.
+        // Copy of old backup-list if new backup-list cannot be created.
         Path backupConfigFileCopyPath = Path.of(this.backupListPath).getParent()
                 .resolve(this.backupListPath.hashCode() + ".csv");
 
@@ -487,6 +491,7 @@ public class BackupService {
         List<SrcDestPair> allBackupsCopy = new ArrayList<>(this.allBackups);
         for (int i = index.length - 1; i >= 0; i--) {
             this.allBackups.remove(index[i]);
+            this.identifierList.remove(index[i]);
         }
 
         boolean addSuccessful = addBackup((this.allBackups));
@@ -517,9 +522,9 @@ public class BackupService {
         return addSuccessful;
     }
 
-    private List<SrcDestPair> readBackups() {
+    private void readBackups() {
         if (Files.notExists(Path.of(this.backupListPath))) {
-            return new ArrayList<>();
+            return;
         }
 
         List<String[]> allBackupsFromFile;
@@ -528,25 +533,56 @@ public class BackupService {
         } catch (IOException e) {
             this.errorLog.log("Error when reading the content of the backup file.",
                     "An IOException occurred: " + e);
-            return new ArrayList<>();
+            return;
         }
+
+        this.allBackups.clear();
+        this.identifierList.clear();
+        this.nextIdentifier = allBackupsFromFile.size();
 
         if (allBackupsFromFile.isEmpty()) {
-            return new ArrayList<>();
+            return;
         }
 
-        List<SrcDestPair> outputList = new ArrayList<>(allBackupsFromFile.size());
+        this.allBackups = new ArrayList<>(allBackupsFromFile.size());
         for (String[] strings : allBackupsFromFile) {
             try {
-                outputList.add(new SrcDestPair(strings[0], strings[1]));
-            } catch (ArrayIndexOutOfBoundsException e) {
+                this.allBackups.add(new SrcDestPair(strings[0], strings[1]));
+
+            } catch (ArrayIndexOutOfBoundsException unused) {
                 this.errorLog.log("Error when reading a backup from the backup list file.",
                         "Array out of bounds exception occurred.",
                         "Content of the invalid line: " + Arrays.toString(strings));
+                return;
+            } catch (NumberFormatException unused) {
             }
+
+            int identifier;
+            try {
+                identifier = Integer.parseInt(strings[2]);
+            } catch (NumberFormatException unused) {
+                this.errorLog.log("Error when reading a backup identifier from the backup list file.",
+                        "Number format exception occurred.",
+                        "Invalid content of file: " + strings[2]);
+                return;
+            } catch (ArrayIndexOutOfBoundsException unused) {
+                identifier = -1;
+            }
+
+            this.identifierList.add(identifier);
         }
 
-        return outputList;
+        int index;
+        while ((index = this.identifierList.indexOf(-1)) != -1) {
+            this.identifierList.set(index, getNextIdentifier());
+        }
+    }
+
+    private int getNextIdentifier() {
+        while (this.identifierList.contains(this.nextIdentifier)) {
+            this.nextIdentifier++;
+        }
+        return this.nextIdentifier;
     }
 
     /**
@@ -557,7 +593,7 @@ public class BackupService {
     }
 
     /**
-     * Checks if a backup already exist in the backup-list.
+     * Checks if a backup already exists in the backup-list.
      * @param paths A source and destination path as {@link SrcDestPair}.
      * @return Boolean value if the backup already exists.
      */
@@ -609,7 +645,7 @@ public class BackupService {
     /**
      * Sets the maximum number of retries for a backup with a missing root after the call of {@link #runBackup()}.
      *
-     * @param maxRetries Maximum number of retires as int.
+     * @param maxRetries Maximum number of retries as int.
      */
     public void setMaxRetries(int maxRetries) {
         this.maxRetries = maxRetries;
@@ -644,5 +680,12 @@ public class BackupService {
         } catch (SecurityException e) {
             return false;
         }
+    }
+
+    public int getBackupIdentifier(int index) {
+        if (index < 0 || index > this.identifierList.size()) {
+            return -1;
+        }
+        return this.identifierList.get(index);
     }
 }

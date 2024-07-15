@@ -568,6 +568,9 @@ public class ConfigureBackupSceneController {
             Tooltip.install(this.deleteBackupButtonWrapperHBox, deletedDeleteButtonTooltip);
 
             for (TableEntry entry : this.tableView.getItems()) {
+                if (entry.getCheckBox().isSelected()) {
+                    System.out.println("Identifier: " + BackupServiceInstance.backupService.getBackupIdentifier(entry.getIndex()));
+                }
                 entry.getCheckBox().setSelected(false);
             }
             for (int index : TagManagerInstance.tagManager.getTagContent(selectedTag.name)) {
