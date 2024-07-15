@@ -1,5 +1,7 @@
 package com.snansidansi.gui.util;
 
+import com.snansidansi.app.instances.SettingsManagerInstance;
+import com.snansidansi.settings.BackupSetting;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
@@ -56,21 +58,32 @@ public class TableEntry {
         this.tagImageView.setFitWidth(IMAGE_SIZE);
         this.tagImageView.setFitHeight(IMAGE_SIZE);
 
-        this.tagHBox.getChildren().addAll(this.tagImageView , this.tagLabel);
         this.tagHBox.setSpacing(3);
-        this.tagHBox.setAlignment(Pos.CENTER_LEFT);
+        this.tagHBox.setAlignment(Pos.CENTER);
         HBox.setHgrow(tagHBox, Priority.ALWAYS);
     }
 
     public void setTag(String tagName, String tagColor) {
-        this.tagLabel.setText(tagName);
-        this.tagLabel.setStyle("-fx-text-fill: " + tagColor + ";-fx-font-weight: bold");
-
-        if (!coloredTagImagesMap.containsKey(tagName)) {
-            Image coloredTagImage = Utility.changeColorOfTransparentBackgroundImage(tagImage, Color.web(tagColor));
-            coloredTagImagesMap.put(tagName, coloredTagImage);
+        if (Boolean.parseBoolean(SettingsManagerInstance.settingsManager.getSetting(BackupSetting.SHOW_TAG_IMAGE))) {
+            this.tagHBox.getChildren().add(this.tagImageView);
+            if (!coloredTagImagesMap.containsKey(tagName)) {
+                Image coloredTagImage = Utility.changeColorOfTransparentBackgroundImage(tagImage, Color.web(tagColor));
+                coloredTagImagesMap.put(tagName, coloredTagImage);
+            }
+            this.tagImageView.setImage(coloredTagImagesMap.get(tagName));
         }
-        this.tagImageView.setImage(coloredTagImagesMap.get(tagName));
+        else {
+            this.tagHBox.getChildren().remove(this.tagImageView);
+        }
+
+        if (Boolean.parseBoolean(SettingsManagerInstance.settingsManager.getSetting(BackupSetting.SHOW_TAG_NAME))) {
+            this.tagHBox.getChildren().add(this.tagLabel);
+            this.tagLabel.setText(tagName);
+            this.tagLabel.setStyle("-fx-text-fill: " + tagColor + ";-fx-font-weight: bold");
+        }
+        else {
+            this.tagHBox.getChildren().remove(this.tagLabel);
+        }
     }
 
     public HBox getTagHBox() {

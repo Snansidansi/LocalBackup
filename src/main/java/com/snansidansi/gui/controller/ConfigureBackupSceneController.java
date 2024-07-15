@@ -1,6 +1,7 @@
 package com.snansidansi.gui.controller;
 
 import com.snansidansi.app.instances.BackupServiceInstance;
+import com.snansidansi.app.instances.SettingsManagerInstance;
 import com.snansidansi.app.instances.TagManagerInstance;
 import com.snansidansi.app.singletons.RunBackupThreadSingleton;
 import com.snansidansi.backup.exceptions.DestinationNoDirException;
@@ -13,6 +14,7 @@ import com.snansidansi.gui.util.SceneManager;
 import com.snansidansi.gui.util.TableEntry;
 import com.snansidansi.gui.util.Utility;
 import com.snansidansi.gui.windows.AboutWindow;
+import com.snansidansi.settings.BackupSetting;
 import com.snansidansi.tag.Tag;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -47,7 +49,7 @@ public class ConfigureBackupSceneController {
     private int numberOfTableElements = 0;
     private String lastSelectedSrcDirPath = "";
     private String lastSelectedDestDirPath = "";
-    private ObservableList<Tag> tagsInComboboxObservableList = FXCollections.observableArrayList();
+    private final ObservableList<Tag> tagsInComboboxObservableList = FXCollections.observableArrayList();
     private boolean applyTagMode = false;
 
     @FXML
@@ -124,6 +126,9 @@ public class ConfigureBackupSceneController {
     }
 
     private void setupTagControls() {
+        if (!Boolean.parseBoolean(SettingsManagerInstance.settingsManager.getSetting(BackupSetting.ENABLE_TAGS))) {
+            this.tagsVBoxWrapperVBox.getChildren().clear();
+        }
         if (TagManagerInstance.tagManager == null) {
             disableTagControls();
             return;
@@ -208,7 +213,8 @@ public class ConfigureBackupSceneController {
             }
         });
 
-        if (TagManagerInstance.tagManager == null) {
+        if (!Boolean.parseBoolean(SettingsManagerInstance.settingsManager.getSetting(BackupSetting.ENABLE_TAGS))
+                || TagManagerInstance.tagManager == null) {
             this.tagTableCol.setVisible(false);
         }
         refillTable(true);

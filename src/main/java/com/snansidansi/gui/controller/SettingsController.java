@@ -70,6 +70,41 @@ public class SettingsController {
 
         addSettingsHeader("Backup:", SETTINGS_NAME_FONTSIZE, true, true, HEADER_TOP_PADDING, HEADER_BOTTOM_PADDING);
         addDeleteMissingFilesRow();
+
+        addSettingsHeader("Tags:", SETTINGS_NAME_FONTSIZE, true, true,HEADER_TOP_PADDING,HEADER_BOTTOM_PADDING);
+        addEnableTagsRow();
+        addShowTagImageRow();
+        addShowTagNameRow();
+    }
+
+    private void addShowTagNameRow() {
+        CheckBoxSettingsRow showTagNameRow = new CheckBoxSettingsRow(
+                BackupSetting.SHOW_TAG_NAME,
+                "Show tag name:",
+                this.SETTINGS_NAME_FONTSIZE);
+
+        updateSettingsNameLabelWidth(showTagNameRow);
+        this.displayedSettings.add(showTagNameRow);
+    }
+
+    private void addShowTagImageRow() {
+        CheckBoxSettingsRow showTagImageRow = new CheckBoxSettingsRow(
+                BackupSetting.SHOW_TAG_IMAGE,
+                "Show tag image:",
+                this.SETTINGS_NAME_FONTSIZE);
+
+        updateSettingsNameLabelWidth(showTagImageRow);
+        this.displayedSettings.add(showTagImageRow);
+    }
+
+    private void addEnableTagsRow() {
+        CheckBoxSettingsRow enableTagsRow = new CheckBoxSettingsRow(
+                BackupSetting.ENABLE_TAGS,
+                "Enable tags:",
+                this.SETTINGS_NAME_FONTSIZE);
+
+        updateSettingsNameLabelWidth(enableTagsRow);
+        this.displayedSettings.add(enableTagsRow);
     }
 
     private void addDeleteMissingFilesRow() {
