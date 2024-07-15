@@ -1,5 +1,9 @@
 package com.snansidansi.gui.util;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
 import java.awt.*;
@@ -26,5 +30,27 @@ public class Utility {
                 Math.round(color.getRed() * 255),
                 Math.round(color.getGreen() * 255),
                 Math.round(color.getBlue() * 255));
+    }
+
+    public static WritableImage changeColorOfTransparentBackgroundImage(Image image, Color outputColor) {
+        int imageWidth = (int) image.getWidth();
+        int imageHeight = (int) image.getHeight();
+
+        PixelReader pixelReader = image.getPixelReader();
+        WritableImage writableImage = new WritableImage(imageWidth, imageHeight);
+        PixelWriter pixelWriter = writableImage.getPixelWriter();
+
+        for (int x = 0; x < imageWidth; x++) {
+            for (int y = 0; y < imageHeight; y++) {
+                Color pixelColor = pixelReader.getColor(x, y);
+                if (!pixelColor.equals(Color.TRANSPARENT)) {
+                    double pixelOpacity = pixelColor.getOpacity();
+                    pixelColor = new Color(outputColor.getRed(), outputColor.getGreen(), outputColor.getBlue(), pixelOpacity);
+                }
+                pixelWriter.setColor(x, y, pixelColor);
+            }
+        }
+
+        return writableImage;
     }
 }
