@@ -25,6 +25,7 @@ public class TableEntry {
     private final HBox tagHBox = new HBox();
     private final Label tagLabel = new Label();
     private final ImageView tagImageView = new ImageView();
+    private String tagName = null;
 
     private static final Image fileImage = new Image(
             TableEntry.class.getResource("/icons/document.png").toString());
@@ -65,6 +66,8 @@ public class TableEntry {
 
     public void setTag(String tagName, String tagColor) {
         this.tagHBox.getChildren().clear();
+        this.tagName = tagName;
+
         if (Boolean.parseBoolean(SettingsManagerInstance.settingsManager.getSetting(BackupSetting.SHOW_TAG_IMAGE))) {
             this.tagHBox.getChildren().add(this.tagImageView);
             if (!coloredTagImagesMap.containsKey(tagName)) {
@@ -109,5 +112,9 @@ public class TableEntry {
 
     public HBox getCheckBoxHBox() {
         return this.checkBoxHBox;
+    }
+
+    public String getTagName() {
+        return this.tagName;
     }
 }

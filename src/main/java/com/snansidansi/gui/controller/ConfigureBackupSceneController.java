@@ -42,7 +42,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ConfigureBackupSceneController {
     private boolean deletePressedOnce = false;
@@ -439,7 +441,28 @@ public class ConfigureBackupSceneController {
         }
 
         List<Integer> indicesToRemove = getCheckedElementsFromTable();
-        BackupServiceInstance.backupService.removeBackup(indicesToRemove.stream().mapToInt(i -> i).toArray());
+        Map<String, List<Integer>> backupTags = new HashMap<>();
+        for (int index : indicesToRemove) {
+            String tagName = this.tableView.getItems().get(index).getTagName();
+            Integer backupIdentifier = BackupServiceInstance.backupService.getBackupIdentifier(index);
+
+            if (tagName == null) {
+                continue;
+            }
+
+            if (!backupTags.containsKey(tagName)) {
+                backupTags.put(tagName, new ArrayList<>());
+            }
+            backupTags.get(tagName).add(backupIdentifier);
+            TagManagerInstance.tagManager.getTagContent(tagName).remove(backupIdentifier);
+        }
+
+        if (!BackupServiceInstance.backupService.removeBackup(indicesToRemove.stream().mapToInt(i -> i).toArray()) ||
+                !TagManagerInstance.tagManager.saveChangesToFile()) {
+            for (Map.Entry<String, List<Integer>> entry : backupTags.entrySet()) {
+                TagManagerInstance.tagManager.getTagContent(entry.getKey()).addAll(entry.getValue());
+            }
+        }
 
         refillTable(true);
 
