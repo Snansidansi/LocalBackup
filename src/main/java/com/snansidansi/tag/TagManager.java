@@ -23,6 +23,7 @@ import java.util.Map;
 public class TagManager {
     private final Path tagsFilePath;
     private Map<String, Pair<String, List<Integer>>> tagsMap = new HashMap<>();
+    private final Map<String, Pair<String, List<Integer>>> backupTagsMap = new HashMap<>();
     private final Path tagFileModPath;
 
     /**
@@ -80,6 +81,8 @@ public class TagManager {
         } catch (FileNotFoundException unused) {
         }
 
+        this.backupTagsMap.clear();
+        this.backupTagsMap.putAll(this.tagsMap);
         return success;
     }
 
@@ -209,6 +212,8 @@ public class TagManager {
             return false;
         }
 
+        this.backupTagsMap.clear();
+        this.backupTagsMap.putAll(this.tagsMap);
         return true;
     }
 
@@ -279,5 +284,14 @@ public class TagManager {
             i++;
         }
         return allTags;
+    }
+
+    /**
+     * Reverts all changes to the {@code TagManager} since the last use of {@link #getTagsFromFile()} or
+     * {@link #saveChangesToFile()}.
+     */
+    public void revertChanges() {
+        this.tagsMap.clear();
+        this.tagsMap.putAll(this.backupTagsMap);
     }
 }

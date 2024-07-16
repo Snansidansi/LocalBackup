@@ -441,7 +441,6 @@ public class ConfigureBackupSceneController {
         }
 
         List<Integer> indicesToRemove = getCheckedElementsFromTable();
-        Map<String, List<Integer>> backupTags = new HashMap<>();
         for (int index : indicesToRemove) {
             String tagName = this.tableView.getItems().get(index).getTagName();
             Integer backupIdentifier = BackupServiceInstance.backupService.getBackupIdentifier(index);
@@ -450,22 +449,15 @@ public class ConfigureBackupSceneController {
                 continue;
             }
 
-            if (!backupTags.containsKey(tagName)) {
-                backupTags.put(tagName, new ArrayList<>());
-            }
-            backupTags.get(tagName).add(backupIdentifier);
             TagManagerInstance.tagManager.getTagContent(tagName).remove(backupIdentifier);
         }
 
         if (!BackupServiceInstance.backupService.removeBackup(indicesToRemove.stream().mapToInt(i -> i).toArray()) ||
                 !TagManagerInstance.tagManager.saveChangesToFile()) {
-            for (Map.Entry<String, List<Integer>> entry : backupTags.entrySet()) {
-                TagManagerInstance.tagManager.getTagContent(entry.getKey()).addAll(entry.getValue());
-            }
+            TagManagerInstance.tagManager.revertChanges();
         }
 
         refillTable(true);
-
         this.deleteConfirmLabel.setVisible(false);
         this.deletePressedOnce = false;
     }
