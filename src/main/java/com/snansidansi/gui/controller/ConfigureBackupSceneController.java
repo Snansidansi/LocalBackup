@@ -554,32 +554,38 @@ public class ConfigureBackupSceneController {
             return;
         }
 
-        if (!applyTagMode) {
-            this.applyTagButton.setText("Finish");
-            this.applyTagMode = true;
-            this.deleteBackupButton.setDisable(true);
-            this.removeTableCol.setText("Apply tag");
-            this.applyTagComboBox.setDisable(true);
+        if (!startTagApply(selectedTag)) {
+            finishTagApply(selectedTag);
+        }
+    }
 
-            Tooltip deletedDeleteButtonTooltip = new Tooltip("Cannot delete backups while deleting tags.");
-            deletedDeleteButtonTooltip.setFont(new Font(12));
-            deletedDeleteButtonTooltip.setShowDelay(Duration.ZERO);
-            deletedDeleteButtonTooltip.setHideDelay(Duration.ZERO);
-            Tooltip.install(this.deleteBackupButtonWrapperHBox, deletedDeleteButtonTooltip);
-
-            for (TableEntry entry : this.tableView.getItems()) {
-                if (entry.getCheckBox().isSelected()) {
-                    System.out.println("Identifier: " + BackupServiceInstance.backupService.getBackupIdentifier(entry.getIndex()));
-                }
-                entry.getCheckBox().setSelected(false);
-            }
-            for (int index : TagManagerInstance.tagManager.getTagContent(selectedTag.name)) {
-                this.tableView.getItems().get(index).getCheckBox().setSelected(true);
-            }
-
-            return;
+    private boolean startTagApply(Tag selectedTag) {
+        if (this.applyTagMode) {
+            return false;
         }
 
+        this.applyTagButton.setText("Finish");
+        this.applyTagMode = true;
+        this.deleteBackupButton.setDisable(true);
+        this.removeTableCol.setText("Apply tag");
+        this.applyTagComboBox.setDisable(true);
+
+        Tooltip deletedDeleteButtonTooltip = new Tooltip("Cannot delete backups while deleting tags.");
+        deletedDeleteButtonTooltip.setFont(new Font(12));
+        deletedDeleteButtonTooltip.setShowDelay(Duration.ZERO);
+        deletedDeleteButtonTooltip.setHideDelay(Duration.ZERO);
+        Tooltip.install(this.deleteBackupButtonWrapperHBox, deletedDeleteButtonTooltip);
+
+        for (TableEntry entry : this.tableView.getItems()) {
+            entry.getCheckBox().setSelected(false);
+        }
+        for (int index : TagManagerInstance.tagManager.getTagContent(selectedTag.name)) {
+            this.tableView.getItems().get(index).getCheckBox().setSelected(true);
+        }
+        return true;
+    }
+
+    private void finishTagApply(Tag selectedTag) {
         List<Integer> oldContent = TagManagerInstance.tagManager.getTagContent(selectedTag.name);
         List<Integer> backupIndicesWithTag = new ArrayList<>();
         for (TableEntry entry : this.tableView.getItems()) {
@@ -604,6 +610,5 @@ public class ConfigureBackupSceneController {
         this.applyTagMode = false;
         this.removeTableCol.setText("Remove");
         this.applyTagComboBox.setDisable(false);
-
     }
 }
