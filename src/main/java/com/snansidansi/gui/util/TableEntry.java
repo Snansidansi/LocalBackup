@@ -64,6 +64,7 @@ public class TableEntry {
     }
 
     public void setTag(String tagName, String tagColor) {
+        this.tagHBox.getChildren().clear();
         if (Boolean.parseBoolean(SettingsManagerInstance.settingsManager.getSetting(BackupSetting.SHOW_TAG_IMAGE))) {
             this.tagHBox.getChildren().add(this.tagImageView);
             if (!coloredTagImagesMap.containsKey(tagName)) {
