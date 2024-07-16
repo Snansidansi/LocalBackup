@@ -87,7 +87,7 @@ public class BackupServiceTest {
         BackupService backupService = new BackupService(filePath);
         backupService.removeBackup(1, 2);
         assertFileContent(filePath, 1, exampleData[0].srcPath() + ";" +
-                exampleData[0].destPath() + ";5");
+                exampleData[0].destPath() + ";3");
     }
 
     @ParameterizedTest
@@ -487,6 +487,18 @@ public class BackupServiceTest {
         Assertions.assertEquals(4, backupService.getBackupIdentifier(3));
         Assertions.assertEquals(5, backupService.getBackupIdentifier(4));
         Assertions.assertEquals(7, backupService.getBackupIdentifier(5));
+    }
+
+    @Test
+    void deletingBackupsDoesNotChangeExistingIdentifiers() {
+        Path backupFilePath = tempDir.resolve("deletingBackupsDoesNotChangeExistingIdentifiers");
+        BackupService backupService = new BackupService(backupFilePath.toString());
+        backupService.addBackup(List.of(this.exampleData));
+        for (int i = 0; i < 3; i++) {
+            Assertions.assertEquals(i, backupService.getBackupIdentifier(i));
+        }
+        backupService.removeBackup(0, 1);
+        Assertions.assertEquals(2, backupService.getBackupIdentifier(1));
     }
 
     // Helper methods

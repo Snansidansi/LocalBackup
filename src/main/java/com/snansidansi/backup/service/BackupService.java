@@ -330,12 +330,25 @@ public class BackupService {
             return false;
         }
 
+        List<Integer> identifierListCopy = null;
+        if (this.allBackups.size() < this.identifierList.size()) {
+            identifierListCopy = new ArrayList<>(this.identifierList);
+        }
+
         try (CsvWriter csvWriter = new CsvWriter(this.backupListPath, append)) {
             for (SrcDestPair data : newBackups) {
-                int identifier = getNextIdentifier();
+                int identifier;
+                if (this.allBackups.size() < this.identifierList.size() && identifierListCopy != null) {
+                    identifier = identifierListCopy.removeFirst();
+                } else {
+                    identifier = getNextIdentifier();
+                }
+
                 csvWriter.writeLine(Path.of(data.srcPath()).toAbsolutePath().toString(),
                         Path.of(data.destPath()).toAbsolutePath().toString(),
                         String.valueOf(identifier));
+
+                this.allBackups.add(data);
                 this.identifierList.add(identifier);
             }
         } catch (IOException e) {
@@ -497,7 +510,9 @@ public class BackupService {
             this.identifierList.remove(index[i]);
         }
 
-        boolean addSuccessful = addBackup((this.allBackups));
+        List<SrcDestPair> allBackupCopy = new ArrayList<>(this.allBackups);
+        this.allBackups.clear();
+        boolean addSuccessful = addBackup((allBackupCopy));
 
         // Cleanup and error handling
         if (!addSuccessful) {
