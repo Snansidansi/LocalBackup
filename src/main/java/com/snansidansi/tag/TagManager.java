@@ -46,8 +46,8 @@ public class TagManager {
     }
 
     /**
-     * Reads the tags and tag content form the tag file. Invalid content gets ignored/skipped.
-     *
+     * Reads the tags and tag content form the tag file. Invalid content gets ignored/skipped. This method will also
+     * replace the internal tags with the tags from the file.
      * @return Boolean value if evey content for a tag was a valid {@code Integer} value.
      * @throws IOException Gets thrown if an {@code IOException} occurs during the file reading process.
      */
@@ -56,6 +56,7 @@ public class TagManager {
             return true;
         }
 
+        this.tagsMap.clear();
         boolean success = true;
         try (CsvReader csvReader = new CsvReader(this.tagsFilePath.toString())) {
             List<String[]> fileContent = csvReader.readAllLines();

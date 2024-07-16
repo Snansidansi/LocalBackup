@@ -16,6 +16,10 @@ public class TagManagerTest {
     private final Path resourcePath = Path.of("src/test/resources/tag");
     private final Path tagsWithValidConfigPath = resourcePath.resolve("tagsWithValidContent.csv");
     private final String secondTagName = "Second tag";
+    private final Tag[] expectedTagsInValidConfigPath = {
+            new Tag("Tag1", "colorA", List.of(1, 2)),
+            new Tag("Tag2", "colorB", List.of(3, 4))
+    };
 
     @TempDir(cleanup = CleanupMode.ALWAYS)
     private static Path tempDir;
@@ -144,11 +148,7 @@ public class TagManagerTest {
     void getAllTagsTest() throws IOException {
         TagManager tagManager = new TagManager(this.tagsWithValidConfigPath);
         tagManager.getTagsFromFile();
-        Tag[] expected = {
-                new Tag("Tag1", "colorA", List.of(1, 2)),
-                new Tag("Tag2", "colorB", List.of(3, 4))
-        };
-        Assertions.assertArrayEquals(expected, tagManager.getAllTags());
+        Assertions.assertArrayEquals(this.expectedTagsInValidConfigPath, tagManager.getAllTags());
     }
 
     @Test
@@ -159,6 +159,25 @@ public class TagManagerTest {
         Tag tag = new Tag(tagName, "color", List.of(1, 2, 3));
         Assertions.assertTrue(tagManager.addTag(tag));
         Assertions.assertEquals(tag, tagManager.getTag(tagName));
+    }
+
+    @Test
+    void usingTheGetTagsFromFileMethodTwiceDoesNotCreateDuplicates() throws IOException {
+        TagManager tagManager = new TagManager(this.tagsWithValidConfigPath);
+        tagManager.getTagsFromFile();
+        tagManager.getTagsFromFile();
+        Assertions.assertArrayEquals(this.expectedTagsInValidConfigPath, tagManager.getAllTags());
+    }
+
+    @Test
+    void usingTheGetTagsFromFileMethodOverwritesTheOldTags() throws IOException {
+        TagManager tagManager = new TagManager(this.tagsWithValidConfigPath);
+        tagManager.addTagName("New tag");
+        tagManager.getTagsFromFile();
+        Assertions.assertArrayEquals(this.expectedTagsInValidConfigPath, tagManager.getAllTags());
+        tagManager.changeColor("Tag1", "newColor");
+        tagManager.getTagsFromFile();
+        Assertions.assertArrayEquals(this.expectedTagsInValidConfigPath, tagManager.getAllTags());
     }
 
     private void asserFileContent(Path filePath, int expectedNumberOfLines, String... expectedLines) throws IOException {
