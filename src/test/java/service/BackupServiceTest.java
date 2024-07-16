@@ -78,7 +78,7 @@ public class BackupServiceTest {
                 "addBackupToBackupConfig.csv", new SrcDestPair("a", "b"));
         BackupService backupService = new BackupService(filePath);
         backupService.addBackup(new SrcDestPair(filePath, tempDir.toString()));
-        assertFileContent(filePath, 2, "a;b", filePath + ";" + tempDir);
+        assertFileContent(filePath, 2, "a;b", filePath + ";" + tempDir + ";2");
     }
 
     @Test
@@ -415,6 +415,78 @@ public class BackupServiceTest {
         BackupService backupService = new BackupService(configFilePath);
         backupService.runBackup();
         Assertions.assertEquals(0, destPath.toFile().listFiles().length);
+    }
+
+    @Test
+    void readIdentifierAndSelectIdentifierFromFile() {
+        BackupService backupService = new BackupService(this.exampleBackupDataPath);
+        Assertions.assertEquals(0, backupService.getBackupIdentifier(0));
+        Assertions.assertEquals(1, backupService.getBackupIdentifier(1));
+        Assertions.assertEquals(2, backupService.getBackupIdentifier(2));
+    }
+
+    @Test
+    void assignIdentifierForNextBackupCorrectAfterReadingFromFile() throws IOException {
+        Path backupFilePath = tempDir.resolve("assignIdentifierForLoaded.csv");
+        Files.copy(Path.of(this.exampleBackupDataPath), backupFilePath);
+        BackupService backupService = new BackupService(backupFilePath.toString());
+        backupService.addBackup(new SrcDestPair("da", "db"));
+        Assertions.assertEquals(3, backupService.getBackupIdentifier(3));
+    }
+
+    @ParameterizedTest
+    @CsvSource({"-1", "3"})
+    void returnMinusOneIfIndexForIdentifierIsInvalid(int index) {
+        BackupService backupService = new BackupService(this.exampleBackupDataPath);
+        Assertions.assertEquals(-1, backupService.getBackupIdentifier(index));
+    }
+
+    @Test
+    void createCorrectIdentifierForMultipleNewBackupsIndividual() {
+        Path backupFilePath = tempDir.resolve("createCorrectIdentifierForMultipleNewBackupsIndividual.csv");
+        BackupService backupService = new BackupService(backupFilePath.toString());
+        backupService.addBackup(new SrcDestPair("a", "b"));
+        backupService.addBackup(new SrcDestPair("aa", "bb"));
+        backupService.addBackup(new SrcDestPair("aaa", "ccc"));
+        for (int i = 0; i < 3; i++) {
+            Assertions.assertEquals(i, backupService.getBackupIdentifier(i));
+        }
+    }
+
+    @Test
+    void createCorrectIdentifierForMultipleNewBackupsAsList() {
+        Path backupFilePath = tempDir.resolve("createCorrectIdentifierForMultipleNewBackupsAsList.csv");
+        BackupService backupService = new BackupService(backupFilePath.toString());
+        backupService.addBackup(List.of(this.exampleData));
+
+        for (int i = 0; i < 3; i++) {
+            Assertions.assertEquals(i, backupService.getBackupIdentifier(i));
+        }
+    }
+
+    @Test
+    void readNotLinearIdentifierFromBackupFile() {
+        Path backupFilePath = Path.of(this.exampleBackupDataPath).getParent()
+                .resolve("notLinearIdentifierBackupFile.csv");
+        BackupService backupService = new BackupService(backupFilePath.toString());
+        Assertions.assertEquals(3, backupService.getBackupIdentifier(0));
+        Assertions.assertEquals(6, backupService.getBackupIdentifier(1));
+        Assertions.assertEquals(1, backupService.getBackupIdentifier(2));
+    }
+
+
+    @Test
+    void createCorrectIdentifierForNotLinearExistingIdentifiers() throws IOException {
+        Path srcBackupFilePath = Path.of(this.exampleBackupDataPath).getParent()
+                .resolve("notLinearIdentifierBackupFile.csv");
+        Path destBackupFilePath = tempDir.resolve("createCorrectIdentifierForExistingNotLinear.csv");
+        Files.copy(srcBackupFilePath, destBackupFilePath);
+
+        BackupService backupService = new BackupService(destBackupFilePath.toString());
+        backupService.addBackup(List.of(this.exampleData));
+        Assertions.assertEquals(4, backupService.getBackupIdentifier(3));
+        Assertions.assertEquals(5, backupService.getBackupIdentifier(4));
+        Assertions.assertEquals(7, backupService.getBackupIdentifier(5));
     }
 
     // Helper methods
