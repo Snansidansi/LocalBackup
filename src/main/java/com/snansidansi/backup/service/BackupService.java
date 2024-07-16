@@ -691,4 +691,9 @@ public class BackupService {
         }
         return this.identifierList.get(index);
     }
+
+    public int getIndexFromIdentifier(int identifier) {
+        Integer identifierInteger = identifier;
+        return this.identifierList.indexOf(identifierInteger);
+    }
 }

@@ -250,7 +250,11 @@ public class ConfigureBackupSceneController {
             return;
         }
         for (Tag tag : TagManagerInstance.tagManager.getAllTags()) {
-            for (int index : tag.content) {
+            for (int identifier : tag.content) {
+                int index = BackupServiceInstance.backupService.getIndexFromIdentifier(identifier);
+                if (index == -1) {
+                    continue;
+                }
                 this.tableView.getItems().get(index).setTag(tag.name, tag.color);
             }
         }
@@ -579,7 +583,11 @@ public class ConfigureBackupSceneController {
         for (TableEntry entry : this.tableView.getItems()) {
             entry.getCheckBox().setSelected(false);
         }
-        for (int index : TagManagerInstance.tagManager.getTagContent(selectedTag.name)) {
+        for (int identifier : TagManagerInstance.tagManager.getTagContent(selectedTag.name)) {
+            int index = BackupServiceInstance.backupService.getIndexFromIdentifier(identifier);
+            if (index == -1) {
+                continue;
+            }
             this.tableView.getItems().get(index).getCheckBox().setSelected(true);
         }
         return true;
@@ -587,18 +595,18 @@ public class ConfigureBackupSceneController {
 
     private void finishTagApply(Tag selectedTag) {
         List<Integer> oldContent = TagManagerInstance.tagManager.getTagContent(selectedTag.name);
-        List<Integer> backupIndicesWithTag = new ArrayList<>();
+        List<Integer> newContent = new ArrayList<>();
         for (TableEntry entry : this.tableView.getItems()) {
             if (!entry.getCheckBox().isSelected()) {
                 continue;
             }
 
             entry.setTag(selectedTag.name, selectedTag.color);
-            backupIndicesWithTag.add(entry.getIndex());
+            newContent.add(BackupServiceInstance.backupService.getBackupIdentifier(entry.getIndex()));
             entry.getCheckBox().setSelected(false);
         }
-        TagManagerInstance.tagManager.changeTagContent(selectedTag.name, backupIndicesWithTag);
 
+        TagManagerInstance.tagManager.changeTagContent(selectedTag.name, newContent);
         if (!TagManagerInstance.tagManager.saveChangesToFile()) {
             TagManagerInstance.tagManager.changeTagContent(selectedTag.name, oldContent);
         }
