@@ -42,9 +42,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ConfigureBackupSceneController {
     private boolean deletePressedOnce = false;
@@ -609,21 +607,25 @@ public class ConfigureBackupSceneController {
     }
 
     private void finishTagApply(Tag selectedTag) {
-        List<Integer> oldContent = TagManagerInstance.tagManager.getTagContent(selectedTag.name);
         List<Integer> newContent = new ArrayList<>();
         for (TableEntry entry : this.tableView.getItems()) {
             if (!entry.getCheckBox().isSelected()) {
                 continue;
             }
 
+            Integer entryBackupIdentifier = BackupServiceInstance.backupService.getBackupIdentifier(entry.getIndex());
+            if (entry.getTagName() != null && !entry.getTagName().equals(selectedTag.name)) {
+                TagManagerInstance.tagManager.getTagContent(entry.getTagName()).remove(entryBackupIdentifier);
+            }
+
             entry.setTag(selectedTag.name, selectedTag.color);
-            newContent.add(BackupServiceInstance.backupService.getBackupIdentifier(entry.getIndex()));
+            newContent.add(entryBackupIdentifier);
             entry.getCheckBox().setSelected(false);
         }
 
         TagManagerInstance.tagManager.changeTagContent(selectedTag.name, newContent);
         if (!TagManagerInstance.tagManager.saveChangesToFile()) {
-            TagManagerInstance.tagManager.changeTagContent(selectedTag.name, oldContent);
+            TagManagerInstance.tagManager.revertChanges();
         }
 
         this.deleteBackupButton.setDisable(false);
