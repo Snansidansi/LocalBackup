@@ -332,17 +332,17 @@ public class BackupService {
 
         try (CsvWriter csvWriter = new CsvWriter(this.backupListPath, append)) {
             for (SrcDestPair data : newBackups) {
+                int identifier = getNextIdentifier();
                 csvWriter.writeLine(Path.of(data.srcPath()).toAbsolutePath().toString(),
                         Path.of(data.destPath()).toAbsolutePath().toString(),
-                        String.valueOf(getNextIdentifier()));
+                        String.valueOf(identifier));
+                this.identifierList.add(identifier);
             }
         } catch (IOException e) {
             this.errorLog.log("Error when adding a new backup to the backup list.",
                     "Error message. " + e);
             return false;
         }
-
-        readBackups();
         return true;
     }
 
@@ -359,9 +359,12 @@ public class BackupService {
         }
 
         try (CsvWriter csvWriter = new CsvWriter(this.backupListPath, append)) {
+            int identifier = getNextIdentifier();
             csvWriter.writeLine(Path.of(pathPair.srcPath()).toAbsolutePath().toString(),
-                    Path.of(pathPair.destPath()).toAbsolutePath().toString());
+                    Path.of(pathPair.destPath()).toAbsolutePath().toString(),
+                    String.valueOf(identifier));
             this.allBackups.add(pathPair);
+            this.identifierList.add(identifier);
         } catch (IOException e) {
             this.errorLog.log("Error when adding backup to the backup list.",
                     "New backup source: " + pathPair.srcPath(),
@@ -683,7 +686,7 @@ public class BackupService {
     }
 
     public int getBackupIdentifier(int index) {
-        if (index < 0 || index > this.identifierList.size()) {
+        if (index < 0 || index > this.identifierList.size() - 1) {
             return -1;
         }
         return this.identifierList.get(index);
