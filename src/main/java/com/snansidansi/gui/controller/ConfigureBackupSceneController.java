@@ -610,6 +610,9 @@ public class ConfigureBackupSceneController {
         List<Integer> newContent = new ArrayList<>();
         for (TableEntry entry : this.tableView.getItems()) {
             if (!entry.getCheckBox().isSelected()) {
+                if (entry.getTagName().equals(selectedTag.name)) {
+                    entry.clearTag();
+                }
                 continue;
             }
 

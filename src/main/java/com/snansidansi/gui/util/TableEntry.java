@@ -90,6 +90,11 @@ public class TableEntry {
         }
     }
 
+    public void clearTag() {
+        this.tagName = null;
+        this.tagHBox.getChildren().clear();
+    }
+
     public HBox getTagHBox() {
         return this.tagHBox;
     }
