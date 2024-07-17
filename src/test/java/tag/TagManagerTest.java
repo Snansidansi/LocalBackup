@@ -10,6 +10,8 @@ import org.junit.jupiter.api.io.TempDir;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TagManagerTest {
@@ -178,6 +180,41 @@ public class TagManagerTest {
         tagManager.changeColor("Tag1", "newColor");
         tagManager.getTagsFromFile();
         Assertions.assertArrayEquals(this.expectedTagsInValidConfigPath, tagManager.getAllTags());
+    }
+
+    @Test
+    void revertChangesWorksWhenNotSavedTest() throws IOException {
+        Path tagFilePath = tempDir.resolve("revertChangesWorksWhenNotSaved.csv");
+        Files.copy(this.tagsWithValidConfigPath, tagFilePath);
+        TagManager tagManager = new TagManager(tagFilePath);
+        tagManager.getTagsFromFile();
+        tagManager.addTagName("newTag");
+        tagManager.deleteTag("Tag1");
+        tagManager.changeColor("Tag2", "newColor");
+        tagManager.revertChanges();
+        Assertions.assertArrayEquals(this.expectedTagsInValidConfigPath, tagManager.getAllTags());
+        tagManager.changeTagContent("Tag2", List.of(3, 4));
+        Assertions.assertArrayEquals(this.expectedTagsInValidConfigPath, tagManager.getAllTags());
+    }
+
+    @Test
+    void notRevertChangesSavedTest() throws IOException {
+        Path tagFilePath = tempDir.resolve("notRevertChangesWhenSavedTest.csv");
+        Files.copy(this.tagsWithValidConfigPath, tagFilePath);
+        TagManager tagManager = new TagManager(tagFilePath);
+        tagManager.getTagsFromFile();
+        tagManager.addTagName("newTag");
+        tagManager.deleteTag("Tag1");
+        tagManager.changeColor("Tag2", "newColor");
+        tagManager.saveChangesToFile();
+        tagManager.revertChanges();
+        Tag[] expectedTags = {
+                new Tag("newTag", "", new ArrayList<>()),
+                new Tag("Tag2", "newColor", List.of(3, 4))
+        };
+        System.out.println(Arrays.toString(expectedTags));
+        System.out.println(Arrays.toString(tagManager.getAllTags()));
+        Assertions.assertArrayEquals(expectedTags, tagManager.getAllTags());
     }
 
     private void asserFileContent(Path filePath, int expectedNumberOfLines, String... expectedLines) throws IOException {
