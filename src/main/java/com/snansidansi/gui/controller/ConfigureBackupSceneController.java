@@ -104,6 +104,8 @@ public class ConfigureBackupSceneController {
     private Button deleteBackupButton;
     @FXML
     private HBox deleteBackupButtonWrapperHBox;
+    @FXML
+    private Label selectTagsInfoLabel;
 
     @FXML
     public void initialize() {
@@ -115,6 +117,7 @@ public class ConfigureBackupSceneController {
         this.invalidDestPathLabel.setVisible(false);
         this.backupRunningIndicatorLabel.setVisible(false);
         this.backupFinishedLabel.setVisible(false);
+        this.selectTagsInfoLabel.setVisible(false);
 
         setupTable();
         Platform.runLater(this::setupTableColumnProperties);
@@ -586,6 +589,7 @@ public class ConfigureBackupSceneController {
         this.deleteBackupButton.setDisable(true);
         this.removeTableCol.setText("Apply tag");
         this.applyTagComboBox.setDisable(true);
+        this.selectTagsInfoLabel.setVisible(true);
 
         Tooltip deletedDeleteButtonTooltip = new Tooltip("Cannot delete backups while deleting tags.");
         deletedDeleteButtonTooltip.setFont(new Font(12));
@@ -638,5 +642,6 @@ public class ConfigureBackupSceneController {
         this.applyTagMode = false;
         this.removeTableCol.setText("Remove");
         this.applyTagComboBox.setDisable(false);
+        this.selectTagsInfoLabel.setVisible(false);
     }
 }
