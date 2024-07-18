@@ -345,21 +345,48 @@
                         <Insets top="10.0"/>
                     </BorderPane.margin>
                     <left>
-                        <TextField fx:id="backupSearchTextField" prefHeight="25.0" prefWidth="468.0"
+                        <TextField fx:id="backupSearchTextField" prefHeight="25.0" prefWidth="402.0"
                                    BorderPane.alignment="CENTER"/>
                     </left>
                     <right>
                         <HBox alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308"
-                              maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="245.0" spacing="10.0"
+                              maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="271.0"
                               BorderPane.alignment="CENTER">
                             <children>
                                 <Label text="Filter tag:">
                                     <font>
                                         <Font size="14.0"/>
                                     </font>
+                                    <HBox.margin>
+                                        <Insets right="5.0"/>
+                                    </HBox.margin>
                                 </Label>
                                 <ComboBox fx:id="filterTagComboBox" prefHeight="25.0" prefWidth="174.0"
                                           promptText="Select Tag"/>
+                                <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity"
+                                        minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
+                                        onAction="#clearTagFilter" prefHeight="25.0" prefWidth="25.0"
+                                        style="-fx-border-color: transparent; -fx-background-color: transparent;"
+                                        text="Clear tag filter">
+                                    <graphic>
+                                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true"
+                                                   preserveRatio="true">
+                                            <image>
+                                                <Image url="@../icons/close.png"/>
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                    <HBox.margin>
+                                        <Insets left="3.0"/>
+                                    </HBox.margin>
+                                    <tooltip>
+                                        <Tooltip text="Clears the tag filter.">
+                                            <font>
+                                                <Font size="14.0"/>
+                                            </font>
+                                        </Tooltip>
+                                    </tooltip>
+                                </Button>
                             </children>
                         </HBox>
                     </right>

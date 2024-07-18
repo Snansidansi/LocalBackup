@@ -144,6 +144,10 @@ public class ConfigureBackupSceneController {
 
         this.filterTagComboBox.setOnAction(event -> {
             refillTable(false);
+            if (this.filterTagComboBox.getValue() == null) {
+                return;
+            }
+
             Iterator<TableEntry> tabelIterator = this.tableView.getItems().iterator();
             String selectedTag = this.filterTagComboBox.getValue().name;
 
@@ -154,7 +158,6 @@ public class ConfigureBackupSceneController {
                 }
             }
         });
-
     }
 
     private void setupSearchAndFilterBorderPane() {
@@ -166,7 +169,7 @@ public class ConfigureBackupSceneController {
 
     private void setupSearchBar() {
         this.backupSearchTextField.prefWidthProperty().bind(
-                this.searchAndFilterBorderPane.widthProperty().multiply(0.6));
+                this.searchAndFilterBorderPane.widthProperty().multiply(0.5));
 
         this.backupSearchTextField.setPromptText("Search backup source");
         this.backupSearchTextField.textProperty().addListener((obs, oldVal, newVal) -> {
@@ -699,5 +702,9 @@ public class ConfigureBackupSceneController {
         this.removeTableCol.setText("Remove");
         this.applyTagComboBox.setDisable(false);
         this.selectTagsInfoLabel.setVisible(false);
+    }
+
+    public void clearTagFilter() {
+        this.filterTagComboBox.setValue(null);
     }
 }
