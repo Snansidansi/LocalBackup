@@ -338,6 +338,16 @@
                     </children>
                 </HBox>
             </right>
+            <bottom>
+                <HBox prefWidth="990.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <TextField fx:id="backupSearchTextField" prefHeight="25.0" prefWidth="569.0"/>
+                    </children>
+                    <BorderPane.margin>
+                        <Insets top="10.0"/>
+                    </BorderPane.margin>
+                </HBox>
+            </bottom>
         </BorderPane>
     </top>
    <right>

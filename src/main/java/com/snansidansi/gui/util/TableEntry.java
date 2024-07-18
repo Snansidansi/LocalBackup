@@ -26,6 +26,7 @@ public class TableEntry {
     private final Label tagLabel = new Label();
     private final ImageView tagImageView = new ImageView();
     private String tagName = null;
+    private final String srcPath;
 
     private static final Image fileImage = new Image(
             TableEntry.class.getResource("/icons/document.png").toString());
@@ -38,6 +39,7 @@ public class TableEntry {
     public TableEntry(String srcPath, String destPath, int index, boolean checked, boolean srcIsDir) {
         this.destPath = destPath;
         this.index = index;
+        this.srcPath = srcPath;
 
         // Setup delete check box
         this.checkBoxHBox = new HBox(this.checkBox);
@@ -53,7 +55,7 @@ public class TableEntry {
         this.srcHbox.setPadding(new Insets(0, 0, 0, 3));
         this.srcHbox.setSpacing(3);
         this.srcHbox.setAlignment(Pos.CENTER_LEFT);
-        this.srcHbox.getChildren().addAll(srcImageView, new Label(srcPath));
+        this.srcHbox.getChildren().addAll(srcImageView, new Label(this.srcPath));
 
         // Setup tag
         this.tagImageView.setFitWidth(IMAGE_SIZE);
@@ -121,5 +123,9 @@ public class TableEntry {
 
     public String getTagName() {
         return this.tagName;
+    }
+
+    public String getSrcPath() {
+        return this.srcPath;
     }
 }

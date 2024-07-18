@@ -106,11 +106,12 @@ public class ConfigureBackupSceneController {
     private HBox deleteBackupButtonWrapperHBox;
     @FXML
     private Label selectTagsInfoLabel;
+    @FXML
+    private TextField backupSearchTextField;
 
     @FXML
     public void initialize() {
         setupTagControls();
-        bindMiddleLineToWindowWidth();
 
         this.deleteConfirmLabel.setVisible(false);
         this.invalidSrcPathLabel.setVisible(false);
@@ -121,11 +122,30 @@ public class ConfigureBackupSceneController {
 
         setupTable();
         Platform.runLater(this::setupTableColumnProperties);
+        setupSearchBar();
 
         RotateTransition loadingAnimation = createLoadingAnimation();
         RunBackupThreadSingleton.setAnimation(loadingAnimation, this.backupRunningIndicatorLabel);
         RunBackupThreadSingleton.setFinishedLabel(this.backupFinishedLabel);
         RunBackupThreadSingleton.setConfigureBackupSceneController(this);
+    }
+
+    private void setupSearchBar() {
+        this.backupSearchTextField.prefWidthProperty().bind(
+                this.tableView.widthProperty().multiply(0.7)
+                        .subtract(10) // Margin from the HBox
+        );
+
+        this.backupSearchTextField.setPromptText("Search backup source");
+        this.backupSearchTextField.textProperty().addListener((obs, oldVal, newVal) -> {
+            for (TableEntry entry : tableView.getItems()) {
+                if (newVal.isBlank() || !entry.getSrcPath().contains(newVal)) {
+                    entry.getSrcHBox().setStyle("-fx-background-color: transparent");
+                    continue;
+                }
+                entry.getSrcHBox().setStyle("-fx-background-color: #d99338");
+            }
+        });
     }
 
     private void setupTagControls() {
