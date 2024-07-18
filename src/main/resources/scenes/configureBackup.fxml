@@ -312,7 +312,7 @@
                 </HBox>
             </left>
             <right>
-                <HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER">
+                <HBox alignment="CENTER_RIGHT">
                     <children>
                         <Label fx:id="backupFinishedLabel" text="(Backup finished)" textFill="#6e6e6e">
                             <font>
@@ -339,14 +339,31 @@
                 </HBox>
             </right>
             <bottom>
-                <HBox prefWidth="990.0" BorderPane.alignment="CENTER">
-                    <children>
-                        <TextField fx:id="backupSearchTextField" prefHeight="25.0" prefWidth="569.0"/>
-                    </children>
+                <BorderPane fx:id="searchAndFilterBorderPane" maxWidth="-Infinity" prefHeight="25.0" prefWidth="738.0"
+                            BorderPane.alignment="BOTTOM_LEFT">
                     <BorderPane.margin>
                         <Insets top="10.0"/>
                     </BorderPane.margin>
-                </HBox>
+                    <left>
+                        <TextField fx:id="backupSearchTextField" prefHeight="25.0" prefWidth="468.0"
+                                   BorderPane.alignment="CENTER"/>
+                    </left>
+                    <right>
+                        <HBox alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308"
+                              maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="245.0" spacing="10.0"
+                              BorderPane.alignment="CENTER">
+                            <children>
+                                <Label text="Filter tag:">
+                                    <font>
+                                        <Font size="14.0"/>
+                                    </font>
+                                </Label>
+                                <ComboBox fx:id="filterTagComboBox" prefHeight="25.0" prefWidth="174.0"
+                                          promptText="Select Tag"/>
+                            </children>
+                        </HBox>
+                    </right>
+                </BorderPane>
             </bottom>
         </BorderPane>
     </top>

@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ConfigureBackupSceneController {
@@ -107,7 +108,11 @@ public class ConfigureBackupSceneController {
     @FXML
     private Label selectTagsInfoLabel;
     @FXML
+    private BorderPane searchAndFilterBorderPane;
+    @FXML
     private TextField backupSearchTextField;
+    @FXML
+    private ComboBox<Tag> filterTagComboBox;
 
     @FXML
     public void initialize() {
@@ -122,7 +127,9 @@ public class ConfigureBackupSceneController {
 
         setupTable();
         Platform.runLater(this::setupTableColumnProperties);
+        setupSearchAndFilterBorderPane();
         setupSearchBar();
+        setupFilterTagCombobox();
 
         RotateTransition loadingAnimation = createLoadingAnimation();
         RunBackupThreadSingleton.setAnimation(loadingAnimation, this.backupRunningIndicatorLabel);
@@ -130,11 +137,36 @@ public class ConfigureBackupSceneController {
         RunBackupThreadSingleton.setConfigureBackupSceneController(this);
     }
 
+    private void setupFilterTagCombobox() {
+        this.filterTagComboBox.setCellFactory(getTagComboboxCallback());
+        this.filterTagComboBox.setButtonCell(getTagComboboxListCell());
+        this.filterTagComboBox.setItems(this.tagsInComboboxObservableList);
+
+        this.filterTagComboBox.setOnAction(event -> {
+            refillTable(false);
+            Iterator<TableEntry> tabelIterator = this.tableView.getItems().iterator();
+            String selectedTag = this.filterTagComboBox.getValue().name;
+
+            while (tabelIterator.hasNext()) {
+                var currentElement = tabelIterator.next();
+                if (!selectedTag.equals(currentElement.getTagName())) {
+                    tabelIterator.remove();
+                }
+            }
+        });
+
+    }
+
+    private void setupSearchAndFilterBorderPane() {
+        this.searchAndFilterBorderPane.prefWidthProperty().bind(
+                this.tableView.widthProperty()
+                        .subtract(10) // For the HBox margin to the left.
+        );
+    }
+
     private void setupSearchBar() {
         this.backupSearchTextField.prefWidthProperty().bind(
-                this.tableView.widthProperty().multiply(0.7)
-                        .subtract(10) // Margin from the HBox
-        );
+                this.searchAndFilterBorderPane.widthProperty().multiply(0.6));
 
         this.backupSearchTextField.setPromptText("Search backup source");
         this.backupSearchTextField.textProperty().addListener((obs, oldVal, newVal) -> {
@@ -245,7 +277,7 @@ public class ConfigureBackupSceneController {
         refillTable(true);
     }
 
-    public void refillTable(boolean changedValues) {
+    public void refillTable(boolean changedValues, String tagName) {
         this.numberOfTableElements = 0;
         List<Integer> checkedElements = null;
 
@@ -281,6 +313,10 @@ public class ConfigureBackupSceneController {
                 this.tableView.getItems().get(index).setTag(tag.name, tag.color);
             }
         }
+    }
+
+    public void refillTable(boolean changedValue) {
+        refillTable(changedValue, null);
     }
 
     private SrcDestPair adjustSrcDestPairToPathMode(SrcDestPair pathPair) {
