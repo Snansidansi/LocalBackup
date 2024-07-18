@@ -669,10 +669,20 @@ public class BackupService {
         this.maxRetries = maxRetries;
     }
 
+    /**
+     * Enables the setting to delete a backup with a missing source.
+     *
+     * @param enable Boolean value if the setting should be enabled.
+     */
     public void setDeleteBackupsWithMissingSource(boolean enable) {
         this.deleteBackupsWithMissingSource = enable;
     }
 
+    /**
+     * Deletes a directory recursively.
+     * @param path Path of the directory that should be deleted.
+     * @return Null if the given path is no directory. Otherwise, a boolean value if the deletion was totally successful.
+     */
     public boolean deleteDir(Path path) {
         File[] subFiles = path.toFile().listFiles();
         if (subFiles == null) {
@@ -700,6 +710,11 @@ public class BackupService {
         }
     }
 
+    /**
+     * Gets the backup identifier from a backup list index.
+     * @param index Index of the backup.
+     * @return The corresponding identifier to the backup index.
+     */
     public int getBackupIdentifier(int index) {
         if (index < 0 || index > this.identifierList.size() - 1) {
             return -1;
@@ -707,6 +722,11 @@ public class BackupService {
         return this.identifierList.get(index);
     }
 
+    /**
+     * Gets the backup list index from an identifier.
+     * @param identifier The identifier of a backup.
+     * @return The index of the backup list entry or {@code -1} if the identifier is unknown.
+     */
     public int getIndexFromIdentifier(int identifier) {
         Integer identifierInteger = identifier;
         return this.identifierList.indexOf(identifierInteger);
