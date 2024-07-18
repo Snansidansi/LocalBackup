@@ -280,7 +280,7 @@ public class ConfigureBackupSceneController {
         refillTable(true);
     }
 
-    public void refillTable(boolean changedValues, String tagName) {
+    public void refillTable(boolean changedValues) {
         this.numberOfTableElements = 0;
         List<Integer> checkedElements = null;
 
@@ -316,10 +316,6 @@ public class ConfigureBackupSceneController {
                 this.tableView.getItems().get(index).setTag(tag.name, tag.color);
             }
         }
-    }
-
-    public void refillTable(boolean changedValue) {
-        refillTable(changedValue, null);
     }
 
     private SrcDestPair adjustSrcDestPairToPathMode(SrcDestPair pathPair) {
