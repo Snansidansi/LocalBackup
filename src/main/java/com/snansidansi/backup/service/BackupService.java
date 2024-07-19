@@ -101,6 +101,10 @@ public class BackupService {
             }
 
             Path destPath = Path.of(this.allBackups.get(i).destPath()).resolve(srcPath.getFileName());
+            if (Files.notExists(destPath.getRoot())) {
+                missingRootIndices.add(i);
+                continue;
+            }
 
             if (Files.isDirectory(srcPath)) {
                 backupDirLogged(srcPath, destPath);
@@ -194,6 +198,9 @@ public class BackupService {
                 }
 
                 Path destPath = Path.of(pathPair.destPath());
+                if (Files.notExists(destPath.getRoot())) {
+                    continue;
+                }
 
                 if (Files.isDirectory(srcPath)) {
                     backupDirLogged(srcPath, destPath);
