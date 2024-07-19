@@ -50,7 +50,7 @@ public class SettingsController {
 
         Platform.runLater(() -> {
             if (stageWidth == 0) {
-                stageWidth = this.settingsVBox.getWidth() + 200;
+                stageWidth = this.settingsVBox.getWidth() + 250;
             }
 
             Stage stage = (Stage) this.mainContainer.getScene().getWindow();
