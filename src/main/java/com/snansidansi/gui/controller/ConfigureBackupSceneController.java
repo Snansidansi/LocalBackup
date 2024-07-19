@@ -114,6 +114,14 @@ public class ConfigureBackupSceneController {
     private TextField backupSearchTextField;
     @FXML
     private ComboBox<Tag> filterTagComboBox;
+    @FXML
+    private Button deleteTagButton;
+    @FXML
+    private Button applyTagChangesButton;
+    @FXML
+    private HBox deleteTagButtonWrapperHBox;
+    @FXML
+    private HBox applyTagChangesButtonWrapperHBox;
 
     @FXML
     public void initialize() {
@@ -650,18 +658,22 @@ public class ConfigureBackupSceneController {
             return false;
         }
 
-        this.applyTagButton.setText("Finish");
         this.applyTagMode = true;
-        this.deleteBackupButton.setDisable(true);
+        this.applyTagButton.setText("Finish");
         this.removeTableCol.setText("Apply tag");
+        this.deleteBackupButton.setDisable(true);
+        this.deleteTagButton.setDisable(true);
+        this.applyTagChangesButton.setDisable(true);
         this.applyTagComboBox.setDisable(true);
         this.selectTagsInfoLabel.setVisible(true);
 
-        Tooltip deletedDeleteButtonTooltip = new Tooltip("Cannot delete backups while deleting tags.");
-        deletedDeleteButtonTooltip.setFont(new Font(12));
-        deletedDeleteButtonTooltip.setShowDelay(Duration.ZERO);
-        deletedDeleteButtonTooltip.setHideDelay(Duration.ZERO);
-        Tooltip.install(this.deleteBackupButtonWrapperHBox, deletedDeleteButtonTooltip);
+        Tooltip disabledElementDuringTagApplyTooltip = new Tooltip("This operation is unavailable while applying tags.");
+        disabledElementDuringTagApplyTooltip.setFont(new Font(12));
+        disabledElementDuringTagApplyTooltip.setShowDelay(Duration.ZERO);
+        disabledElementDuringTagApplyTooltip.setHideDelay(Duration.ZERO);
+        Tooltip.install(this.deleteBackupButtonWrapperHBox, disabledElementDuringTagApplyTooltip);
+        Tooltip.install(this.deleteTagButtonWrapperHBox, disabledElementDuringTagApplyTooltip);
+        Tooltip.install(this.applyTagChangesButtonWrapperHBox, disabledElementDuringTagApplyTooltip);
 
 
         for (TableEntry entry : this.tableView.getItems()) {
@@ -702,14 +714,18 @@ public class ConfigureBackupSceneController {
             TagManagerInstance.tagManager.revertChanges();
         }
 
-        this.deleteBackupButton.setDisable(false);
-        Tooltip.uninstall(this.deleteBackupButtonWrapperHBox, null);
-
-        this.applyTagButton.setText("Apply tag");
         this.applyTagMode = false;
+        this.applyTagButton.setText("Apply tag");
         this.removeTableCol.setText("Remove");
         this.applyTagComboBox.setDisable(false);
+        this.deleteBackupButton.setDisable(false);
+        this.deleteTagButton.setDisable(false);
+        this.applyTagChangesButton.setDisable(false);
         this.selectTagsInfoLabel.setVisible(false);
+
+        Tooltip.uninstall(this.deleteBackupButtonWrapperHBox, null);
+        Tooltip.uninstall(this.deleteTagButtonWrapperHBox, null);
+        Tooltip.uninstall(this.applyTagChangesButtonWrapperHBox, null);
     }
 
     public void clearTagFilter() {

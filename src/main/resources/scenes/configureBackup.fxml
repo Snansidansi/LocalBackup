@@ -450,22 +450,29 @@
                        <HBox spacing="5.0">
                            <children>
                                <ComboBox fx:id="editTagComboBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="180.0" promptText="Select tag" />
-                               <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteTag" prefHeight="25.0" prefWidth="28.0" text="Delete tag">
-                                   <graphic>
-                                       <ImageView fitHeight="25.0" fitWidth="25.0">
-                                           <image>
-                                               <Image url="@../icons/delete_tag.png" />
-                                           </image>
-                                       </ImageView>
-                                   </graphic>
-                                   <tooltip>
-                                       <Tooltip text="Delete the selected tag.">
-                                           <font>
-                                               <Font size="14.0" />
-                                           </font>
-                                       </Tooltip>
-                                   </tooltip>
-                               </Button>
+                               <HBox fx:id="deleteTagButtonWrapperHBox">
+                                   <children>
+                                       <Button fx:id="deleteTagButton" contentDisplay="GRAPHIC_ONLY"
+                                               maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                                               minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteTag"
+                                               prefHeight="25.0" prefWidth="28.0" text="Delete tag">
+                                           <graphic>
+                                               <ImageView fitHeight="25.0" fitWidth="25.0">
+                                                   <image>
+                                                       <Image url="@../icons/delete_tag.png"/>
+                                                   </image>
+                                               </ImageView>
+                                           </graphic>
+                                           <tooltip>
+                                               <Tooltip text="Delete the selected tag.">
+                                                   <font>
+                                                       <Font size="14.0"/>
+                                                   </font>
+                                               </Tooltip>
+                                           </tooltip>
+                                       </Button>
+                                   </children>
+                               </HBox>
                            </children>
                            <VBox.margin>
                                <Insets left="10.0" />
@@ -478,15 +485,23 @@
                            <children>
                                <TextField fx:id="editTagTextField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="180.0" />
                                <ColorPicker fx:id="editTagColorPicker" prefHeight="25.0" prefWidth="30.0" />
-                               <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#editTag" prefHeight="25.0" prefWidth="25.0" text="Apply changes">
-                                   <graphic>
-                                       <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
-                                           <image>
-                                               <Image url="@../icons/change_tag.png" />
-                                           </image>
-                                       </ImageView>
-                                   </graphic>
-                               </Button>
+                               <HBox fx:id="applyTagChangesButtonWrapperHBox">
+                                   <children>
+                                       <Button fx:id="applyTagChangesButton" contentDisplay="GRAPHIC_ONLY"
+                                               maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                                               minWidth="-Infinity" mnemonicParsing="false" onAction="#editTag"
+                                               prefHeight="25.0" prefWidth="25.0" text="Apply changes">
+                                           <graphic>
+                                               <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true"
+                                                          preserveRatio="true">
+                                                   <image>
+                                                       <Image url="@../icons/change_tag.png"/>
+                                                   </image>
+                                               </ImageView>
+                                           </graphic>
+                                       </Button>
+                           </children>
+                               </HBox>
                            </children>
                        </HBox>
                        <Label text="Apply tags:" underline="true">
