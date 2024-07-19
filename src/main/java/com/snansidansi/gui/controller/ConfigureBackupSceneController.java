@@ -117,6 +117,7 @@ public class ConfigureBackupSceneController {
     @FXML
     public void initialize() {
         setupTagControls();
+        bindMiddleLineToWindowWidth();
 
         this.deleteConfirmLabel.setVisible(false);
         this.invalidSrcPathLabel.setVisible(false);
@@ -141,6 +142,7 @@ public class ConfigureBackupSceneController {
         this.filterTagComboBox.setCellFactory(getTagComboboxCallback());
         this.filterTagComboBox.setButtonCell(getTagComboboxListCell());
         this.filterTagComboBox.setItems(this.tagsInComboboxObservableList);
+
 
         this.filterTagComboBox.setOnAction(event -> {
             refillTable(false);
@@ -585,13 +587,19 @@ public class ConfigureBackupSceneController {
         }
 
         Tag oldTag = TagManagerInstance.tagManager.getTag(selectedTag.name);
+        if (oldTag == null) {
+            return;
+        }
+
         TagManagerInstance.tagManager.deleteTag(selectedTag.name);
         if (!TagManagerInstance.tagManager.saveChangesToFile()) {
             TagManagerInstance.tagManager.addTag(oldTag);
             return;
         }
-        this.tagsInComboboxObservableList.remove(oldTag);
+        this.editTagComboBox.setValue(null);
         this.editTagTextField.setText("");
+
+        this.tagsInComboboxObservableList.remove(oldTag);
     }
 
     public void editTag() {
@@ -652,6 +660,7 @@ public class ConfigureBackupSceneController {
         deletedDeleteButtonTooltip.setHideDelay(Duration.ZERO);
         Tooltip.install(this.deleteBackupButtonWrapperHBox, deletedDeleteButtonTooltip);
 
+
         for (TableEntry entry : this.tableView.getItems()) {
             entry.getCheckBox().setSelected(false);
         }
@@ -669,7 +678,7 @@ public class ConfigureBackupSceneController {
         List<Integer> newContent = new ArrayList<>();
         for (TableEntry entry : this.tableView.getItems()) {
             if (!entry.getCheckBox().isSelected()) {
-                if (entry.getTagName().equals(selectedTag.name)) {
+                if (selectedTag.name.equals(entry.getTagName())) {
                     entry.clearTag();
                 }
                 continue;

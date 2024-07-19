@@ -31,7 +31,7 @@ public class Tag {
 
     /**
      * Check if a {@link Object} is equal to this {@code Tag} object. If the given {@link Object} is a {@code Tag} then
-     * name, color and content fields of the {@code Tag} instance get compared.
+     * the name and color fields of the {@code Tag} instances get compared.
      *
      * @param object Any object.
      * @return Boolean value if both {@code Objects} are equal.
@@ -46,8 +46,7 @@ public class Tag {
         }
         if (object instanceof Tag tagObject) {
             return tagObject.name.equals(this.name) &&
-                    tagObject.color.equals(this.color) &&
-                    tagObject.content.equals(this.content);
+                    tagObject.color.equals(this.color);
         }
         return false;
     }
