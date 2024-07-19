@@ -145,6 +145,11 @@ public class ConfigureBackupSceneController {
         RunBackupThreadSingleton.setAnimation(loadingAnimation, this.backupRunningIndicatorLabel);
         RunBackupThreadSingleton.setFinishedLabel(this.backupFinishedLabel);
         RunBackupThreadSingleton.setConfigureBackupSceneController(this);
+
+        if (RunBackupThreadSingleton.isAlive()) {
+            this.backupRunningIndicatorLabel.setVisible(true);
+            loadingAnimation.playFromStart();
+        }
     }
 
     private void setupFilterTagCombobox() {
@@ -363,7 +368,6 @@ public class ConfigureBackupSceneController {
         loadingAnimation.setToAngle(360);
         loadingAnimation.setDuration(Duration.seconds(1.25));
         loadingAnimation.setInterpolator(Interpolator.LINEAR);
-
         return loadingAnimation;
     }
 
