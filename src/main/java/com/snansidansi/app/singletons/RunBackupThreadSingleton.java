@@ -4,6 +4,7 @@ import com.snansidansi.app.instances.BackupServiceInstance;
 import com.snansidansi.gui.controller.ConfigureBackupSceneController;
 import javafx.animation.Animation;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
 public class RunBackupThreadSingleton {
@@ -12,6 +13,7 @@ public class RunBackupThreadSingleton {
     private static Node animatedNode = null;
     private static Label finishedLabel = null;
     private static ConfigureBackupSceneController configureBackupSceneController = null;
+    private static Button settingsMenuButton = null;
 
     private RunBackupThreadSingleton() {
     }
@@ -20,6 +22,9 @@ public class RunBackupThreadSingleton {
         public void run() {
             int originalBackupListSize = BackupServiceInstance.backupService.getAllBackups().size();
 
+            if (settingsMenuButton != null) {
+                settingsMenuButton.setDisable(true);
+            }
             if (animation != null && animatedNode != null) {
                 animatedNode.setVisible(true);
                 animation.playFromStart();
@@ -34,6 +39,9 @@ public class RunBackupThreadSingleton {
 
             if (finishedLabel != null) {
                 finishedLabel.setVisible(true);
+            }
+            if (settingsMenuButton != null) {
+                settingsMenuButton.setDisable(false);
             }
 
             if (originalBackupListSize != BackupServiceInstance.backupService.getAllBackups().size()) {
@@ -65,5 +73,9 @@ public class RunBackupThreadSingleton {
 
     public static void setConfigureBackupSceneController(ConfigureBackupSceneController controller) {
         configureBackupSceneController = controller;
+    }
+
+    public static void setSettingsMenuButton(Button button) {
+        settingsMenuButton = button;
     }
 }

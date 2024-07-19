@@ -276,7 +276,11 @@
                                 </Tooltip>
                             </tooltip>
                         </Button>
-                        <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#switchToSettingsScene" prefHeight="32.0" prefWidth="32.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" text="Settings">
+                        <Button fx:id="settingsMenuButton" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity"
+                                maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
+                                onAction="#switchToSettingsScene" prefHeight="32.0" prefWidth="32.0"
+                                style="-fx-background-color: transparent; -fx-border-color: transparent;"
+                                text="Settings">
                             <graphic>
                                 <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                                     <image>

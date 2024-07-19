@@ -122,6 +122,8 @@ public class ConfigureBackupSceneController {
     private HBox deleteTagButtonWrapperHBox;
     @FXML
     private HBox applyTagChangesButtonWrapperHBox;
+    @FXML
+    private Button settingsMenuButton;
 
     @FXML
     public void initialize() {
@@ -145,10 +147,12 @@ public class ConfigureBackupSceneController {
         RunBackupThreadSingleton.setAnimation(loadingAnimation, this.backupRunningIndicatorLabel);
         RunBackupThreadSingleton.setFinishedLabel(this.backupFinishedLabel);
         RunBackupThreadSingleton.setConfigureBackupSceneController(this);
+        RunBackupThreadSingleton.setSettingsMenuButton(this.settingsMenuButton);
 
         if (RunBackupThreadSingleton.isAlive()) {
             this.backupRunningIndicatorLabel.setVisible(true);
             loadingAnimation.playFromStart();
+            this.settingsMenuButton.setDisable(true);
         }
     }
 
