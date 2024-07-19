@@ -29,6 +29,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
@@ -202,6 +203,7 @@ public class ConfigureBackupSceneController {
                 return;
             }
             this.editTagTextField.setText(tag.name);
+            this.editTagColorPicker.setValue(Color.web(tag.color));
         });
         this.editTagComboBox.setCellFactory(getTagComboboxCallback());
         this.editTagComboBox.setButtonCell(getTagComboboxListCell());
@@ -598,7 +600,7 @@ public class ConfigureBackupSceneController {
         }
         this.editTagComboBox.setValue(null);
         this.editTagTextField.setText("");
-
+        this.editTagColorPicker.setValue(Color.WHITE);
         this.tagsInComboboxObservableList.remove(oldTag);
     }
 
@@ -629,6 +631,7 @@ public class ConfigureBackupSceneController {
         this.tagsInComboboxObservableList.add(TagManagerInstance.tagManager.getTag(newTagName));
         this.editTagTextField.setText("");
         this.editTagComboBox.setValue(null);
+        this.editTagColorPicker.setValue(Color.WHITE);
     }
 
     public void applyTag() {
