@@ -2,6 +2,7 @@ package com.snansidansi.gui.controller;
 
 import com.snansidansi.app.LocalBackupApp;
 import com.snansidansi.app.instances.SettingsManagerInstance;
+import com.snansidansi.gui.uielements.WindowBar;
 import com.snansidansi.gui.uielements.buttons.ImageButton;
 import com.snansidansi.gui.uielements.settingsrow.CheckBoxSettingsRow;
 import com.snansidansi.gui.uielements.settingsrow.SettingsRow;
@@ -37,14 +38,15 @@ public class SettingsController {
     private final int TOOLTIP_FONTSIZE = 14;
 
     @FXML
-    VBox mainContainer;
+    private VBox mainContainer;
     @FXML
-    ScrollPane settingsScrollPane;
-    @FXML
-    VBox settingsVBox;
+    private VBox settingsVBox;
 
     @FXML
     public void initialize() {
+        WindowBar windowBar = new WindowBar(this.mainContainer);
+        this.mainContainer.getChildren().addFirst(windowBar);
+
         createSettingsContent();
         displaySettingsRows();
 
@@ -55,7 +57,7 @@ public class SettingsController {
 
             Stage stage = (Stage) this.mainContainer.getScene().getWindow();
             SceneManager.changeStageSize(stage, stageWidth, 520);
-            SceneManager.changeStageSizeBounds(stage, stageWidth, 0, stageWidth, -1);
+            SceneManager.changeStageSizeBounds(stage, stageWidth, 200, stageWidth, -1);
         });
     }
 

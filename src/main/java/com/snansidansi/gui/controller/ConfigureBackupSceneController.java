@@ -10,6 +10,7 @@ import com.snansidansi.backup.exceptions.SourceDoesNotExistException;
 import com.snansidansi.backup.exceptions.StringsAreEqualException;
 import com.snansidansi.backup.service.BackupService;
 import com.snansidansi.backup.util.SrcDestPair;
+import com.snansidansi.gui.uielements.WindowBar;
 import com.snansidansi.gui.util.SceneManager;
 import com.snansidansi.gui.util.TableEntry;
 import com.snansidansi.gui.util.Utility;
@@ -55,7 +56,7 @@ public class ConfigureBackupSceneController {
     private boolean applyTagMode = false;
 
     @FXML
-    private BorderPane mainContainer;
+    private VBox mainContainer;
     @FXML
     private Line middleLine;
     @FXML
@@ -127,6 +128,9 @@ public class ConfigureBackupSceneController {
 
     @FXML
     public void initialize() {
+        WindowBar windowBar = new WindowBar(this.mainContainer);
+        this.mainContainer.getChildren().addFirst(windowBar);
+
         setupTagControls();
         bindMiddleLineToWindowWidth();
 

@@ -17,7 +17,7 @@ public class SceneManager {
     public static void setConfigureBackupsScene(Stage stage) throws IOException {
         changeScene(stage, "/scenes/configureBackup.fxml");
         loadSafedStageSize(stage);
-        changeStageSizeBounds(stage, 600, 520, -1, -1);
+        changeStageSizeBounds(stage, 600, 550, -1, -1);
     }
 
     public static void setAboutScene(Stage stage) throws IOException {
@@ -29,7 +29,7 @@ public class SceneManager {
 
     public static void setLogScene(Stage stage) throws IOException {
         changeScene(stage, "/scenes/log.fxml");
-        changeStageSizeBounds(stage, 370, 160, -1, -1);
+        changeStageSizeBounds(stage, 600, 160, -1, -1);
     }
 
     public static void setSettingsScene(Stage stage) throws IOException {

@@ -1,11 +1,11 @@
 package com.snansidansi.gui.controller;
 
+import com.snansidansi.gui.uielements.WindowBar;
 import com.snansidansi.gui.uielements.buttons.LogFileButton;
 import com.snansidansi.gui.util.SceneManager;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -27,24 +27,27 @@ public class LogController {
     String lastSelectedExportPath = "";
 
     @FXML
-    BorderPane mainBorderPane;
+    private VBox mainContainer;
     @FXML
-    ToggleButton backupLogTButton;
+    private ToggleButton backupLogTButton;
     @FXML
-    ToggleButton errorLogTButton;
+    private ToggleButton errorLogTButton;
     @FXML
-    Spinner<Integer> textSizeSpinner;
+    private Spinner<Integer> textSizeSpinner;
     @FXML
-    VBox logFileListVBox;
+    private VBox logFileListVBox;
     @FXML
-    TextFlow logFileContentTextFlow;
+    private TextFlow logFileContentTextFlow;
     @FXML
-    Label noLogFilesLabel;
+    private Label noLogFilesLabel;
     @FXML
-    Label confirmDeleteLabel;
+    private Label confirmDeleteLabel;
 
     @FXML
     public void initialize() {
+        WindowBar windowBar = new WindowBar(this.mainContainer);
+        this.mainContainer.getChildren().addFirst(windowBar);
+
         ToggleGroup logTypeTGroup = new ToggleGroup();
         this.errorLogTButton.setToggleGroup(logTypeTGroup);
         this.backupLogTButton.setToggleGroup(logTypeTGroup);
@@ -83,7 +86,7 @@ public class LogController {
     }
 
     public void backToBackupConfigScene() throws IOException {
-        Stage stage = (Stage) this.mainBorderPane.getScene().getWindow();
+        Stage stage = (Stage) this.mainContainer.getScene().getWindow();
         SceneManager.setConfigureBackupsScene(stage);
     }
 

@@ -1,72 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<VBox maxHeight="-Infinity" maxWidth="436.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="159.0"
-      prefWidth="425.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.snansidansi.gui.controller.AboutSceneController">
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="mainContainer" maxHeight="-Infinity" maxWidth="436.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="159.0" prefWidth="425.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.snansidansi.gui.controller.AboutSceneController">
     <children>
         <Label prefHeight="20.0" prefWidth="123.0" text="About the program" underline="true">
             <font>
-                <Font size="14.0"/>
+                <Font size="14.0" />
             </font>
             <VBox.margin>
-                <Insets bottom="10.0" left="20.0" top="10.0"/>
+                <Insets bottom="10.0" left="20.0" top="10.0" />
             </VBox.margin>
         </Label>
-        <Label prefHeight="25.0" prefWidth="378.0" text="This is a simple program to automate local backups."
-               wrapText="true">
+        <Label prefHeight="25.0" prefWidth="378.0" text="This is a simple program to automate local backups." wrapText="true">
             <font>
-                <Font size="16.0"/>
+                <Font size="16.0" />
             </font>
             <VBox.margin>
-                <Insets bottom="10.0" left="40.0"/>
+                <Insets bottom="10.0" left="40.0" />
             </VBox.margin>
         </Label>
         <HBox>
             <VBox.margin>
-                <Insets left="40.0"/>
+                <Insets left="40.0" />
             </VBox.margin>
             <children>
                 <Label minWidth="-Infinity" prefWidth="70.0" text="Github:">
                     <font>
-                        <Font size="16.0"/>
+                        <Font size="16.0" />
                     </font>
                 </Label>
-                <Label fx:id="githubLinkLabel" onMouseClicked="#copyGithubLinkToClipboard" prefHeight="20.0"
-                       prefWidth="323.0" text="github.com/Snansidansi/LocalBackup" textFill="#6176ff">
+                <Label fx:id="githubLinkLabel" onMouseClicked="#copyGithubLinkToClipboard" prefHeight="20.0" prefWidth="323.0" text="github.com/Snansidansi/LocalBackup" textFill="#6176ff">
                     <font>
-                        <Font size="16.0"/>
+                        <Font size="16.0" />
                     </font>
                 </Label>
             </children>
         </HBox>
         <HBox>
             <VBox.margin>
-                <Insets left="40.0"/>
+                <Insets left="40.0" />
             </VBox.margin>
             <children>
                 <Label minWidth="-Infinity" prefWidth="70.0" text="Icons by:">
                     <font>
-                        <Font size="16.0"/>
+                        <Font size="16.0" />
                     </font>
                 </Label>
-                <Label fx:id="icons8LinkLabel" onMouseClicked="#copyIcons8LinkToClipboard" prefHeight="20.0"
-                       prefWidth="189.0" text="icons8.com" textFill="#6176ff">
+                <Label fx:id="icons8LinkLabel" onMouseClicked="#copyIcons8LinkToClipboard" prefHeight="20.0" prefWidth="189.0" text="icons8.com" textFill="#6176ff">
                     <font>
-                        <Font size="16.0"/>
+                        <Font size="16.0" />
                     </font>
                 </Label>
             </children>
         </HBox>
         <Label text="(click links to copy)">
             <VBox.margin>
-                <Insets left="40.0" top="5.0"/>
+                <Insets left="40.0" top="5.0" />
             </VBox.margin>
             <font>
-                <Font name="System Italic" size="13.0"/>
+                <Font name="System Italic" size="13.0" />
             </font>
         </Label>
     </children>
