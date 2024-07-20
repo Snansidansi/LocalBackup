@@ -35,6 +35,7 @@ public class WindowBar extends BorderPane {
     private final HBox buttonHBox = new HBox();
     private final HBox iconAndNameHBox = new HBox();
     private final Pane stageMainContainer;
+    private Button toggleFullScreenButton;
     private Stage currentStage;
     private Scene currentScene;
 
@@ -115,16 +116,8 @@ public class WindowBar extends BorderPane {
         return mouseEvent.getSceneX() > this.stageMainContainer.getWidth() - EDGE_DETECTION_THRESHOLD;
     }
 
-    private boolean onLeftEdge(MouseEvent mouseEvent) {
-        return mouseEvent.getSceneX() < EDGE_DETECTION_THRESHOLD;
-    }
-
     private boolean onBottomEdge(MouseEvent mouseEvent) {
         return mouseEvent.getSceneY() > this.stageMainContainer.getHeight() - EDGE_DETECTION_THRESHOLD;
-    }
-
-    private boolean onTopEdge(MouseEvent mouseEvent) {
-        return mouseEvent.getSceneY() < EDGE_DETECTION_THRESHOLD;
     }
 
     private void setupStageDragging() {
@@ -158,6 +151,7 @@ public class WindowBar extends BorderPane {
             this.currentStage.setMaximized(true);
         });
 
+        this.toggleFullScreenButton = toggleFullScreenButton;
         this.buttonHBox.getChildren().add(toggleFullScreenButton);
     }
 
@@ -210,5 +204,10 @@ public class WindowBar extends BorderPane {
 
     public void setStageResizable(boolean resizable) {
         this.resizable = resizable;
+        if (resizable) {
+            this.buttonHBox.getChildren().add(1, this.toggleFullScreenButton);
+            return;
+        }
+        this.buttonHBox.getChildren().remove(this.toggleFullScreenButton);
     }
 }
