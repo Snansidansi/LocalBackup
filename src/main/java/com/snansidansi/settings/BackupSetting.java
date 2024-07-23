@@ -14,7 +14,7 @@ public enum BackupSetting implements Settings {
             .resolve("Microsoft/Windows/Start Menu/Programs/Startup").toString(), SettingType.STRING),
     ADDED_TO_AUTOSTART("added to autostart", "false", SettingType.BOOLEAN),
     DELETE_BACKUP_FILES_WITH_MISSING_SRC("delete missing files", "true", SettingType.BOOLEAN),
-    ENABLE_TAGS("enable tags", "true", SettingType.BOOLEAN),
+    ENABLE_TAGS("enable tags", "false", SettingType.BOOLEAN),
     SHOW_TAG_IMAGE("show tag image", "true", SettingType.BOOLEAN),
     SHOW_TAG_NAME("show tag name", "true", SettingType.BOOLEAN);
 
