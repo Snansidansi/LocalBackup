@@ -178,6 +178,7 @@ public class SettingsController {
                 To find the autostart dir press "windows key + r ", write "shell:startup" and press enter.
                 Then copy the path to the directory that the explorer opened.""", this.TOOLTIP_FONTSIZE);
 
+        this.displayedSettings.add(autostartPathRow);
     }
 
     private CheckBoxSettingsRow addBackupExecutionToAutoStartRow() {
