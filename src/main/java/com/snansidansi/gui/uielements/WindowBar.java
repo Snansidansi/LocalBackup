@@ -47,8 +47,8 @@ public class WindowBar extends BorderPane {
 
     public WindowBar(Pane stageMainContainer) {
         super();
-        super.setLeft(this.iconAndNameHBox);
-        super.setRight(this.buttonHBox);
+        this.setLeft(this.iconAndNameHBox);
+        this.setRight(this.buttonHBox);
 
         this.stageMainContainer = stageMainContainer;
         Platform.runLater(() -> {
@@ -62,6 +62,8 @@ public class WindowBar extends BorderPane {
         setupMinimizeButton();
         setupToggleFullScreenButton();
         setupCloseButton();
+
+        this.getStyleClass().add("window-bar");
     }
 
     private void setupStageResizing() {
@@ -153,6 +155,7 @@ public class WindowBar extends BorderPane {
 
         this.toggleFullScreenButton = toggleFullScreenButton;
         this.buttonHBox.getChildren().add(toggleFullScreenButton);
+        toggleFullScreenButton.getStyleClass().add("window-bar-button");
     }
 
     private void setupMinimizeButton() {
@@ -170,6 +173,7 @@ public class WindowBar extends BorderPane {
         });
 
         this.buttonHBox.getChildren().add(minimizeButton);
+        minimizeButton.getStyleClass().add("window-bar-button");
     }
 
     private void setupCloseButton() {
@@ -187,6 +191,7 @@ public class WindowBar extends BorderPane {
         });
 
         this.buttonHBox.getChildren().add(closeButton);
+        closeButton.getStyleClass().addAll("window-bar-close-button", "window-bar-button");
     }
 
     private void setupIconAndNameHBox() {

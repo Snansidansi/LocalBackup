@@ -33,6 +33,7 @@ public class LogFileButton extends HBox {
         Label doubleUpperButtonLabel = createLabel(text.substring(0, indexOfUnderscore), fontSize);
         Label doubleDownButtonLabel = createLabel(text.substring(indexOfUnderscore + 1), fontSize);
         this.getChildren().add(new VBox(doubleUpperButtonLabel, doubleDownButtonLabel));
+        this.getStyleClass().add("log-file-button");
     }
 
     private Label createLabel(String text, int fontSize) {
