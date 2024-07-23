@@ -28,7 +28,7 @@ public class TextFieldSettingsRow extends SettingsRow {
 
     @Override
     public void restoreStandardValue() {
-        this.textField.setText(initValue);
+        this.textField.setText(this.initValue);
     }
 
     @Override

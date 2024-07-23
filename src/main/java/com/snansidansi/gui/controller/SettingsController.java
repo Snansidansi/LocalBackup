@@ -4,10 +4,7 @@ import com.snansidansi.app.LocalBackupApp;
 import com.snansidansi.app.instances.SettingsManagerInstance;
 import com.snansidansi.gui.uielements.WindowBar;
 import com.snansidansi.gui.uielements.buttons.ImageButton;
-import com.snansidansi.gui.uielements.settingsrow.CheckBoxSettingsRow;
-import com.snansidansi.gui.uielements.settingsrow.SettingsRow;
-import com.snansidansi.gui.uielements.settingsrow.SpinnerSettingsRow;
-import com.snansidansi.gui.uielements.settingsrow.TextFieldSettingsRow;
+import com.snansidansi.gui.uielements.settingsrow.*;
 import com.snansidansi.gui.util.SceneManager;
 import com.snansidansi.settings.BackupSetting;
 import javafx.application.Platform;
@@ -88,6 +85,19 @@ public class SettingsController {
         addEnableTagsRow();
         addShowTagImageRow();
         addShowTagNameRow();
+
+        addSettingsHeader("Appearance:", SETTINGS_NAME_FONTSIZE, true, true, HEADER_TOP_PADDING, HEADER_BOTTOM_PADDING);
+        addDarkModeRow();
+    }
+
+    private void addDarkModeRow() {
+        ComboBoxSettingsRow darkModeRow = new ComboBoxSettingsRow(
+                BackupSetting.DARK_MODE,
+                "Enable dark mode:",
+                this.SETTINGS_NAME_FONTSIZE
+        );
+
+        this.displayedSettings.add(darkModeRow);
     }
 
     private void addShowTagNameRow() {
