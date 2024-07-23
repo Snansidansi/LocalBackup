@@ -12,7 +12,7 @@ public class LocalBackupGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        primaryStage.initStyle(StageStyle.UNDECORATED);
+        primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setTitle("Local Backup");
 
         Image appIcon = new Image("/icons/appIcon.png");

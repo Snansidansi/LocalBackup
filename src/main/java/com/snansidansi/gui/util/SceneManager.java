@@ -3,6 +3,7 @@ package com.snansidansi.gui.util;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -57,6 +58,11 @@ public class SceneManager {
         } else {
             currentScene.setRoot(root);
         }
+
+        root.getScene().setFill(Color.TRANSPARENT);
+        root.getScene().getStylesheets().add(
+                (SceneManager.class.getResource("/css/lightMode.css")).toExternalForm());
+
         return root;
     }
 

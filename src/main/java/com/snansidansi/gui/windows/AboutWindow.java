@@ -10,7 +10,7 @@ import java.io.IOException;
 public class AboutWindow {
     public static void showWindow() throws IOException {
         Stage aboutStage = new Stage();
-        aboutStage.initStyle(StageStyle.UNDECORATED);
+        aboutStage.initStyle(StageStyle.TRANSPARENT);
 
         aboutStage.setTitle("About the program");
         aboutStage.setAlwaysOnTop(true);
