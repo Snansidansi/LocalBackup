@@ -19,9 +19,9 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="mainContainer" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.snansidansi.gui.controller.ConfigureBackupSceneController">
+<VBox id="stage" fx:id="mainContainer" stylesheets="@../css/lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.snansidansi.gui.controller.ConfigureBackupSceneController">
    <children>
-      <BorderPane VBox.vgrow="ALWAYS">
+      <BorderPane id="scene-container" stylesheets="@../css/lightMode.css" VBox.vgrow="ALWAYS">
           <center>
               <TableView fx:id="tableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="246.0" prefWidth="749.0" BorderPane.alignment="CENTER">
                   <columns>
@@ -74,7 +74,7 @@
                               </HBox>
                           </left>
                           <right>
-                              <CheckBox fx:id="showFullPathsCheckBox" mnemonicParsing="false" onAction="#toggleFullPath" prefHeight="20.0" prefWidth="123.0" selected="true" text="Show full paths" BorderPane.alignment="CENTER">
+                              <CheckBox fx:id="showFullPathsCheckBox" mnemonicParsing="false" onAction="#toggleFullPath" prefHeight="23.0" prefWidth="131.0" selected="true" text="Show full paths" BorderPane.alignment="CENTER">
                                   <font>
                                       <Font size="14.0" />
                                   </font>
@@ -93,7 +93,7 @@
                       </BorderPane>
                       <HBox prefHeight="40.0" prefWidth="501.0" spacing="24.0" VBox.vgrow="NEVER">
                           <VBox.margin>
-                              <Insets bottom="5.0" left="20.0" top="10.0" />
+                              <Insets left="20.0" top="10.0" />
                           </VBox.margin>
                           <children>
                               <Label prefHeight="25.0" prefWidth="113.0" text="Add new backup:" underline="true">
@@ -219,7 +219,7 @@
                                       </Button>
                                       <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addBackup" prefHeight="32.0" prefWidth="32.0">
                                           <graphic>
-                                              <ImageView fitHeight="32.0" fitWidth="32.0">
+                                              <ImageView fitHeight="25.0" fitWidth="25.0">
                                                   <image>
                                                       <Image url="@../icons/plus.png" />
                                                   </image>
@@ -260,7 +260,7 @@
                   <left>
                       <HBox alignment="CENTER_LEFT" spacing="20.0" BorderPane.alignment="CENTER">
                           <children>
-                              <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#runBackup" prefHeight="32.0" prefWidth="32.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" text="Run backup">
+                              <Button id="menu-button" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#runBackup" prefHeight="32.0" prefWidth="32.0" stylesheets="@../css/lightMode.css" text="Run backup">
                                   <graphic>
                                       <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                                           <image>
@@ -276,7 +276,7 @@
                                       </Tooltip>
                                   </tooltip>
                               </Button>
-                              <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#switchToLogScene" prefHeight="32.0" prefWidth="32.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" text="Logs">
+                              <Button id="menu-button" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#switchToLogScene" prefHeight="32.0" prefWidth="32.0" stylesheets="@../css/lightMode.css" text="Logs">
                                   <graphic>
                                       <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                                           <image>
@@ -292,7 +292,7 @@
                                       </Tooltip>
                                   </tooltip>
                               </Button>
-                              <Button fx:id="settingsMenuButton" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#switchToSettingsScene" prefHeight="32.0" prefWidth="32.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" text="Settings">
+                              <Button id="menu-button" fx:id="settingsMenuButton" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#switchToSettingsScene" prefHeight="32.0" prefWidth="32.0" stylesheets="@../css/lightMode.css" text="Settings">
                                   <graphic>
                                       <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                                           <image>
@@ -308,7 +308,7 @@
                                       </Tooltip>
                                   </tooltip>
                               </Button>
-                              <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showAboutMessageBox" prefHeight="32.0" prefWidth="32.0" style="-fx-background-color: transparent; -fx-border-color: transparent;" text="Info">
+                              <Button id="menu-button" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showAboutMessageBox" prefHeight="32.0" prefWidth="32.0" stylesheets="@../css/lightMode.css" text="Info">
                                   <graphic>
                                       <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                                           <image>
@@ -374,9 +374,9 @@
                                           </HBox.margin>
                                       </Label>
                                       <ComboBox fx:id="filterTagComboBox" prefHeight="25.0" prefWidth="174.0" promptText="Select Tag" />
-                                      <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#clearTagFilter" prefHeight="25.0" prefWidth="25.0" style="-fx-border-color: transparent; -fx-background-color: transparent;" text="Clear tag filter">
+                                      <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#clearTagFilter" prefHeight="25.0" prefWidth="25.0" text="Clear tag filter">
                                           <graphic>
-                                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                              <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                                   <image>
                                                       <Image url="@../icons/close.png" />
                                                   </image>
@@ -406,7 +406,7 @@
                      <Insets />
                  </BorderPane.margin>
                  <children>
-                     <VBox fx:id="tagsVBox" prefHeight="246.0" prefWidth="261.0" style="-fx-border-style: solid none solid none;" VBox.vgrow="ALWAYS">
+                     <VBox id="tagsContainer" fx:id="tagsVBox" prefHeight="246.0" prefWidth="261.0" stylesheets="@../css/lightMode.css" VBox.vgrow="ALWAYS">
                          <children>
                              <Label text="Add tags:" underline="true">
                                  <font>
@@ -418,12 +418,12 @@
                              </Label>
                              <HBox spacing="5.0">
                                  <children>
-                                     <TextField fx:id="addTagTextField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="180.0">
+                                     <TextField fx:id="addTagTextField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="175.0">
                                          <HBox.margin>
                                              <Insets left="10.0" />
                                          </HBox.margin>
                                      </TextField>
-                                     <ColorPicker fx:id="addTagColorPicker" prefHeight="25.0" prefWidth="30.0">
+                                     <ColorPicker fx:id="addTagColorPicker" maxWidth="-Infinity" prefHeight="25.0" prefWidth="30.0">
                                          <HBox.margin>
                                              <Insets />
                                          </HBox.margin>
@@ -455,7 +455,7 @@
                              </Label>
                              <HBox spacing="5.0">
                                  <children>
-                                     <ComboBox fx:id="editTagComboBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="180.0" promptText="Select tag" />
+                                     <ComboBox fx:id="editTagComboBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="175.0" promptText="Select tag" />
                                      <HBox fx:id="deleteTagButtonWrapperHBox">
                                          <children>
                                              <Button fx:id="deleteTagButton" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteTag" prefHeight="25.0" prefWidth="28.0" text="Delete tag">
@@ -486,7 +486,7 @@
                                      <Insets left="10.0" top="5.0" />
                                  </VBox.margin>
                                  <children>
-                                     <TextField fx:id="editTagTextField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="180.0" />
+                                     <TextField fx:id="editTagTextField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="175.0" />
                                      <ColorPicker fx:id="editTagColorPicker" prefHeight="25.0" prefWidth="30.0" />
                                      <HBox fx:id="applyTagChangesButtonWrapperHBox">
                                          <children>
@@ -532,6 +532,9 @@
                          <padding>
                              <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                          </padding>
+                     <VBox.margin>
+                        <Insets left="5.0" />
+                     </VBox.margin>
                      </VBox>
                  </children>
             </VBox>

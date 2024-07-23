@@ -16,11 +16,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.TextFlow?>
 
-<VBox fx:id="mainContainer" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.snansidansi.gui.controller.LogController">
+<VBox id="stage" fx:id="mainContainer" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.snansidansi.gui.controller.LogController">
    <children>
-      <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+      <BorderPane id="scene-container" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
           <top>
-              <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#backToBackupConfigScene" prefHeight="32.0" prefWidth="32.0" style="-fx-border-color: transparent; -fx-background-radius: 50%; -fx-background-color: transparent;" text="Back" BorderPane.alignment="CENTER_LEFT">
+              <Button id="menu-button" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#backToBackupConfigScene" prefHeight="32.0" prefWidth="32.0" stylesheets="@../css/lightMode.css" text="Back" BorderPane.alignment="CENTER_LEFT">
                   <BorderPane.margin>
                       <Insets bottom="8.0" left="8.0" top="8.0" />
                   </BorderPane.margin>
@@ -48,7 +48,7 @@
                   <children>
                       <HBox>
                           <children>
-                              <ToggleButton fx:id="backupLogTButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showBackupLogs" prefWidth="70.0" text="Backup">
+                              <ToggleButton id="backup-toggle-button" fx:id="backupLogTButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showBackupLogs" prefWidth="70.0" text="Backup">
                                   <font>
                                       <Font size="14.0" />
                                   </font>
@@ -60,7 +60,7 @@
                                       </Tooltip>
                                   </tooltip>
                               </ToggleButton>
-                              <ToggleButton fx:id="errorLogTButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showErrorLogs" prefWidth="70.0" text="Error">
+                              <ToggleButton id="error-toggle-button" fx:id="errorLogTButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showErrorLogs" prefWidth="70.0" text="Error">
                                   <font>
                                       <Font size="14.0" />
                                   </font>
@@ -74,12 +74,12 @@
                               </ToggleButton>
                           </children>
                           <VBox.margin>
-                              <Insets bottom="3.0" />
+                              <Insets bottom="5.0" />
                           </VBox.margin>
                       </HBox>
                       <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" style="-fx-border-color: transparent; -fx-background-color: transparent;" VBox.vgrow="ALWAYS">
                           <content>
-                              <VBox fx:id="logFileListVBox" alignment="TOP_CENTER" prefWidth="100.0" style="-fx-background-color: e9e9e9;">
+                              <VBox id="container" fx:id="logFileListVBox" alignment="TOP_CENTER" prefHeight="346.0" prefWidth="100.0" stylesheets="@../css/lightMode.css">
                                   <children>
                                       <Label fx:id="noLogFilesLabel" text="No log files found.">
                                           <font>
@@ -102,7 +102,7 @@
           <center>
               <VBox alignment="TOP_RIGHT" BorderPane.alignment="CENTER">
                   <BorderPane.margin>
-                      <Insets bottom="12.0" left="10.0" right="10.0" />
+                      <Insets bottom="10.0" left="10.0" right="10.0" />
                   </BorderPane.margin>
                   <children>
                       <HBox alignment="CENTER_RIGHT" fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="30.0" prefWidth="406.0" VBox.vgrow="NEVER">
@@ -175,9 +175,9 @@
                               <Insets bottom="5.0" />
                           </VBox.margin>
                       </HBox>
-                      <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-border-color: transparent; -fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+                      <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="320.0" prefWidth="519.0" style="-fx-border-color: transparent; -fx-background-color: transparent;" VBox.vgrow="ALWAYS">
                           <content>
-                              <TextFlow fx:id="logFileContentTextFlow" prefHeight="346.0" prefWidth="515.0" style="-fx-background-color: e9e9e9;">
+                              <TextFlow id="container" fx:id="logFileContentTextFlow" prefHeight="392.0" prefWidth="515.0" stylesheets="@../css/lightMode.css">
                                   <padding>
                                       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                   </padding>
