@@ -21,6 +21,7 @@ public enum BackupSetting implements Settings {
     private final String id;
     private final String standardValue;
     private final SettingType settingType;
+    private String[] options = null;
 
     BackupSetting(String id,
                   String standardValue,
@@ -29,6 +30,15 @@ public enum BackupSetting implements Settings {
         this.id = id;
         this.standardValue = standardValue;
         this.settingType = settingType;
+    }
+
+    BackupSetting(String id,
+                  String standardValue,
+                  SettingType settingType,
+                  String... options) {
+
+        this(id, standardValue, settingType);
+        this.options = options;
     }
 
     public String getID() {
@@ -41,5 +51,9 @@ public enum BackupSetting implements Settings {
 
     public SettingType getType() {
         return this.settingType;
+    }
+
+    public String[] getOptions() {
+        return this.options;
     }
 }
