@@ -20,7 +20,7 @@
    <children>
       <BorderPane id="scene-container" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
           <top>
-              <Button id="menu-button" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#backToBackupConfigScene" prefHeight="32.0" prefWidth="32.0" stylesheets="@../css/lightMode.css" text="Back" BorderPane.alignment="CENTER_LEFT">
+              <Button id="menu-button" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#backToBackupConfigScene" prefHeight="32.0" prefWidth="32.0" text="Back" BorderPane.alignment="CENTER_LEFT">
                   <BorderPane.margin>
                       <Insets bottom="8.0" left="8.0" top="8.0" />
                   </BorderPane.margin>
@@ -28,7 +28,7 @@
                       <Font size="14.0" />
                   </font>
                   <graphic>
-                      <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                      <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="dynamic-image">
                           <image>
                               <Image url="@../icons/backArrow.png" />
                           </image>
@@ -77,9 +77,9 @@
                               <Insets bottom="5.0" />
                           </VBox.margin>
                       </HBox>
-                      <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" style="-fx-border-color: transparent; -fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+                      <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                           <content>
-                              <VBox id="container" fx:id="logFileListVBox" alignment="TOP_CENTER" prefHeight="346.0" prefWidth="100.0" stylesheets="@../css/lightMode.css">
+                              <VBox id="container" fx:id="logFileListVBox" alignment="TOP_CENTER" prefHeight="346.0" prefWidth="100.0">
                                   <children>
                                       <Label fx:id="noLogFilesLabel" text="No log files found.">
                                           <font>
@@ -105,9 +105,9 @@
                       <Insets bottom="10.0" left="10.0" right="10.0" />
                   </BorderPane.margin>
                   <children>
-                      <HBox alignment="CENTER_RIGHT" fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="30.0" prefWidth="406.0" VBox.vgrow="NEVER">
+                      <HBox alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="30.0" prefWidth="406.0" VBox.vgrow="NEVER">
                           <children>
-                              <Label fx:id="confirmDeleteLabel" prefHeight="30.0" prefWidth="202.0" text="Press again to confirm deletion." textFill="RED">
+                              <Label id="error-label" fx:id="confirmDeleteLabel" prefHeight="30.0" prefWidth="202.0" text="Press again to confirm deletion." textFill="RED">
                                   <HBox.margin>
                                       <Insets right="5.0" />
                                   </HBox.margin>
@@ -123,7 +123,7 @@
                                       <Insets right="5.0" />
                                   </HBox.margin>
                                   <graphic>
-                                      <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                      <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" styleClass="dynamic-image">
                                           <image>
                                               <Image url="@../icons/trashCan.png" />
                                           </image>
@@ -142,7 +142,7 @@
                                       <Font size="14.0" />
                                   </font>
                                   <graphic>
-                                      <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                      <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" styleClass="dynamic-image">
                                           <image>
                                               <Image url="@../icons/export.png" />
                                           </image>
@@ -172,12 +172,12 @@
                               <Spinner fx:id="textSizeSpinner" editable="true" prefWidth="60.0" />
                           </children>
                           <VBox.margin>
-                              <Insets bottom="5.0" />
+                              <Insets bottom="7.0" />
                           </VBox.margin>
                       </HBox>
-                      <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="320.0" prefWidth="519.0" style="-fx-border-color: transparent; -fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+                      <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="320.0" prefWidth="519.0" VBox.vgrow="ALWAYS">
                           <content>
-                              <TextFlow id="container" fx:id="logFileContentTextFlow" prefHeight="392.0" prefWidth="515.0" stylesheets="@../css/lightMode.css">
+                              <TextFlow id="container" fx:id="logFileContentTextFlow" prefHeight="392.0" prefWidth="515.0" styleClass="text-flow">
                                   <padding>
                                       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                   </padding>

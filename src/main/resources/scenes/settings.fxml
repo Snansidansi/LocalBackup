@@ -8,13 +8,13 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox id="stage" fx:id="mainContainer" stylesheets="@../css/lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.snansidansi.gui.controller.SettingsController">
+<VBox id="stage" fx:id="mainContainer" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.snansidansi.gui.controller.SettingsController">
    <children>
-      <VBox id="scene-container" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@../css/lightMode.css" VBox.vgrow="ALWAYS">
+      <VBox id="scene-container" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
           <children>
-              <Button id="menu-button" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#backToConfigureBackupScene" prefHeight="32.0" prefWidth="32.0" stylesheets="@../css/lightMode.css" text="Back" VBox.vgrow="NEVER">
+              <Button id="menu-button" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#backToConfigureBackupScene" prefHeight="32.0" prefWidth="32.0" text="Back" VBox.vgrow="NEVER">
                   <graphic>
-                      <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                      <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="dynamic-image">
                           <image>
                               <Image url="@../icons/backArrow.png" />
                           </image>

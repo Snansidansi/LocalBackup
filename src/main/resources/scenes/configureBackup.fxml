@@ -19,14 +19,14 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<VBox id="stage" fx:id="mainContainer" stylesheets="@../css/lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.snansidansi.gui.controller.ConfigureBackupSceneController">
+<VBox id="stage" fx:id="mainContainer" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.snansidansi.gui.controller.ConfigureBackupSceneController">
    <children>
-      <BorderPane id="scene-container" stylesheets="@../css/lightMode.css" VBox.vgrow="ALWAYS">
+      <BorderPane id="scene-container" VBox.vgrow="ALWAYS">
           <center>
               <TableView fx:id="tableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="246.0" prefWidth="749.0" BorderPane.alignment="CENTER">
                   <columns>
                       <TableColumn fx:id="sourceTableCol" editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="242.0" sortable="false" text="Source" />
-                      <TableColumn fx:id="destinationTableCol" editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="368.0" sortable="false" text="Destination" />
+                      <TableColumn id="destination-column" fx:id="destinationTableCol" editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="368.0" sortable="false" text="Destination" />
                   <TableColumn fx:id="tagTableCol" editable="false" minWidth="50.0" prefWidth="73.0" sortable="false" text="Tag" />
                       <TableColumn fx:id="removeTableCol" editable="false" maxWidth="225.0" minWidth="0.0" prefWidth="65.0" resizable="false" sortable="false" text="Remove" />
                   </columns>
@@ -46,7 +46,7 @@
                                  <children>
                                             <Button fx:id="deleteBackupButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteBackup" prefHeight="40.0" prefWidth="40.0">
                                                 <graphic>
-                                                    <ImageView fitHeight="36.0" fitWidth="36.0">
+                                                    <ImageView fitHeight="36.0" fitWidth="36.0" styleClass="dynamic-image">
                                                         <image>
                                                             <Image url="@../icons/trashCan.png" />
                                                         </image>
@@ -62,7 +62,7 @@
                                             </Button>
                                  </children>
                               </HBox>
-                                      <Label fx:id="deleteConfirmLabel" prefHeight="48.0" prefWidth="306.0" text="Are you sure to remove all the selected backups? Press again to confirm." textFill="RED" wrapText="true">
+                                      <Label id="error-label" fx:id="deleteConfirmLabel" prefHeight="48.0" prefWidth="306.0" text="Are you sure to remove all the selected backups? Press again to confirm." textFill="RED" wrapText="true">
                                           <font>
                                               <Font size="14.0" />
                                           </font>
@@ -84,7 +84,7 @@
                               </CheckBox>
                           </right>
                           <bottom>
-                              <Line fx:id="middleLine" endX="300.0" fill="BLACK" strokeLineCap="BUTT" strokeWidth="1.3" BorderPane.alignment="CENTER">
+                              <Line id="separator-line" fx:id="middleLine" endX="300.0" fill="BLACK" strokeLineCap="BUTT" strokeWidth="1.3" BorderPane.alignment="CENTER">
                                   <BorderPane.margin>
                                       <Insets />
                                   </BorderPane.margin>
@@ -103,12 +103,12 @@
                               </Label>
                               <VBox fillWidth="false" prefHeight="40.0" prefWidth="352.0">
                                   <children>
-                                      <Label fx:id="invalidSrcPathLabel" prefHeight="20.0" prefWidth="585.0" text="Invalid source path" textFill="RED" wrapText="true">
+                                      <Label id="error-label" fx:id="invalidSrcPathLabel" prefHeight="20.0" prefWidth="585.0" text="Invalid source path" textFill="RED" wrapText="true">
                                           <font>
                                               <Font size="14.0" />
                                           </font>
                                       </Label>
-                                      <Label fx:id="invalidDestPathLabel" prefHeight="20.0" prefWidth="585.0" text="Invalid destination path" textFill="RED" wrapText="true">
+                                      <Label id="error-label" fx:id="invalidDestPathLabel" prefHeight="20.0" prefWidth="585.0" text="Invalid destination path" textFill="RED" wrapText="true">
                                           <font>
                                               <Font size="14.0" />
                                           </font>
@@ -143,7 +143,7 @@
                                   <children>
                                       <Button mnemonicParsing="false" onAction="#openSrcFileSelection" prefHeight="32.0" prefWidth="42.0">
                                           <graphic>
-                                              <ImageView fitHeight="25.0" fitWidth="25.0">
+                                              <ImageView fitHeight="25.0" fitWidth="25.0" styleClass="dynamic-image">
                                                   <image>
                                                       <Image url="@../icons/addFile.png" />
                                                   </image>
@@ -159,7 +159,7 @@
                                       </Button>
                                       <Button mnemonicParsing="false" onAction="#openSrcFolderSelection" prefHeight="25.0" prefWidth="42.0">
                                           <graphic>
-                                              <ImageView fitHeight="25.0" fitWidth="25.0">
+                                              <ImageView fitHeight="25.0" fitWidth="25.0" styleClass="dynamic-image">
                                                   <image>
                                                       <Image url="@../icons/add_folder.png" />
                                                   </image>
@@ -203,7 +203,7 @@
                                   <children>
                                       <Button mnemonicParsing="false" onAction="#openDestSelection" prefHeight="25.0" prefWidth="42.0">
                                           <graphic>
-                                              <ImageView fitHeight="25.0" fitWidth="25.0">
+                                              <ImageView fitHeight="25.0" fitWidth="25.0" styleClass="dynamic-image">
                                                   <image>
                                                       <Image url="@../icons/add_folder.png" />
                                                   </image>
@@ -219,7 +219,7 @@
                                       </Button>
                                       <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addBackup" prefHeight="32.0" prefWidth="32.0">
                                           <graphic>
-                                              <ImageView fitHeight="25.0" fitWidth="25.0">
+                                              <ImageView fitHeight="25.0" fitWidth="25.0" styleClass="dynamic-image">
                                                   <image>
                                                       <Image url="@../icons/plus.png" />
                                                   </image>
@@ -260,9 +260,9 @@
                   <left>
                       <HBox alignment="CENTER_LEFT" spacing="20.0" BorderPane.alignment="CENTER">
                           <children>
-                              <Button id="menu-button" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#runBackup" prefHeight="32.0" prefWidth="32.0" stylesheets="@../css/lightMode.css" text="Run backup">
+                              <Button id="menu-button" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#runBackup" prefHeight="32.0" prefWidth="32.0" text="Run backup">
                                   <graphic>
-                                      <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                      <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="dynamic-image">
                                           <image>
                                               <Image url="@../icons/runBackup.png" />
                                           </image>
@@ -276,9 +276,9 @@
                                       </Tooltip>
                                   </tooltip>
                               </Button>
-                              <Button id="menu-button" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#switchToLogScene" prefHeight="32.0" prefWidth="32.0" stylesheets="@../css/lightMode.css" text="Logs">
+                              <Button id="menu-button" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#switchToLogScene" prefHeight="32.0" prefWidth="32.0" text="Logs">
                                   <graphic>
-                                      <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                      <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="dynamic-image">
                                           <image>
                                               <Image url="@../icons/showLogs.png" />
                                           </image>
@@ -292,9 +292,9 @@
                                       </Tooltip>
                                   </tooltip>
                               </Button>
-                              <Button id="menu-button" fx:id="settingsMenuButton" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#switchToSettingsScene" prefHeight="32.0" prefWidth="32.0" stylesheets="@../css/lightMode.css" text="Settings">
+                              <Button id="menu-button" fx:id="settingsMenuButton" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#switchToSettingsScene" prefHeight="32.0" prefWidth="32.0" text="Settings">
                                   <graphic>
-                                      <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                      <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="dynamic-image">
                                           <image>
                                               <Image url="@../icons/settings.png" />
                                           </image>
@@ -308,9 +308,9 @@
                                       </Tooltip>
                                   </tooltip>
                               </Button>
-                              <Button id="menu-button" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showAboutMessageBox" prefHeight="32.0" prefWidth="32.0" stylesheets="@../css/lightMode.css" text="Info">
+                              <Button id="menu-button" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showAboutMessageBox" prefHeight="32.0" prefWidth="32.0" text="Info">
                                   <graphic>
-                                      <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                      <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="dynamic-image">
                                           <image>
                                               <Image url="@../icons/info_black.png" />
                                           </image>
@@ -337,7 +337,7 @@
                               </Label>
                               <Label fx:id="backupRunningIndicatorLabel" contentDisplay="GRAPHIC_ONLY" text="ImageContainer">
                                   <graphic>
-                                      <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                      <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="dynamic-image">
                                           <image>
                                               <Image url="@../icons/loading.png" />
                                           </image>
@@ -376,7 +376,7 @@
                                       <ComboBox fx:id="filterTagComboBox" prefHeight="25.0" prefWidth="174.0" promptText="Select Tag" />
                                       <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#clearTagFilter" prefHeight="25.0" prefWidth="25.0" text="Clear tag filter">
                                           <graphic>
-                                              <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                              <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" styleClass="dynamic-image">
                                                   <image>
                                                       <Image url="@../icons/close.png" />
                                                   </image>
@@ -406,7 +406,7 @@
                      <Insets />
                  </BorderPane.margin>
                  <children>
-                     <VBox id="tagsContainer" fx:id="tagsVBox" prefHeight="246.0" prefWidth="261.0" stylesheets="@../css/lightMode.css" VBox.vgrow="ALWAYS">
+                     <VBox id="tagsContainer" fx:id="tagsVBox" prefHeight="246.0" prefWidth="261.0" VBox.vgrow="ALWAYS">
                          <children>
                              <Label text="Add tags:" underline="true">
                                  <font>
@@ -430,7 +430,7 @@
                                      </ColorPicker>
                                      <Button contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addTag" prefHeight="25.0" prefWidth="25.0" text="Apply changes">
                                          <graphic>
-                                             <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                                             <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true" styleClass="dynamic-image">
                                                  <image>
                                                      <Image url="@../icons/add_tag.png" />
                                                  </image>
@@ -455,12 +455,12 @@
                              </Label>
                              <HBox spacing="5.0">
                                  <children>
-                                     <ComboBox fx:id="editTagComboBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="175.0" promptText="Select tag" />
+                                     <ComboBox fx:id="editTagComboBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="175.0" promptText="Select tag" />
                                      <HBox fx:id="deleteTagButtonWrapperHBox">
                                          <children>
                                              <Button fx:id="deleteTagButton" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteTag" prefHeight="25.0" prefWidth="28.0" text="Delete tag">
                                                  <graphic>
-                                                     <ImageView fitHeight="25.0" fitWidth="25.0">
+                                                     <ImageView fitHeight="25.0" fitWidth="25.0" styleClass="dynamic-image">
                                                          <image>
                                                              <Image url="@../icons/delete_tag.png" />
                                                          </image>
@@ -492,7 +492,7 @@
                                          <children>
                                              <Button fx:id="applyTagChangesButton" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#editTag" prefHeight="25.0" prefWidth="25.0" text="Apply changes">
                                                  <graphic>
-                                                     <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                                                     <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true" styleClass="dynamic-image">
                                                          <image>
                                                              <Image url="@../icons/change_tag.png" />
                                                          </image>
