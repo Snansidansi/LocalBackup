@@ -11,7 +11,10 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -92,7 +95,7 @@ public class SettingsController {
 
     private void addDarkModeRow() {
         ComboBoxSettingsRow darkModeRow = new ComboBoxSettingsRow(
-                BackupSetting.DARK_MODE,
+                BackupSetting.COLOR_SCHEME,
                 "Enable dark mode:",
                 this.SETTINGS_NAME_FONTSIZE
         );
