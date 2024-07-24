@@ -127,6 +127,8 @@ public class ConfigureBackupSceneController {
     private Button settingsMenuButton;
     @FXML
     private HBox filterTagsHBox;
+    @FXML
+    private VBox filterTagsHBoxWrapperVBox;
 
     @FXML
     public void initialize() {
@@ -212,7 +214,7 @@ public class ConfigureBackupSceneController {
     private void setupTagControls() {
         if (!Boolean.parseBoolean(SettingsManagerInstance.settingsManager.getSetting(BackupSetting.ENABLE_TAGS))) {
             this.tagsVBoxWrapperVBox.getChildren().clear();
-            this.filterTagsHBox.getChildren().clear();
+            this.filterTagsHBoxWrapperVBox.getChildren().clear();
         }
         if (TagManagerInstance.tagManager == null) {
             disableTagControls();
@@ -261,12 +263,16 @@ public class ConfigureBackupSceneController {
 
     private void disableTagControls() {
         this.tagsVBox.setDisable(true);
+        this.filterTagsHBox.setDisable(true);
+
         Tooltip disabledTagsTooltip = new Tooltip("Tags are disabled because of an Error while loading" +
                 "the tags.\n Error: " + TagManagerInstance.loadingException);
         disabledTagsTooltip.setShowDelay(Duration.ZERO);
         disabledTagsTooltip.setHideDelay(Duration.ZERO);
         disabledTagsTooltip.setFont(new Font(14));
+
         Tooltip.install(this.tagsVBoxWrapperVBox, disabledTagsTooltip);
+        Tooltip.install(this.filterTagsHBoxWrapperVBox, disabledTagsTooltip);
     }
 
     private void bindMiddleLineToWindowWidth() {
