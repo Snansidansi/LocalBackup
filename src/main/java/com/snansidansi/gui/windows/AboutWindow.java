@@ -8,7 +8,13 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 
 public class AboutWindow {
+    public static boolean visible = false;
+
     public static void showWindow() throws IOException {
+        if (visible) {
+            return;
+        }
+
         Stage aboutStage = new Stage();
         aboutStage.initStyle(StageStyle.TRANSPARENT);
 
@@ -28,5 +34,7 @@ public class AboutWindow {
             SceneManager.removeActiveStage(aboutStage);
             visible = false;
         });
+
+        visible = true;
     }
 }

@@ -20,6 +20,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 
 public class WindowBar extends BorderPane {
@@ -213,8 +214,11 @@ public class WindowBar extends BorderPane {
         closeButton.setGraphic(closeImageView);
 
         closeButton.setOnMouseClicked(mouseEvent -> {
+            WindowEvent closeEvent = new WindowEvent(this.currentStage, WindowEvent.WINDOW_CLOSE_REQUEST);
+            this.currentStage.fireEvent(closeEvent);
+
             this.currentStage.close();
-            SceneManager.removeActiveStage((Stage) this.getScene().getWindow());
+            SceneManager.removeActiveStage(this.currentStage);
         });
 
         this.buttonHBox.getChildren().add(closeButton);
