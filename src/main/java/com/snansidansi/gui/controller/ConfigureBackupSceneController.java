@@ -125,6 +125,8 @@ public class ConfigureBackupSceneController {
     private HBox applyTagChangesButtonWrapperHBox;
     @FXML
     private Button settingsMenuButton;
+    @FXML
+    private HBox filterTagsHBox;
 
     @FXML
     public void initialize() {
@@ -210,6 +212,7 @@ public class ConfigureBackupSceneController {
     private void setupTagControls() {
         if (!Boolean.parseBoolean(SettingsManagerInstance.settingsManager.getSetting(BackupSetting.ENABLE_TAGS))) {
             this.tagsVBoxWrapperVBox.getChildren().clear();
+            this.filterTagsHBox.getChildren().clear();
         }
         if (TagManagerInstance.tagManager == null) {
             disableTagControls();

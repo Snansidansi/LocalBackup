@@ -363,7 +363,7 @@
                               <TextField fx:id="backupSearchTextField" prefHeight="25.0" prefWidth="402.0" BorderPane.alignment="CENTER" />
                           </left>
                           <right>
-                              <HBox alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="271.0" BorderPane.alignment="CENTER">
+                              <HBox fx:id="filterTagsHBox" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="271.0" BorderPane.alignment="CENTER">
                                   <children>
                                       <Label text="Filter tag:">
                                           <font>
