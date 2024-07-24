@@ -146,4 +146,10 @@ public class SceneManager {
             setCorrectButtonColor(stage.getScene());
         }
     }
+
+    public static void closeActiveStages() {
+        for (Stage stage : activeStage) {
+            stage.close();
+        }
+    }
 }
