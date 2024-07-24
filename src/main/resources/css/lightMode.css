@@ -76,6 +76,10 @@
     -fx-border-radius: 5px;
 }
 
+.combo-box-base .cell {
+    -fx-background-radius: 5px;
+}
+
 .combo-box .list-view {
     -fx-border-radius: 5px;
     -fx-background-radius: 5px;
@@ -147,7 +151,9 @@
 }
 
 .table-view .virtual-flow .scroll-bar:vertical .thumb:hover,
-.scroll-pane .scroll-bar .thumb:hover {
+.table-view .virtual-flow .scroll-bar:vertical .thumb:pressed,
+.scroll-pane .scroll-bar .thumb:hover,
+.scroll-pane .scroll-bar .thumb:pressed {
     -fx-background-color: -fx-clicked-color;
 }
 
@@ -231,10 +237,12 @@
 
 #backup-toggle-button {
     -fx-border-radius: 5px 0px 0px 5px;
+    -fx-background-radius: 5px 0px 0px 5px;
 }
 
 #error-toggle-button {
     -fx-border-radius: 0px 5px 5px 0px;
+    -fx-background-radius: 0px 5px 5px 0px;
 }
 
 .toggle-button:hover {
