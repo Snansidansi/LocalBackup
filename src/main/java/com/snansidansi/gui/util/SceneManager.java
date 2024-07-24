@@ -152,4 +152,8 @@ public class SceneManager {
             stage.close();
         }
     }
+
+    public static List<Stage> getActiveStages() {
+        return new ArrayList<>(activeStage);
+    }
 }

@@ -2,11 +2,14 @@ package com.snansidansi.app.instances;
 
 import com.snansidansi.app.LocalBackupApp;
 import com.snansidansi.backup.service.BackupService;
+import com.snansidansi.gui.uielements.WindowBar;
 import com.snansidansi.gui.util.SceneManager;
 import com.snansidansi.settings.BackupSetting;
 import com.snansidansi.settings.settingsmanager.SettingsManager;
 import com.snansidansi.shortcut.OsIsNotWindowsException;
 import com.snansidansi.shortcut.WindowsShortcutManager;
+import javafx.scene.Node;
+import javafx.stage.Stage;
 
 import java.nio.file.Path;
 
@@ -39,7 +42,19 @@ public class SettingsManagerInstance {
                 Boolean.parseBoolean(settingsManager.getSetting(BackupSetting.DELETE_BACKUP_FILES_WITH_MISSING_SRC))
         );
 
+        updateUIStyle();
+    }
+
+    private static void updateUIStyle() {
         SceneManager.updateStyle();
+
+        for (Stage stage : SceneManager.getActiveStages()) {
+            for (Node node : stage.getScene().getRoot().lookupAll(".window-bar")) {
+                if (node instanceof WindowBar windowBar) {
+                    windowBar.updateImages();
+                }
+            }
+        }
     }
 
     private static void reloadAutostartSetting() {

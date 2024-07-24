@@ -44,21 +44,22 @@ public class WindowBar extends BorderPane {
     private Button toggleFullScreenButton;
     private Stage currentStage;
     private Scene currentScene;
+    private final ImageView appIconView = new ImageView();
+    private final ImageView minimizeWindowImageView = new ImageView();
+    private final ImageView toggleFullScreenImageView = new ImageView();
+    private final ImageView closeImageView = new ImageView();
 
     private double mouseDragStartX;
     private double mouseDragStartY;
     private boolean widthResize = false;
     private boolean heightResize = false;
     private boolean resizable = true;
-    private final boolean darkMode;
 
     public WindowBar(Pane stageMainContainer) {
         super();
         this.setLeft(this.iconAndNameHBox);
         this.setRight(this.buttonHBox);
         this.getStyleClass().add("window-bar");
-        this.darkMode = SettingsManagerInstance.settingsManager.getSetting(
-                BackupSetting.COLOR_SCHEME).equals("dark mode");
 
         this.stageMainContainer = stageMainContainer;
         Platform.runLater(() -> {
@@ -68,14 +69,22 @@ public class WindowBar extends BorderPane {
             setupStageDragging();
         });
 
-        setupImageColors();
         setupIconAndNameHBox();
         setupMinimizeButton();
         setupToggleFullScreenButton();
         setupCloseButton();
+        updateImages();
     }
 
     private void setupImageColors() {
+        Boolean darkMode;
+        if (SettingsManagerInstance.settingsManager.getSetting(BackupSetting.COLOR_SCHEME).equals("dark mode")) {
+            darkMode = true;
+        }
+        else {
+            darkMode = false;
+        }
+
         Color imageColor = darkMode ? Color.WHITE : Color.BLACK;
         minimizeWindowImage = Utility.changeColorOfTransparentBackgroundImage(
                 minimizeWindowImage, imageColor);
@@ -91,6 +100,14 @@ public class WindowBar extends BorderPane {
             appIcon = new Image(
                     WindowBar.class.getResource("/icons/appIcon.png").toString());
         }
+    }
+
+    public void updateImages() {
+        setupImageColors();
+        this.appIconView.setImage(appIcon);
+        this.minimizeWindowImageView.setImage(minimizeWindowImage);
+        this.toggleFullScreenImageView.setImage(toggleFullScreenImage);
+        this.closeImageView.setImage(closeImage);
     }
 
     private void setupStageResizing() {
@@ -162,14 +179,13 @@ public class WindowBar extends BorderPane {
     }
 
     private void setupToggleFullScreenButton() {
-        ImageView toggleFullScreenImageView = new ImageView(toggleFullScreenImage);
-        toggleFullScreenImageView.setFitWidth(IMAGE_SIZE);
-        toggleFullScreenImageView.setFitHeight(IMAGE_SIZE);
+        this.toggleFullScreenImageView.setFitWidth(IMAGE_SIZE);
+        this.toggleFullScreenImageView.setFitHeight(IMAGE_SIZE);
 
         Button toggleFullScreenButton = new Button();
         toggleFullScreenButton.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         toggleFullScreenButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-        toggleFullScreenButton.setGraphic(toggleFullScreenImageView);
+        toggleFullScreenButton.setGraphic(this.toggleFullScreenImageView);
 
         toggleFullScreenButton.setOnMouseClicked(mouseEvent -> {
 
@@ -186,14 +202,13 @@ public class WindowBar extends BorderPane {
     }
 
     private void setupMinimizeButton() {
-        ImageView minimizeImageView = new ImageView(minimizeWindowImage);
-        minimizeImageView.setFitWidth(IMAGE_SIZE);
-        minimizeImageView.setFitHeight(IMAGE_SIZE);
+        this.minimizeWindowImageView.setFitWidth(IMAGE_SIZE);
+        this.minimizeWindowImageView.setFitHeight(IMAGE_SIZE);
 
         Button minimizeButton = new Button();
         minimizeButton.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         minimizeButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-        minimizeButton.setGraphic(minimizeImageView);
+        minimizeButton.setGraphic(this.minimizeWindowImageView);
 
         minimizeButton.setOnMouseClicked(mouseEvent -> {
             this.currentStage.setIconified(true);
@@ -204,14 +219,13 @@ public class WindowBar extends BorderPane {
     }
 
     private void setupCloseButton() {
-        ImageView closeImageView = new ImageView(closeImage);
-        closeImageView.setFitWidth(IMAGE_SIZE);
-        closeImageView.setFitHeight(IMAGE_SIZE);
+        this.closeImageView.setFitWidth(IMAGE_SIZE);
+        this.closeImageView.setFitHeight(IMAGE_SIZE);
 
         Button closeButton = new Button();
         closeButton.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         closeButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-        closeButton.setGraphic(closeImageView);
+        closeButton.setGraphic(this.closeImageView);
 
         closeButton.setOnMouseClicked(mouseEvent -> {
             WindowEvent closeEvent = new WindowEvent(this.currentStage, WindowEvent.WINDOW_CLOSE_REQUEST);
@@ -226,7 +240,7 @@ public class WindowBar extends BorderPane {
     }
 
     private void setupIconAndNameHBox() {
-        ImageView appIconView = new ImageView(appIcon);
+        this.appIconView.setImage(appIcon);
         appIconView.setFitWidth(BUTTON_HEIGHT);
         appIconView.setFitHeight(BUTTON_HEIGHT);
 
