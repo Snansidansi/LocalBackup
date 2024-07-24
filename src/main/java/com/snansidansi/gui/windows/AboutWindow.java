@@ -22,5 +22,11 @@ public class AboutWindow {
         aboutStage.setResizable(false);
 
         aboutStage.show();
+        SceneManager.addActiveStage(aboutStage);
+
+        aboutStage.setOnCloseRequest((event) -> {
+            SceneManager.removeActiveStage(aboutStage);
+            visible = false;
+        });
     }
 }

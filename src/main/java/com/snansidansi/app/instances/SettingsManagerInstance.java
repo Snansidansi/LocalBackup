@@ -2,6 +2,7 @@ package com.snansidansi.app.instances;
 
 import com.snansidansi.app.LocalBackupApp;
 import com.snansidansi.backup.service.BackupService;
+import com.snansidansi.gui.util.SceneManager;
 import com.snansidansi.settings.BackupSetting;
 import com.snansidansi.settings.settingsmanager.SettingsManager;
 import com.snansidansi.shortcut.OsIsNotWindowsException;
@@ -37,6 +38,8 @@ public class SettingsManagerInstance {
         backupService.setDeleteBackupsWithMissingSource(
                 Boolean.parseBoolean(settingsManager.getSetting(BackupSetting.DELETE_BACKUP_FILES_WITH_MISSING_SRC))
         );
+
+        SceneManager.updateStyle();
     }
 
     private static void reloadAutostartSetting() {

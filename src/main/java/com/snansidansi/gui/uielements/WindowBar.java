@@ -1,6 +1,7 @@
 package com.snansidansi.gui.uielements;
 
 import com.snansidansi.app.instances.SettingsManagerInstance;
+import com.snansidansi.gui.util.SceneManager;
 import com.snansidansi.gui.util.Utility;
 import com.snansidansi.settings.BackupSetting;
 import javafx.application.Platform;
@@ -213,6 +214,7 @@ public class WindowBar extends BorderPane {
 
         closeButton.setOnMouseClicked(mouseEvent -> {
             this.currentStage.close();
+            SceneManager.removeActiveStage((Stage) this.getScene().getWindow());
         });
 
         this.buttonHBox.getChildren().add(closeButton);

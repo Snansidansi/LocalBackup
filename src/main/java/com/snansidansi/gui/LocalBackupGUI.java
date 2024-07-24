@@ -20,5 +20,6 @@ public class LocalBackupGUI extends Application {
 
         SceneManager.setConfigureBackupsScene(primaryStage);
         primaryStage.show();
+        SceneManager.addActiveStage(primaryStage);
     }
 }

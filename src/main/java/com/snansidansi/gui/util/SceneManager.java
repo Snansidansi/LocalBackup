@@ -13,11 +13,14 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SceneManager {
     private static double lastWidth = -1;
     private static double lastHeight = -1;
     public static final String darkModeButtonImageColor = "#c21014";
+    private static final List<Stage> activeStage = new ArrayList<>();
 
     private SceneManager() {
     }
@@ -69,13 +72,7 @@ public class SceneManager {
         root.getScene().setFill(Color.TRANSPARENT);
         root.getScene().getStylesheets().clear();
 
-        String styleSheet;
-        if (SettingsManagerInstance.settingsManager.getSetting(BackupSetting.COLOR_SCHEME).equals("dark mode")) {
-            styleSheet = getStyleSheetFromFile("darkMode");
-        }
-        else {
-            styleSheet = getStyleSheetFromFile("lightMode");
-        }
+        String styleSheet = getCorrectStyleSheet();
         root.getScene().getStylesheets().add(styleSheet);
 
         Platform.runLater(() -> setCorrectButtonColor(root.getScene()));
@@ -102,20 +99,51 @@ public class SceneManager {
     }
 
     public static void setCorrectButtonColor(Scene currentScene) {
+        Color buttonColor;
         if (SettingsManagerInstance.settingsManager.getSetting(BackupSetting.COLOR_SCHEME).equals("light mode")) {
-            return;
+            buttonColor = Color.BLACK;
         }
+        else {
+            buttonColor = Color.web(darkModeButtonImageColor);
+        }
+
         for (Node node : currentScene.getRoot().lookupAll(".dynamic-image")) {
             if (node instanceof ImageView imageView) {
                 Image newImage = Utility.changeColorOfTransparentBackgroundImage(
-                        imageView.getImage(), Color.web(darkModeButtonImageColor));
+                        imageView.getImage(), buttonColor);
 
                 imageView.setImage(newImage);
             }
         }
     }
 
+    private static String getCorrectStyleSheet() {
+        if (SettingsManagerInstance.settingsManager.getSetting(BackupSetting.COLOR_SCHEME).equals("dark mode")) {
+            return getStyleSheetFromFile("darkMode");
+        }
+        else {
+            return getStyleSheetFromFile("lightMode");
+        }
+    }
+
     private static String getStyleSheetFromFile(String fileName) {
         return SceneManager.class.getResource("/css/" + fileName + ".css").toExternalForm();
+    }
+
+    public static void addActiveStage(Stage stage) {
+        activeStage.add(stage);
+    }
+
+    public static void removeActiveStage(Stage stage) {
+        activeStage.remove(stage);
+    }
+
+    public static void updateStyle() {
+        String styleSheet = getCorrectStyleSheet();
+        for (Stage stage : activeStage) {
+            stage.getScene().getStylesheets().clear();
+            stage.getScene().getStylesheets().add(styleSheet);
+            setCorrectButtonColor(stage.getScene());
+        }
     }
 }
