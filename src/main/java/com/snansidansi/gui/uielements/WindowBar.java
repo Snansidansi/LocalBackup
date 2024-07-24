@@ -1,5 +1,8 @@
 package com.snansidansi.gui.uielements;
 
+import com.snansidansi.app.instances.SettingsManagerInstance;
+import com.snansidansi.gui.util.Utility;
+import com.snansidansi.settings.BackupSetting;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,17 +17,18 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 
 public class WindowBar extends BorderPane {
-    private static final Image appIcon = new Image(
+    private static Image appIcon = new Image(
             WindowBar.class.getResource("/icons/appIcon.png").toString());
-    private static final Image minimizeWindowImage = new Image(
+    private static Image minimizeWindowImage = new Image(
             WindowBar.class.getResource("/icons/minimizeWindow.png").toString());
-    private static final Image toggleFullScreenImage = new Image(
+    private static Image toggleFullScreenImage = new Image(
             WindowBar.class.getResource("/icons/toggleFullScreen.png").toString());
-    private static final Image closeImage = new Image(
+    private static Image closeImage = new Image(
             WindowBar.class.getResource("/icons/close.png").toString());
 
     private static final int IMAGE_SIZE = 18;
@@ -44,11 +48,15 @@ public class WindowBar extends BorderPane {
     private boolean widthResize = false;
     private boolean heightResize = false;
     private boolean resizable = true;
+    private final boolean darkMode;
 
     public WindowBar(Pane stageMainContainer) {
         super();
         this.setLeft(this.iconAndNameHBox);
         this.setRight(this.buttonHBox);
+        this.getStyleClass().add("window-bar");
+        this.darkMode = SettingsManagerInstance.settingsManager.getSetting(
+                BackupSetting.COLOR_SCHEME).equals("dark mode");
 
         this.stageMainContainer = stageMainContainer;
         Platform.runLater(() -> {
@@ -58,12 +66,29 @@ public class WindowBar extends BorderPane {
             setupStageDragging();
         });
 
+        setupImageColors();
         setupIconAndNameHBox();
         setupMinimizeButton();
         setupToggleFullScreenButton();
         setupCloseButton();
+    }
 
-        this.getStyleClass().add("window-bar");
+    private void setupImageColors() {
+        Color imageColor = darkMode ? Color.WHITE : Color.BLACK;
+        minimizeWindowImage = Utility.changeColorOfTransparentBackgroundImage(
+                minimizeWindowImage, imageColor);
+        toggleFullScreenImage = Utility.changeColorOfTransparentBackgroundImage(
+                toggleFullScreenImage, imageColor);
+        closeImage = Utility.changeColorOfTransparentBackgroundImage(
+                closeImage, imageColor);
+
+        if (darkMode) {
+            appIcon = Utility.changeColorOfTransparentBackgroundImage(appIcon, Color.LIGHTGREEN);
+        }
+        else {
+            appIcon = new Image(
+                    WindowBar.class.getResource("/icons/appIcon.png").toString());
+        }
     }
 
     private void setupStageResizing() {

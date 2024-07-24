@@ -30,8 +30,12 @@ public class TableEntry {
 
     private static final Image fileImage = new Image(
             TableEntry.class.getResource("/icons/document.png").toString());
+    private static Image fileImageDarkMode = null;
+
     private static final Image dirImage = new Image(
             TableEntry.class.getResource("/icons/folder.png").toString());
+    private static Image dirImageDarkMode = null;
+
     private static final Image tagImage = new Image(
             TableEntry.class.getResource("/icons/tag.png").toString());
     private static final Map<String, Image> coloredTagImagesMap = new HashMap<>();
@@ -48,7 +52,18 @@ public class TableEntry {
 
         // Setup src
         final int IMAGE_SIZE = 20;
-        ImageView srcImageView = srcIsDir ? new ImageView(dirImage) : new ImageView(fileImage);
+
+        ImageView srcImageView;
+        if (SettingsManagerInstance.settingsManager.getSetting(BackupSetting.COLOR_SCHEME).equals("dark mode")) {
+            if (fileImageDarkMode == null) {
+                fileImageDarkMode = Utility.changeColorOfTransparentBackgroundImage(fileImage, Color.WHITE);
+                dirImageDarkMode = Utility.changeColorOfTransparentBackgroundImage(dirImage, Color.WHITE);
+            }
+            srcImageView = srcIsDir ? new ImageView(dirImageDarkMode) : new ImageView(fileImageDarkMode);
+        }
+        else {
+            srcImageView = srcIsDir ? new ImageView(dirImage) : new ImageView(fileImage);
+        }
         srcImageView.setFitWidth(IMAGE_SIZE);
         srcImageView.setFitHeight(IMAGE_SIZE);
 

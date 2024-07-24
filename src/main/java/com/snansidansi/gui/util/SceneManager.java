@@ -1,8 +1,14 @@
 package com.snansidansi.gui.util;
 
+import com.snansidansi.app.instances.SettingsManagerInstance;
+import com.snansidansi.settings.BackupSetting;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -11,6 +17,7 @@ import java.io.IOException;
 public class SceneManager {
     private static double lastWidth = -1;
     private static double lastHeight = -1;
+    public static final String darkModeButtonImageColor = "#c21014";
 
     private SceneManager() {
     }
@@ -60,9 +67,18 @@ public class SceneManager {
         }
 
         root.getScene().setFill(Color.TRANSPARENT);
-        root.getScene().getStylesheets().add(
-                (SceneManager.class.getResource("/css/lightMode.css")).toExternalForm());
+        root.getScene().getStylesheets().clear();
 
+        String styleSheet;
+        if (SettingsManagerInstance.settingsManager.getSetting(BackupSetting.COLOR_SCHEME).equals("dark mode")) {
+            styleSheet = getStyleSheetFromFile("darkMode");
+        }
+        else {
+            styleSheet = getStyleSheetFromFile("lightMode");
+        }
+        root.getScene().getStylesheets().add(styleSheet);
+
+        Platform.runLater(() -> setCorrectButtonColor(root.getScene()));
         return root;
     }
 
@@ -76,12 +92,30 @@ public class SceneManager {
      * sizes to -1.
      * @param stage The current stage.
      */
-    private static void loadSafedStageSize (Stage stage) {
+    private static void loadSafedStageSize(Stage stage) {
         if (lastWidth < 1 && lastHeight < 1) {
             return;
         }
         changeStageSize(stage, lastWidth, lastHeight);
         lastWidth = -1;
         lastHeight = -1;
+    }
+
+    public static void setCorrectButtonColor(Scene currentScene) {
+        if (SettingsManagerInstance.settingsManager.getSetting(BackupSetting.COLOR_SCHEME).equals("light mode")) {
+            return;
+        }
+        for (Node node : currentScene.getRoot().lookupAll(".dynamic-image")) {
+            if (node instanceof ImageView imageView) {
+                Image newImage = Utility.changeColorOfTransparentBackgroundImage(
+                        imageView.getImage(), Color.web(darkModeButtonImageColor));
+
+                imageView.setImage(newImage);
+            }
+        }
+    }
+
+    private static String getStyleSheetFromFile(String fileName) {
+        return SceneManager.class.getResource("/css/" + fileName + ".css").toExternalForm();
     }
 }

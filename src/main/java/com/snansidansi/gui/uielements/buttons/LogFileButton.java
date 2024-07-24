@@ -1,5 +1,9 @@
 package com.snansidansi.gui.uielements.buttons;
 
+import com.snansidansi.app.instances.SettingsManagerInstance;
+import com.snansidansi.gui.util.SceneManager;
+import com.snansidansi.gui.util.Utility;
+import com.snansidansi.settings.BackupSetting;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -11,17 +15,25 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class LogFileButton extends HBox {
-    private final ImageView logImage = new ImageView(new Image(
-            LogFileButton.class.getResource("/icons/document.png").toString()));
+    private static final Image logImage = new Image(
+            LogFileButton.class.getResource("/icons/document.png").toString());
 
     public LogFileButton(String text, int fontSize, int imageSize) {
         super();
         this.setAlignment(Pos.CENTER_LEFT);
         this.setBorder(Border.stroke(Color.GRAY));
 
-        this.logImage.setFitHeight(imageSize);
-        this.logImage.setFitWidth(imageSize);
-        this.getChildren().add(this.logImage);
+        ImageView imageView = new ImageView();
+        imageView.setFitWidth(imageSize);
+        imageView.setFitHeight(imageSize);
+        if (SettingsManagerInstance.settingsManager.getSetting(BackupSetting.COLOR_SCHEME).equals("dark mode")) {
+            imageView.setImage(Utility.changeColorOfTransparentBackgroundImage(
+                    logImage, Color.web(SceneManager.darkModeButtonImageColor)));
+        }
+        else {
+            imageView.setImage(logImage);
+        }
+        this.getChildren().add(imageView);
 
         int indexOfUnderscore = text.indexOf('_');
         if (indexOfUnderscore == -1) {
