@@ -65,7 +65,7 @@ public class SettingsManagerInstance {
         WindowsShortcutManager shortcutManager;
         try {
             shortcutManager = new WindowsShortcutManager(
-                    Path.of("C:/Dev/Java/LocalBackup/build/launch4j/LocalBackup.exe"),
+                    LocalBackupApp.applicationPath,
                     Path.of(settingsManager.getSetting(BackupSetting.AUTOSTART_DIR_PATH)),
                     "runBackup-LocalBackup");
         } catch (OsIsNotWindowsException unused) {
