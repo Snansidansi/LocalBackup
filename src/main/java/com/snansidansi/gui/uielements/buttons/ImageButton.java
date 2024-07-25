@@ -22,4 +22,8 @@ public class ImageButton extends Button {
         this.imageView.setFitWidth(width);
         this.imageView.setFitHeight(height);
     }
+
+    public ImageView getImageView() {
+        return this.imageView;
+    }
 }
