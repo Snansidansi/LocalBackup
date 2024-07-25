@@ -663,11 +663,20 @@ public class ConfigureBackupSceneController {
             }
         }
 
-        this.tagsInComboboxObservableList.remove(selectedTag);
-        this.tagsInComboboxObservableList.add(TagManagerInstance.tagManager.getTag(newTagName));
         this.editTagTextField.setText("");
         this.editTagComboBox.setValue(null);
         this.editTagColorPicker.setValue(Color.WHITE);
+
+        if (this.filterTagComboBox.getValue() != null && this.filterTagComboBox.getValue().equals(selectedTag)) {
+            this.filterTagComboBox.setValue(null);
+        }
+        if (this.applyTagComboBox.getValue() != null && this.applyTagComboBox.getValue().equals(selectedTag)) {
+            this.applyTagComboBox.setValue(null);
+        }
+        this.filterTagComboBox.setValue(null);
+
+        this.tagsInComboboxObservableList.remove(selectedTag);
+        this.tagsInComboboxObservableList.add(TagManagerInstance.tagManager.getTag(newTagName));
     }
 
     public void applyTag() {
@@ -702,7 +711,6 @@ public class ConfigureBackupSceneController {
         Tooltip.install(this.deleteBackupButtonWrapperHBox, disabledElementDuringTagApplyTooltip);
         Tooltip.install(this.deleteTagButtonWrapperHBox, disabledElementDuringTagApplyTooltip);
         Tooltip.install(this.applyTagChangesButtonWrapperHBox, disabledElementDuringTagApplyTooltip);
-
 
         for (TableEntry entry : this.tableView.getItems()) {
             entry.getCheckBox().setSelected(false);
