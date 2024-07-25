@@ -117,7 +117,7 @@ public class SceneManager {
         }
     }
 
-    private static String getCorrectStyleSheet() {
+    public static String getCorrectStyleSheet() {
         if (SettingsManagerInstance.settingsManager.getSetting(BackupSetting.COLOR_SCHEME).equals("dark mode")) {
             return getStyleSheetFromFile("darkMode");
         }

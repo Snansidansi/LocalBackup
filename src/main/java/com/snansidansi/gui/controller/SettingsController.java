@@ -343,6 +343,7 @@ public class SettingsController {
 
     private boolean showConfirmAlert(String title, String contentText) {
         Alert confrimAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confrimAlert.getDialogPane().getScene().getStylesheets().add(SceneManager.getCorrectStyleSheet());
         confrimAlert.setTitle(title);
         confrimAlert.setHeaderText(contentText);
 
@@ -352,6 +353,7 @@ public class SettingsController {
 
     private void showErrorAlert(String title, String contentText) {
         Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+        errorAlert.getDialogPane().getScene().getStylesheets().add(SceneManager.getCorrectStyleSheet());
         errorAlert.setTitle(title);
         errorAlert.setHeaderText(contentText);
         errorAlert.showAndWait();

@@ -365,3 +365,8 @@
 .text-flow > Text {
     -fx-fill: white;
 }
+
+.alert,
+.alert .header-panel {
+    -fx-background-color: -fx-main-color;
+}

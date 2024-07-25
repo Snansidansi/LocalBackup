@@ -41,6 +41,7 @@ public class LocalBackupGUI extends Application {
         }
 
         Alert confirmCloseAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmCloseAlert.getDialogPane().getScene().getStylesheets().add(SceneManager.getCorrectStyleSheet());
         confirmCloseAlert.setTitle("Run backup in background");
         confirmCloseAlert.setHeaderText("A backup is still running.\nShould the backup finish in the background?");
 

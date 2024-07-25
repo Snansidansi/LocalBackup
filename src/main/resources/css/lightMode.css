@@ -271,3 +271,8 @@
 .color-picker:armed {
     -fx-background-color: -fx-clicked-color;
 }
+
+.alert,
+.alert .header-panel {
+    -fx-background-color: -fx-main-color;
+}
