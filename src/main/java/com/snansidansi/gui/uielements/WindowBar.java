@@ -230,8 +230,6 @@ public class WindowBar extends BorderPane {
         closeButton.setOnMouseClicked(mouseEvent -> {
             WindowEvent closeEvent = new WindowEvent(this.currentStage, WindowEvent.WINDOW_CLOSE_REQUEST);
             this.currentStage.fireEvent(closeEvent);
-
-            this.currentStage.close();
             SceneManager.removeActiveStage(this.currentStage);
         });
 
