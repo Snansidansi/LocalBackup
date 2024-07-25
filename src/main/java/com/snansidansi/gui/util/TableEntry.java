@@ -87,11 +87,11 @@ public class TableEntry {
 
         if (Boolean.parseBoolean(SettingsManagerInstance.settingsManager.getSetting(BackupSetting.SHOW_TAG_IMAGE))) {
             this.tagHBox.getChildren().add(this.tagImageView);
-            if (!coloredTagImagesMap.containsKey(tagName)) {
+            if (!coloredTagImagesMap.containsKey(tagColor)) {
                 Image coloredTagImage = Utility.changeColorOfTransparentBackgroundImage(tagImage, Color.web(tagColor));
-                coloredTagImagesMap.put(tagName, coloredTagImage);
+                coloredTagImagesMap.put(tagColor, coloredTagImage);
             }
-            this.tagImageView.setImage(coloredTagImagesMap.get(tagName));
+            this.tagImageView.setImage(coloredTagImagesMap.get(tagColor));
         }
         else {
             this.tagHBox.getChildren().remove(this.tagImageView);

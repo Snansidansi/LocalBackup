@@ -656,6 +656,13 @@ public class ConfigureBackupSceneController {
             TagManagerInstance.tagManager.changeTagName(newTagName, selectedTag.name);
             return;
         }
+
+        for (TableEntry entry : this.tableView.getItems()) {
+            if (entry.getTagName().equals(selectedTag.name)) {
+                entry.setTag(newTagName, newHexColor);
+            }
+        }
+
         this.tagsInComboboxObservableList.remove(selectedTag);
         this.tagsInComboboxObservableList.add(TagManagerInstance.tagManager.getTag(newTagName));
         this.editTagTextField.setText("");
