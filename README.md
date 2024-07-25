@@ -16,7 +16,7 @@ LocalBackup is a small backup program with a graphical user interface (GUI) for 
 1. A file or directory is only copied to the backup location if it does not already exist there or if it has been modified since the last backup.
 2. Tags are disabled by default but can be activated in the settings.
 3. The program will create several directories in the directory of the executable file or the IDE working directory. These directories store the program data and should not be deleted, as this will result in data loss. These directories must be in the same location as the program executable file.
-4. The program is only tested for windows.
+4. The program is only tested for Windows.
 
 ## Demo
 ### Dark Mode
