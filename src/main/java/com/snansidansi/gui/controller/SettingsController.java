@@ -138,7 +138,7 @@ public class SettingsController {
 
         deleteMissingFilesRow.addTooltip("This setting determines if a file at the backup location should be " +
                 "deleted if the original file is deleted.\n" +
-                "This counts for individual files, directories and files in directories.", this.TOOLTIP_FONTSIZE);
+                "This applies to individual files, directories and files in directories.", this.TOOLTIP_FONTSIZE);
 
         this.displayedSettings.add(deleteMissingFilesRow);
     }
