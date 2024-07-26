@@ -638,10 +638,21 @@ public class ConfigureBackupSceneController {
             TagManagerInstance.tagManager.addTag(oldTag);
             return;
         }
+
         this.editTagComboBox.setValue(null);
         this.editTagTextField.setText("");
         this.editTagColorPicker.setValue(Color.WHITE);
         this.tagsInComboboxObservableList.remove(oldTag);
+
+        if (oldTag.content.isEmpty()) {
+            return;
+        }
+        for (TableEntry entry : this.tableView.getItems()) {
+            Integer backupIdentifier = BackupServiceInstance.backupService.getBackupIdentifier(entry.getIndex());
+            if(oldTag.content.contains(backupIdentifier)) {
+                entry.clearTag();
+            }
+        }
     }
 
     public void editTag() {
