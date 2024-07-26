@@ -680,7 +680,7 @@ public class ConfigureBackupSceneController {
         }
 
         for (TableEntry entry : this.tableView.getItems()) {
-            if (entry.getTagName().equals(selectedTag.name)) {
+            if (entry.getTagName() != null && entry.getTagName().equals(selectedTag.name)) {
                 entry.setTag(newTagName, newHexColor);
             }
         }
