@@ -21,6 +21,9 @@
     -fx-background-color: -fx-menu-bar-color;
     -fx-padding: 0 0 0 0;
     -fx-background-radius: 8px 8px 0px 0px;
+    -fx-border-color: -fx-hover-color;
+    -fx-border-radius: 8px 8px 0px 0px;
+    -fx-border-width: 1px 1px 0px 1px;
 }
 
 .button {
@@ -62,6 +65,9 @@
 #scene-container {
     -fx-background-color: -fx-main-color;
     -fx-background-radius: 0px 0px 8px 8px;
+    -fx-border-color: -fx-hover-color;
+    -fx-border-width: 0px 1px 1px 1px;
+    -fx-border-radius: 0px 0px 8px 8px;
 }
 
 #menu-button {
