@@ -38,6 +38,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import javafx.util.Pair;
 
 import java.io.File;
 import java.io.IOException;
@@ -316,7 +317,7 @@ public class ConfigureBackupSceneController {
 
     public void refillTable(boolean changedValues) {
         this.numberOfTableElements = 0;
-        List<Integer> checkedElements = null;
+        List<Pair<Integer, Integer>> checkedElements = null;
 
         if (!changedValues) {
             checkedElements = getCheckedElementsFromTable();
@@ -328,7 +329,9 @@ public class ConfigureBackupSceneController {
             pathPair = adjustSrcDestPairToPathMode(pathPair);
             boolean checked = false;
 
-            if (!changedValues && !checkedElements.isEmpty() && this.numberOfTableElements == checkedElements.getFirst()) {
+            if (!changedValues && !checkedElements.isEmpty() &&
+                    this.numberOfTableElements == checkedElements.getFirst().getValue()) {
+
                 checkedElements.removeFirst();
                 checked = true;
             }
@@ -368,11 +371,16 @@ public class ConfigureBackupSceneController {
         return new SrcDestPair(srcPath.toString(), destPath.toString());
     }
 
-    private List<Integer> getCheckedElementsFromTable() {
-        List<Integer> indicesToRemove = new ArrayList<>();
-        for (TableEntry entry : this.tableView.getItems()) {
+    /**
+     * Gets every checked element from the tableview.
+     * @return Pair &lt index in the table, index of the {@link TableEntry} element &gt .
+     */
+    private List<Pair<Integer, Integer>> getCheckedElementsFromTable() {
+        List<Pair<Integer, Integer>> indicesToRemove = new ArrayList<>();
+        for (int i = 0; i < this.tableView.getItems().size(); i++) {
+            TableEntry entry = this.tableView.getItems().get(i);
             if (entry.getCheckBox().isSelected()) {
-                indicesToRemove.add(entry.getIndex());
+                indicesToRemove.add(new Pair<>(i, entry.getIndex()));
             }
         }
         return indicesToRemove;
@@ -529,10 +537,12 @@ public class ConfigureBackupSceneController {
             return;
         }
 
-        List<Integer> indicesToRemove = getCheckedElementsFromTable();
-        for (int index : indicesToRemove) {
-            String tagName = this.tableView.getItems().get(index).getTagName();
-            Integer backupIdentifier = BackupServiceInstance.backupService.getBackupIdentifier(index);
+        List<Pair<Integer, Integer>> indicesToRemove = getCheckedElementsFromTable();
+        for (int i = 0; i < indicesToRemove.size(); i++) {
+            int rowIndex = indicesToRemove.get(i).getKey();
+            int indexOfRowElement = indicesToRemove.get(i).getValue();
+            String tagName = this.tableView.getItems().get(rowIndex).getTagName();
+            Integer backupIdentifier = BackupServiceInstance.backupService.getBackupIdentifier(indexOfRowElement);
 
             if (tagName == null) {
                 continue;
@@ -541,7 +551,7 @@ public class ConfigureBackupSceneController {
             TagManagerInstance.tagManager.getTagContent(tagName).remove(backupIdentifier);
         }
 
-        if (!BackupServiceInstance.backupService.removeBackup(indicesToRemove.stream().mapToInt(i -> i).toArray()) ||
+        if (!BackupServiceInstance.backupService.removeBackup(indicesToRemove.stream().mapToInt(Pair::getValue).toArray()) ||
                 !TagManagerInstance.tagManager.saveChangesToFile()) {
             TagManagerInstance.tagManager.revertChanges();
         }
@@ -549,6 +559,7 @@ public class ConfigureBackupSceneController {
         refillTable(true);
         this.deleteConfirmLabel.setVisible(false);
         this.deletePressedOnce = false;
+        this.filterTagComboBox.setValue(null);
     }
 
     public void toggleFullPath() {
