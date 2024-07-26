@@ -62,4 +62,10 @@ launch4j {
     outfile = 'LocalBackup.exe'
     mainClassName = 'com.snansidansi.app.LocalBackupApp'
     icon = "${projectDir}/src/main/resources/icons/appIcon.ico"
+    mutexName = "LocalBackup_InstanceMutex_Snansidansi"
+    version = "1.0"
+    textVersion = "1.0"
+    copyright = "https://github.com/Snansidansi/LocalBackup/blob/main/LICENSE.txt"
+    companyName = "Snansidansi"
+    downloadUrl = "https://www.oracle.com/de/java/technologies/downloads/"
 }
