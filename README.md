@@ -17,6 +17,7 @@ LocalBackup is a small backup program with a graphical user interface (GUI) for 
 2. Tags are disabled by default but can be activated in the settings.
 3. The program will create several directories in the directory of the executable file or the IDE working directory. These directories store the program data and should not be deleted, as this will result in data loss. These directories must be in the same location as the program executable file.
 4. The program is only tested for Windows.
+5. To remove a tag from a backup, select the tag in the "Apply tags" section and click on the "Apply tag" button. Then, unselect the backup rows that should no longer have the tag.
 
 ## Demo
 ### Dark Mode
