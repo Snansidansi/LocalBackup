@@ -34,7 +34,7 @@ public class TagManagerTest {
         tagManager.addTagName(firstTagName);
         tagManager.addTagName(this.secondTagName);
         Assertions.assertTrue(tagManager.saveChangesToFile());
-        asserFileContent(tagFilePath, 2, this.secondTagName + ";", firstTagName + ";");
+        asserFileContent(tagFilePath, 2, firstTagName + ";", this.secondTagName + ";");
     }
 
     @Test
@@ -59,7 +59,7 @@ public class TagManagerTest {
         tagManager.addTagName(this.secondTagName);
         tagManager.changeTagName(oldTagName, newTagName);
         Assertions.assertTrue(tagManager.saveChangesToFile());
-        asserFileContent(tagFilePath, 2, this.secondTagName + ";", newTagName + ";");
+        asserFileContent(tagFilePath, 2, newTagName + ";", this.secondTagName + ";");
     }
 
     @Test
@@ -212,8 +212,6 @@ public class TagManagerTest {
                 new Tag("newTag", "", new ArrayList<>()),
                 new Tag("Tag2", "newColor", List.of(3, 4))
         };
-        System.out.println(Arrays.toString(expectedTags));
-        System.out.println(Arrays.toString(tagManager.getAllTags()));
         Assertions.assertArrayEquals(expectedTags, tagManager.getAllTags());
     }
 

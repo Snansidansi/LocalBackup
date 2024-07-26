@@ -9,10 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A class to manage tags for backups. To save a change like adding or deleting a tag, it is important to use the method
@@ -22,7 +19,7 @@ import java.util.Map;
  */
 public class TagManager {
     private final Path tagsFilePath;
-    private Map<String, Pair<String, List<Integer>>> tagsMap = new HashMap<>();
+    private Map<String, Pair<String, List<Integer>>> tagsMap = new TreeMap<>();
     private final Map<String, Pair<String, List<Integer>>> backupTagsMap = new HashMap<>();
     private final Path tagFileModPath;
 
