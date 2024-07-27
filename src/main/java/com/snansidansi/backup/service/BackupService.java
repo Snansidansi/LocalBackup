@@ -349,6 +349,7 @@ public class BackupService {
                     identifier = identifierListCopy.removeFirst();
                 } else {
                     identifier = getNextIdentifier();
+                    this.identifierList.add(identifier);
                 }
 
                 csvWriter.writeLine(Path.of(data.srcPath()).toAbsolutePath().toString(),
@@ -356,7 +357,6 @@ public class BackupService {
                         String.valueOf(identifier));
 
                 this.allBackups.add(data);
-                this.identifierList.add(identifier);
             }
         } catch (IOException e) {
             this.errorLog.log("Error when adding a new backup to the backup list.",
@@ -519,7 +519,7 @@ public class BackupService {
 
         List<SrcDestPair> allBackupCopy = new ArrayList<>(this.allBackups);
         this.allBackups.clear();
-        boolean addSuccessful = addBackup((allBackupCopy));
+        boolean addSuccessful = addBackup(allBackupCopy);
 
         // Cleanup and error handling
         if (!addSuccessful) {
@@ -563,7 +563,6 @@ public class BackupService {
 
         this.allBackups.clear();
         this.identifierList.clear();
-        this.nextIdentifier = allBackupsFromFile.size();
 
         if (allBackupsFromFile.isEmpty()) {
             return;
