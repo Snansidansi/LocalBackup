@@ -286,14 +286,16 @@ public class BackupService {
         }
         for (String fileName : existingBackupFiles) {
             Path filePath = destPath.resolve(fileName);
-            if(Files.isDirectory(filePath)) {
+            if (Files.isDirectory(filePath)) {
                 deleteDir(filePath);
+                changedAnything = true;
                 continue;
             }
 
             try {
                Files.deleteIfExists(filePath);
                this.deletedFilesDuringDirBackup++;
+               changedAnything = true;
             } catch (IOException | SecurityException unused) {
             }
         }
@@ -700,11 +702,17 @@ public class BackupService {
             for (File file : subFiles) {
                 if (file.isDirectory() && !deleteDir(file.toPath())) {
                     successful = false;
-                } else if (!file.delete()) {
-                    successful = false;
+                    continue;
                 }
+
+                if (!file.delete()) {
+                    successful = false;
+                    continue;
+                }
+                this.deletedFilesDuringDirBackup++;
             }
 
+            // Deletes the empty dir
             subFiles = path.toFile().listFiles();
             if (subFiles != null && subFiles.length == 0) {
                 return path.toFile().delete();
