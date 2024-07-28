@@ -591,14 +591,14 @@ public class ConfigureBackupSceneController {
     public void switchToLogScene() {
         try {
             SceneManager.setLogScene((Stage) this.mainContainer.getScene().getWindow());
-        } catch (IOException unused) {
+        } catch (IOException ignored) {
         }
     }
 
     public void switchToSettingsScene() {
         try {
             SceneManager.setSettingsScene((Stage) this.mainContainer.getScene().getWindow());
-        } catch (IOException unused) {
+        } catch (IOException ignored) {
         }
     }
 

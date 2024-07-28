@@ -33,7 +33,7 @@ public class SettingsManager<T extends Enum<T> & Settings> {
 
         try {
             Files.createDirectories(this.settingsFilePath.getParent());
-        } catch (IOException unused) {
+        } catch (IOException ignored) {
         }
     }
 

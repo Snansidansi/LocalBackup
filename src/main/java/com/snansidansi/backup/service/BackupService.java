@@ -112,7 +112,7 @@ public class BackupService {
 
         try {
             retryBackups(missingRootIndices, missingBackupIndices);
-        } catch (InterruptedException unused) {
+        } catch (InterruptedException ignored) {
         }
 
         if (this.deleteBackupsWithMissingSource) {
@@ -295,7 +295,7 @@ public class BackupService {
                Files.deleteIfExists(filePath);
                this.deletedFilesDuringDirBackup++;
                changedAnything = true;
-            } catch (IOException | SecurityException unused) {
+            } catch (IOException | SecurityException ignored) {
             }
         }
 
@@ -579,7 +579,7 @@ public class BackupService {
                         "Array out of bounds exception occurred.",
                         "Content of the invalid line: " + Arrays.toString(strings));
                 return;
-            } catch (NumberFormatException unused) {
+            } catch (NumberFormatException ignored) {
             }
 
             int identifier;

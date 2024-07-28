@@ -76,7 +76,7 @@ public class TagManager {
 
                 this.tagsMap.put(tagName, new Pair<>(tagColor, indicesWithTag));
             }
-        } catch (FileNotFoundException unused) {
+        } catch (FileNotFoundException ignored) {
         }
 
         this.backupTagsMap.clear();
@@ -196,10 +196,10 @@ public class TagManager {
 
                 csvWriter.writeLine(inputLine);
             }
-        } catch (IOException unused1) {
+        } catch (IOException unused) {
             try {
                 Files.delete(this.tagFileModPath);
-            } catch (IOException unused2) {
+            } catch (IOException ignored) {
             }
             return false;
         }

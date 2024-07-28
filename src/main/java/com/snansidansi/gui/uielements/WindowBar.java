@@ -77,13 +77,8 @@ public class WindowBar extends BorderPane {
     }
 
     private void setupImageColors() {
-        Boolean darkMode;
-        if (SettingsManagerInstance.settingsManager.getSetting(BackupSetting.COLOR_SCHEME).equals("dark mode")) {
-            darkMode = true;
-        }
-        else {
-            darkMode = false;
-        }
+        boolean darkMode;
+        darkMode = SettingsManagerInstance.settingsManager.getSetting(BackupSetting.COLOR_SCHEME).equals("dark mode");
 
         Color imageColor = darkMode ? Color.WHITE : Color.BLACK;
         minimizeWindowImage = Utility.changeColorOfTransparentBackgroundImage(

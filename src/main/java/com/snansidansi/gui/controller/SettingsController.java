@@ -280,7 +280,7 @@ public class SettingsController {
 
         try {
             SceneManager.setConfigureBackupsScene((Stage) this.mainContainer.getScene().getWindow());
-        } catch (IOException unused) {
+        } catch (IOException ignored) {
         }
     }
 
