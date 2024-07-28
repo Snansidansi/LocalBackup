@@ -78,7 +78,7 @@ public class BackupServiceTest {
                 "addBackupToBackupConfig.csv", new SrcDestPair("a", "b"));
         BackupService backupService = new BackupService(filePath);
         backupService.addBackup(new SrcDestPair(filePath, tempDir.toString()));
-        assertFileContent(filePath, 2, "a;b", filePath + ";" + tempDir + ";2");
+        assertFileContent(filePath, 2, "a;b", filePath + ";" + tempDir + ";1");
     }
 
     @Test
@@ -87,7 +87,7 @@ public class BackupServiceTest {
         BackupService backupService = new BackupService(filePath);
         backupService.removeBackup(1, 2);
         assertFileContent(filePath, 1, exampleData[0].srcPath() + ";" +
-                exampleData[0].destPath() + ";3");
+                exampleData[0].destPath() + ";0");
     }
 
     @ParameterizedTest
@@ -484,9 +484,9 @@ public class BackupServiceTest {
 
         BackupService backupService = new BackupService(destBackupFilePath.toString());
         backupService.addBackup(List.of(this.exampleData));
-        Assertions.assertEquals(4, backupService.getBackupIdentifier(3));
-        Assertions.assertEquals(5, backupService.getBackupIdentifier(4));
-        Assertions.assertEquals(7, backupService.getBackupIdentifier(5));
+        Assertions.assertEquals(0, backupService.getBackupIdentifier(3));
+        Assertions.assertEquals(2, backupService.getBackupIdentifier(4));
+        Assertions.assertEquals(4, backupService.getBackupIdentifier(5));
     }
 
     @Test
@@ -498,7 +498,7 @@ public class BackupServiceTest {
             Assertions.assertEquals(i, backupService.getBackupIdentifier(i));
         }
         backupService.removeBackup(0, 1);
-        Assertions.assertEquals(2, backupService.getBackupIdentifier(1));
+        Assertions.assertEquals(2, backupService.getBackupIdentifier(0));
     }
 
     // Helper methods
