@@ -11,10 +11,7 @@ import com.snansidansi.log.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -136,7 +133,9 @@ public class BackupService {
             else {
                 try {
                     Files.delete(destPath);
-                } catch (IOException | SecurityException e) {
+                } catch (NoSuchFileException ignored) {
+                }
+                catch (IOException | SecurityException e) {
                     this.errorLog.log("Error during the deletion of a backup file with a missing source file:",
                             "Missing source file: " + srcPath,
                             "Backup file: " + destPath,
