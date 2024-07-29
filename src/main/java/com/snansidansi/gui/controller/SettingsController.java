@@ -36,6 +36,7 @@ public class SettingsController {
     private final int SMALL_SPINNER_WIDTH = 80;
     private final int SETTINGS_NAME_FONTSIZE = 14;
     private final int TOOLTIP_FONTSIZE = 14;
+    private boolean restoreDefault = false;
 
     @FXML
     private VBox mainContainer;
@@ -297,6 +298,7 @@ public class SettingsController {
                 row.restoreStandardValue();
             }
         }
+        this.restoreDefault = true;
     }
 
     public void discardChanges() {
@@ -308,7 +310,7 @@ public class SettingsController {
     }
 
     public void saveChanges() {
-        if (!settingsChanged()) {
+        if (!this.restoreDefault && !settingsChanged()) {
             return;
         }
         if (this.invalidSettings) {
@@ -328,6 +330,7 @@ public class SettingsController {
             return;
         }
         SettingsManagerInstance.reloadSettings();
+        this.restoreDefault = false;
     }
 
     private boolean settingsChanged() {

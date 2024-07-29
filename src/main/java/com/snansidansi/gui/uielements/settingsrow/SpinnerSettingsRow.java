@@ -47,7 +47,7 @@ public class SpinnerSettingsRow extends SettingsRow {
 
     @Override
     public void restoreStandardValue() {
-        this.spinner.getEditor().setText(this.initValue);
+        this.spinner.getValueFactory().setValue(Integer.parseInt(this.initValue));
     }
 
     @Override
