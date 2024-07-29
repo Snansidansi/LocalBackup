@@ -18,6 +18,7 @@ LocalBackup is a small backup program with a graphical user interface (GUI) for 
 3. The program will create several directories in the directory of the executable file or the IDE working directory. These directories store the program data and should not be deleted, as this will result in data loss. These directories must be in the same location as the program executable file.
 4. The program is only tested for Windows.
 5. To remove a tag from a backup, select the tag in the "Apply tags" section and click on the "Apply tag" button. Then, unselect the backup rows that should no longer have the tag.
+6. If you back up a directory, the created backup directory can only contain the exact content of the source directory. If new content is added directly to the destination directory, it will be deleted by the backup program.
 
 ## Demo
 ### Dark Mode
