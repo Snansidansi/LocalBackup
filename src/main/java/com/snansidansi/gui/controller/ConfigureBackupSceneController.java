@@ -203,7 +203,7 @@ public class ConfigureBackupSceneController {
         this.backupSearchTextField.setPromptText("Search backup source");
         this.backupSearchTextField.textProperty().addListener((obs, oldVal, newVal) -> {
             for (TableEntry entry : tableView.getItems()) {
-                if (newVal.isBlank() || !entry.getSrcPath().contains(newVal)) {
+                if (newVal.isBlank() || !entry.getSrcPath().toLowerCase().contains(newVal.toLowerCase())) {
                     entry.getSrcHBox().setStyle("-fx-background-color: transparent");
                     continue;
                 }
