@@ -92,6 +92,16 @@ public class SettingsController {
 
         addSettingsHeader("Appearance:", SETTINGS_NAME_FONTSIZE, true, true, HEADER_TOP_PADDING, HEADER_BOTTOM_PADDING);
         addDarkModeRow();
+        addDarkModeButtonColorRow();
+    }
+
+    private void addDarkModeButtonColorRow() {
+        ColorPickerSettingsRow darkModeButtonColorRow = new ColorPickerSettingsRow(
+                BackupSetting.DARK_MODE_BUTTON_COLOR,
+                "Dark mode button color:",
+                this.SETTINGS_NAME_FONTSIZE);
+
+        this.displayedSettings.add(darkModeButtonColorRow);
     }
 
     private void addDarkModeRow() {
@@ -309,7 +319,7 @@ public class SettingsController {
         }
     }
 
-    public void saveChanges() {
+    public void saveChanges() throws IOException {
         if (!this.restoreDefault && !settingsChanged()) {
             return;
         }
@@ -330,6 +340,7 @@ public class SettingsController {
             return;
         }
         SettingsManagerInstance.reloadSettings();
+        SceneManager.setCorrectButtonColor(this.mainContainer.getScene());
         this.restoreDefault = false;
     }
 

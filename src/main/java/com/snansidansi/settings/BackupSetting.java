@@ -17,7 +17,8 @@ public enum BackupSetting implements Settings {
     ENABLE_TAGS("enable tags", "false", SettingType.BOOLEAN),
     SHOW_TAG_IMAGE("show tag image", "true", SettingType.BOOLEAN),
     SHOW_TAG_NAME("show tag name", "true", SettingType.BOOLEAN),
-    COLOR_SCHEME("dark mode", "light mode", SettingType.STRING, "light mode", "dark mode");
+    COLOR_SCHEME("dark mode", "light mode", SettingType.STRING, "light mode", "dark mode"),
+    DARK_MODE_BUTTON_COLOR("dark mode button color", "#c21014", SettingType.STRING);
 
     private final String id;
     private final String standardValue;

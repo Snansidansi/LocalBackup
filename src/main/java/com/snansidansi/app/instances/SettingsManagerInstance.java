@@ -43,6 +43,8 @@ public class SettingsManagerInstance {
         );
 
         updateUIStyle();
+
+        SceneManager.darkModeButtonImageColor = settingsManager.getSetting((BackupSetting.DARK_MODE_BUTTON_COLOR));
     }
 
     private static void updateUIStyle() {

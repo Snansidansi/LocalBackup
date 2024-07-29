@@ -19,7 +19,7 @@ import java.util.List;
 public class SceneManager {
     private static double lastWidth = -1;
     private static double lastHeight = -1;
-    public static final String darkModeButtonImageColor = "#c21014";
+    public static String darkModeButtonImageColor = "#ffffff";
     private static final List<Stage> activeStage = new ArrayList<>();
 
     private SceneManager() {
