@@ -172,7 +172,7 @@ public class SettingsController {
         rowTextField.textProperty().addListener(((observableValue, oldValue, newValue) -> {
             if (Files.exists(Path.of(newValue))) {
                 enableAutostartRow.setDisable(false);
-                rowTextField.setStyle("-fx-text-fill: black");
+                rowTextField.setStyle(null);
                 this.invalidSettings = false;
                 return;
             }
